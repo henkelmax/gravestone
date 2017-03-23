@@ -22,7 +22,7 @@ public class UpdateCheckEvents {
 	private boolean updateShown;
 
 	public UpdateCheckEvents() {
-		this.checkUpdates = Config.instance().checkUpdates;
+		this.checkUpdates = Config.checkUpdates;
 		this.updateShown = false;
 	}
 

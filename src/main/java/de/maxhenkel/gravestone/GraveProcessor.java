@@ -36,7 +36,7 @@ public class GraveProcessor {
 		this.time=System.currentTimeMillis();
 		
 		if (replaceableBlocks == null) {
-			replaceableBlocks=Config.instance().replaceableBlocks;
+			replaceableBlocks=Config.replaceableBlocks;
 		}
 	}
 

@@ -11,16 +11,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
 
 public class Tools {
 
-	public static String translate(String str, Object... args) {
-		return new TextComponentTranslation(str, args).getFormattedText();
-	}
-
 	public static String dimIDToString(int id) {
-		Map<Integer, String> dims = Config.instance().dimensionNames;
+		Map<Integer, String> dims = Config.dimensionNames;
 
 		String name = dims.get(id);
 		if (name == null || name.isEmpty()) {
@@ -76,7 +71,7 @@ public class Tools {
 
 		Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(time);
-		SimpleDateFormat sdf = new SimpleDateFormat(Config.instance().dateFormat);
+		SimpleDateFormat sdf = new SimpleDateFormat(Config.dateFormat);
 		return sdf.format(c.getTime());
 	}
 

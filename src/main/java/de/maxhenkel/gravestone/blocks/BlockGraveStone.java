@@ -3,7 +3,6 @@ package de.maxhenkel.gravestone.blocks;
 import java.util.Random;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
-import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -24,6 +23,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -185,7 +185,7 @@ public class BlockGraveStone extends BlockContainer {
 		if (time == null || time.isEmpty()) {
 			player.sendMessage(new TextComponentString(name));
 		} else {
-			player.sendMessage(new TextComponentString(Tools.translate("message.died", name, time)));
+			player.sendMessage(new TextComponentTranslation("message.died", name, time));
 		}
 
 		return true;

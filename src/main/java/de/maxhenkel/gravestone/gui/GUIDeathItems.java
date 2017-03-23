@@ -13,6 +13,7 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 public class GUIDeathItems extends GuiScreen {
@@ -39,8 +40,8 @@ public class GUIDeathItems extends GuiScreen {
 	public void initGui() {
 		this.buttonList.clear();
 		int left = (this.width - TEXTURE_X) / 2;
-		this.buttonPrev = addButton(new GuiButton(0, left, 190, 75, 20, Tools.translate("button.prev")));
-		this.buttonNext = addButton(new GuiButton(1, left + TEXTURE_X - 75, 190, 75, 20, Tools.translate("button.next")));
+		this.buttonPrev = addButton(new GuiButton(0, left, 190, 75, 20, new TextComponentTranslation("button.prev").getFormattedText()));
+		this.buttonNext = addButton(new GuiButton(1, left + TEXTURE_X - 75, 190, 75, 20, new TextComponentTranslation("button.next").getFormattedText()));
 		this.buttonPrev.enabled=false;
 		if(pageList.getPages()<=0){
 			this.buttonNext.enabled=false;
@@ -108,7 +109,7 @@ public class GUIDeathItems extends GuiScreen {
 
 		// Title
 
-		String title = Tools.translate("gui.deathinfo.title");
+		String title = new TextComponentTranslation("gui.deathinfo.title").getFormattedText();
 
 		int titleWidth = this.fontRendererObj.getStringWidth(title);
 
@@ -116,7 +117,7 @@ public class GUIDeathItems extends GuiScreen {
 
 		// Name
 
-		String textName = Tools.translate("gui.deathinfo.name") + ":";
+		String textName =  new TextComponentTranslation("gui.deathinfo.name").getFormattedText() + ":";
 		drawLeft(TextFormatting.BLACK + textName, 50);
 
 		String name = info.getName();
@@ -124,7 +125,7 @@ public class GUIDeathItems extends GuiScreen {
 
 		// Dimension
 
-		String textDimension = Tools.translate("gui.deathinfo.dimension") + ":";
+		String textDimension =  new TextComponentTranslation("gui.deathinfo.dimension").getFormattedText() + ":";
 		drawLeft(TextFormatting.BLACK + textDimension, 63);
 
 		String dimension = Tools.dimIDToString(info.getDimension());
@@ -132,7 +133,7 @@ public class GUIDeathItems extends GuiScreen {
 
 		// Time
 
-		String textTime = Tools.translate("gui.deathinfo.time") + ":";
+		String textTime =  new TextComponentTranslation("gui.deathinfo.time").getFormattedText() + ":";
 		drawLeft(TextFormatting.BLACK + textTime, 76);
 
 		String time = Tools.timeToString(info.getTime());
@@ -140,7 +141,7 @@ public class GUIDeathItems extends GuiScreen {
 
 		// Location
 
-		String textLocation = Tools.translate("gui.deathinfo.location") + ":";
+		String textLocation =  new TextComponentTranslation("gui.deathinfo.location").getFormattedText() + ":";
 		drawLeft(TextFormatting.BLACK + textLocation, 89);
 
 		String locX = "X: " + info.getDeathLocation().getX();

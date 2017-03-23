@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -26,8 +27,8 @@ public class DeathEvents {
 	private boolean givePlayerNote;
 	
 	public DeathEvents() {
-		this.livingGraves=Config.instance().livingGraves;
-		this.givePlayerNote=Config.instance().giveDeathNotes;
+		this.livingGraves=Config.livingGraves;
+		this.givePlayerNote=Config.giveDeathNotes;
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
@@ -84,7 +85,12 @@ public class DeathEvents {
 				event.setCanceled(true);
 			}else{
 				if(entity instanceof EntityPlayerMP){
-					((EntityPlayerMP)entity).sendMessage(new TextComponentString("[" + Tools.translate("message.name") + "] " +Tools.translate("message.create_grave_failed")));
+					String modname=new TextComponentTranslation("message.name").getFormattedText();
+					String message=new TextComponentTranslation("message.create_grave_failed").getFormattedText();
+					
+					EntityPlayerMP player=(EntityPlayerMP) entity;
+					
+					player.sendMessage(new TextComponentString("[" + modname + "] " +message));
 				}
 			}
 			if (givePlayerNote) {

@@ -26,9 +26,9 @@ public class BlockEvents {
 	private boolean spawnGhost;
 
 	public BlockEvents() {
-		this.removeDeathNote = Config.instance().removeDeathNote;
-		this.onlyOwnersCanBreak = Config.instance().onlyPlayersCanBreak;
-		this.spawnGhost= Config.instance().spawnGhost;
+		this.removeDeathNote = Config.removeDeathNote;
+		this.onlyOwnersCanBreak = Config.onlyPlayersCanBreak;
+		this.spawnGhost= Config.spawnGhost;
 	}
 
 	@SubscribeEvent

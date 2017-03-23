@@ -3,6 +3,7 @@ package de.maxhenkel.gravestone.gui;
 import java.util.Arrays;
 import de.maxhenkel.gravestone.DeathInfo.ItemInfo;
 import de.maxhenkel.gravestone.util.Tools;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 public class Page {
@@ -23,14 +24,14 @@ public class Page {
 	}
 
 	public void drawPage(int num) {
-		String title = Tools.translate("gui.deathinfo.title.items");
+		String title =  new TextComponentTranslation("gui.deathinfo.title.items").getFormattedText();
 
 		int titleWidth = gui.getFontRenderer().getStringWidth(title);
 
 		gui.getFontRenderer().drawString(TextFormatting.BLACK +"" +TextFormatting.UNDERLINE +title, (gui.width - titleWidth) / 2, 30, 0);
 		
 		
-		String page = Tools.translate("gui.deathinfo.page");
+		String page =  new TextComponentTranslation("gui.deathinfo.page").getFormattedText();
 		page=TextFormatting.DARK_GRAY +page +" " +TextFormatting.DARK_GRAY +String.valueOf(num);
 		int pageWidth = gui.getFontRenderer().getStringWidth(page);
 

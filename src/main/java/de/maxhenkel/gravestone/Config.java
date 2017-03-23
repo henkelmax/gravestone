@@ -12,73 +12,50 @@ import net.minecraftforge.common.config.Configuration;
 
 public class Config {
 
-	private static Config instance;
-	private Configuration config;
-	
-	public final boolean checkUpdates;
-	public final Map<Integer, String> dimensionNames;
-	public final String dateFormat;
-	public final boolean renderSkull;
-	public final boolean livingGraves;
-	public final boolean giveDeathNotes;
-	public final List<Block> replaceableBlocks;
-	public final boolean removeDeathNote;
-	public final boolean onlyPlayersCanBreak;
-	public final boolean spawnGhost;
-	
+	public static boolean checkUpdates = true;
+	public static Map<Integer, String> dimensionNames = new HashMap<Integer, String>();
+	public static String dateFormat = new String();
+	public static boolean renderSkull = true;
+	public static boolean livingGraves = false;
+	public static boolean giveDeathNotes = true;
+	public static List<Block> replaceableBlocks = new ArrayList<Block>();
+	public static boolean removeDeathNote = false;
+	public static boolean onlyPlayersCanBreak = false;
+	public static boolean spawnGhost = false;
 
-	public Config(Configuration config) {
-		this.config = config;
-		this.config.load();
-		
-		this.checkUpdates=checkUpdates();
-		this.dimensionNames=Collections.unmodifiableMap(getDimensionNames());
-		this.dateFormat=getDateFormat();
-		this.renderSkull=renderSkull();
-		this.livingGraves=livingGraves();
-		this.giveDeathNotes=giveDeathNotes();
-		this.replaceableBlocks=Collections.unmodifiableList(getReplaceableBlocks());
-		this.removeDeathNote=removeDeathNote();
-		this.onlyPlayersCanBreak=onlyOwnersCanBreak();
-		this.spawnGhost=spawnGhost();
-		
-		this.config.save();
-		
+	public static void init(Configuration config) {
+		config.load();
+
+		checkUpdates = checkUpdates(config);
+		dimensionNames = Collections.unmodifiableMap(getDimensionNames(config));
+		dateFormat = getDateFormat(config);
+		renderSkull = renderSkull(config);
+		livingGraves = livingGraves(config);
+		giveDeathNotes = giveDeathNotes(config);
+		replaceableBlocks = Collections.unmodifiableList(getReplaceableBlocks(config));
+		removeDeathNote = removeDeathNote(config);
+		onlyPlayersCanBreak = onlyOwnersCanBreak(config);
+		spawnGhost = spawnGhost(config);
+
+		config.save();
 	}
 
-	private String getString(String key, String category, String defaultValue, String comment) {
-		String s = defaultValue;
-		try {
-			s = config.getString(key, category, defaultValue, comment);
-		} catch (Exception e) {}
-		return s;
-	}
+	/*
+	 * private static String[] getStringArray(Configuration config, String key,
+	 * String category, String[] defaultValues, String comment) { String[] s =
+	 * defaultValues; try { s = config.getStringList(key, category,
+	 * defaultValues, comment); } catch (Exception e) { } return s; }
+	 */
 
-	private boolean getBoolean(String key, String category, boolean defaultValue, String comment) {
-		boolean s = defaultValue;
-		try {
-			s = config.getBoolean(key, category, defaultValue, comment);
-		} catch (Exception e) {}
-		return s;
-	}
-
-	private String[] getStringArray(String key, String category, String[] defaultValues, String comment) {
-		String[] s = defaultValues;
-		try {
-			s = config.getStringList(key, category, defaultValues, comment);
-		} catch (Exception e) {}
-		return s;
-	}
-
-	private boolean checkUpdates() {
-		return getBoolean("check_updates", "gravestone", true,
+	private static boolean checkUpdates(Configuration config) {
+		return config.getBoolean("check_updates", "gravestone", true,
 				"Whether the mod should notify you when an update is available");
 	}
 
-	private Map<Integer, String> getDimensionNames() {
+	private static Map<Integer, String> getDimensionNames(Configuration config) {
 		String[] def = new String[] { "-1: Nether", "0: Overworld", "1: The End" };
 
-		String[] dimsStr = getStringArray("dimension_names", "gravestone", def,
+		String[] dimsStr = config.getStringList("dimension_names", "gravestone", def,
 				"The names of the Dimensions for the Death Note");
 
 		Map<Integer, String> dims = new HashMap<Integer, String>();
@@ -90,16 +67,23 @@ public class Config {
 				if (i < 0) {
 					continue;
 				}
-				
-				if(str.length()-1<i+1){
+
+				if (str.length() - 1 < i + 1) {
 					continue;
 				}
 
 				String did = str.substring(0, i);
-				String name = str.substring(i+1).trim();
-				int dimid = Integer.parseInt(did);
+				String name = str.substring(i + 1).trim();
+				int dimid = 0;
 
-				if (name.isEmpty()) {
+				try {
+					dimid = Integer.parseInt(did);
+				} catch (NumberFormatException e) {
+					Log.w("Failed to parse dimension ID: " + e.getMessage());
+					continue;
+				}
+
+				if (name == null || name.isEmpty()) {
 					Log.w("Failed to load dimension name for id " + dimid);
 					continue;
 				}
@@ -113,23 +97,23 @@ public class Config {
 		return dims;
 	}
 
-	private String getDateFormat() {
-		return getString("grave_date_format", "gravestone", "yyyy/MM/dd HH:mm:ss",
+	private static String getDateFormat(Configuration config) {
+		return config.getString("grave_date_format", "gravestone", "yyyy/MM/dd HH:mm:ss",
 				"The date format outputted by clicking the gravestone or displayed in the death note");
 	}
 
-	private boolean renderSkull() {
-		return getBoolean("render_skull", "gravestone", true,
+	private static boolean renderSkull(Configuration config) {
+		return config.getBoolean("render_skull", "gravestone", true,
 				"If this is set to true the players head will be rendered on the gravestone when there is a full block under it");
 	}
 
-	private boolean livingGraves() {
-		return getBoolean("enable_living_entity_graves", "gravestone", false,
+	private static boolean livingGraves(Configuration config) {
+		return config.getBoolean("enable_living_entity_graves", "gravestone", false,
 				"If this is set to true every living entity will generate a gravestone");
 	}
 
-	private boolean giveDeathNotes() {
-		return getBoolean("enable_death_note", "gravestone", true,
+	private static boolean giveDeathNotes(Configuration config) {
+		return config.getBoolean("enable_death_note", "gravestone", true,
 				"If this is set to true you get a death note after you died");
 	}
 
@@ -138,11 +122,10 @@ public class Config {
 			"minecraft:sapling", "minecraft:brown_mushroom", "minecraft:red_mushroom", "minecraft:torch",
 			"minecraft:snow_layer", "minecraft:vine", "minecraft:deadbush", "minecraft:reeds", "minecraft:fire" };
 
-	private List<Block> getReplaceableBlocks() {
+	private static List<Block> getReplaceableBlocks(Configuration config) {
 		List<Block> replaceableBlocks = new ArrayList<Block>();
 		try {
-			String[] blocks = getStringArray("replaceable_blocks", "gravestone", DEFAULT_BLOCKS,
-					"The blocks that can be replaced with a grave when someone dies on it");
+			String[] blocks = config.getStringList("replaceable_blocks", "gravestone", DEFAULT_BLOCKS, "The blocks that can be replaced with a grave when someone dies on it");
 
 			replaceableBlocks = Tools.getBlocks(blocks);
 
@@ -157,28 +140,23 @@ public class Config {
 				replaceableBlocks = new ArrayList<Block>();
 			}
 		}
-		
+
 		return replaceableBlocks;
 	}
-	
-	private boolean removeDeathNote(){
-		return getBoolean("remove_death_note", "gravestone", false, "If this is set to true the death note will be taken out of your inventory when you destroyed the gravestone");
-	}
-	
-	private boolean onlyOwnersCanBreak(){
-		return getBoolean("only_owners_can_break", "gravestone", false, "If this is set to true only the player that owns the gravestone and the admins can break the gravestone");
-	}
-	
-	private boolean spawnGhost(){
-		return getBoolean("spawn_ghost", "gravestone", false, "If this is set to true a ghost of the dead player will be spawned when the gravestone is broken");
+
+	private static boolean removeDeathNote(Configuration config) {
+		return config.getBoolean("remove_death_note", "gravestone", false,
+				"If this is set to true the death note will be taken out of your inventory when you destroyed the gravestone");
 	}
 
-	public void setInstance() {
-		instance = this;
+	private static boolean onlyOwnersCanBreak(Configuration config) {
+		return config.getBoolean("only_owners_can_break", "gravestone", false,
+				"If this is set to true only the player that owns the gravestone and the admins can break the gravestone");
 	}
 
-	public static Config instance() {
-		return instance;
+	private static boolean spawnGhost(Configuration config) {
+		return config.getBoolean("spawn_ghost", "gravestone", false,
+				"If this is set to true a ghost of the dead player will be spawned when the gravestone is broken");
 	}
 
 }

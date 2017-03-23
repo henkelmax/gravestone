@@ -21,7 +21,7 @@ public class TileentitySpecialRendererGraveStone extends TileEntitySpecialRender
 	private boolean renderSkull;
 
 	public TileentitySpecialRendererGraveStone() {
-		this.renderSkull = Config.instance().renderSkull;
+		this.renderSkull = Config.renderSkull;
 	}
 
 	@Override
