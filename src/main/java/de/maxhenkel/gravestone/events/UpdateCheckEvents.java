@@ -2,12 +2,13 @@ package de.maxhenkel.gravestone.events;
 
 import de.maxhenkel.gravestone.Config;
 import de.maxhenkel.gravestone.Main;
-import de.maxhenkel.gravestone.util.Tools;
 import de.maxhenkel.gravestone.util.UpdateChecker;
 import de.maxhenkel.gravestone.util.UpdateChecker.IUpdateCheckResult;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentBase;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.ClickEvent.Action;
@@ -16,9 +17,6 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class UpdateCheckEvents {
-
-	private static final String UPDATE_CHECK_URL = "http://maxhenkel.de/update/gravestone_1.11.2.txt";
-	private static final String UPDATE_URL = "http://minecraft.curseforge.com/projects/gravestone-mod";
 
 	private boolean checkUpdates;
 	private boolean updateShown;
@@ -58,32 +56,33 @@ public class UpdateCheckEvents {
 
 		UpdateChecker checker = new UpdateChecker(new IUpdateCheckResult() {
 			@Override
-			public void onResult(boolean isAvailable) {
+			public void onResult(boolean isAvailable, String updateURL) {
 				if (isAvailable) {
-					showUpdateMessage(player);
+					showUpdateMessage(player, updateURL);
 				}
 			}
-		}, Main.VERSION_NUMBER, UPDATE_CHECK_URL);
+		}, Main.VERSION_NUMBER, Main.UPDATE_CHECK_URL);
 		checker.start();
 		updateShown = true;
 	}
 
-	private void showUpdateMessage(EntityPlayer player) {
+	private void showUpdateMessage(EntityPlayer player, String updateURL) {
 
-		String msg = "[" + Tools.translate("message.name") + "] "
-				+ Tools.translate("message.update") + " ";
+		String modname=new TextComponentTranslation("message.name").getFormattedText();
+		String updateMessgae=new TextComponentTranslation("message.update").getFormattedText();
+		TextComponentBase hoverMessgae=new TextComponentTranslation("message.update.hover");
+		TextComponentBase download=new TextComponentTranslation("message.download");
+		
+		String msg = "[" +  modname + "] " + updateMessgae + " ";
 
-		ClickEvent openUrl = new ClickEvent(Action.OPEN_URL, UPDATE_URL);
+		ClickEvent openUrl = new ClickEvent(Action.OPEN_URL, updateURL);
 		Style style = new Style();
-
 		style.setClickEvent(openUrl);
 		style.setUnderlined(true);
 		style.setColor(TextFormatting.GREEN);
-		style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString(
-				Tools.translate("message.update.hover"))));
-		TextComponentString comp = new TextComponentString("[Download]");
-		comp.setStyle(style);
-		player.sendMessage(new TextComponentString(msg).appendSibling(comp));
+		style.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverMessgae));
+		download.setStyle(style);
+		player.sendMessage(new TextComponentString(msg).appendSibling(download));
 	}
 
 }

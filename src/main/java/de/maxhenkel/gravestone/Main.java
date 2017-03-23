@@ -16,6 +16,7 @@ public class Main{
     public static final String VERSION = "1.7.3";
     public static final String MC_VERSION = "[1.11.2]";
     public static final int VERSION_NUMBER = 27;
+    public static final String UPDATE_CHECK_URL = "http://maxhenkel.de/update/gravestone_1.11.2.txt";
 
 	@Instance
     private static Main instance;
