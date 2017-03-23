@@ -1,46 +1,30 @@
 package de.maxhenkel.gravestone.proxy;
 
-import java.awt.Color;
-
 import de.maxhenkel.gravestone.Config;
 import de.maxhenkel.gravestone.Log;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.ModBlocks;
 import de.maxhenkel.gravestone.ModItems;
 import de.maxhenkel.gravestone.entity.EntityGhostPlayer;
-import de.maxhenkel.gravestone.entity.RenderFactoryGhostPlayer;
 import de.maxhenkel.gravestone.events.BlockEvents;
 import de.maxhenkel.gravestone.events.DeathEvents;
 import de.maxhenkel.gravestone.events.UpdateCheckEvents;
 import de.maxhenkel.gravestone.gui.GuiHandler;
 import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelZombie;
-import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.DungeonHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
 
 public class CommonProxy {
 

@@ -21,7 +21,7 @@ public class GuiHandler implements IGuiHandler {
 			if(info==null){
 				return null;
 			}
-			return new GUIDeathItems(player, info);
+			return new GUIDeathItems(info);
 		}
 		
 		return null;

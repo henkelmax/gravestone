@@ -1,20 +1,17 @@
 package de.maxhenkel.gravestone.events;
 
 import java.util.UUID;
-
 import de.maxhenkel.gravestone.Config;
 import de.maxhenkel.gravestone.DeathInfo;
 import de.maxhenkel.gravestone.ModBlocks;
 import de.maxhenkel.gravestone.ModItems;
 import de.maxhenkel.gravestone.entity.EntityGhostPlayer;
 import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -58,7 +55,7 @@ public class BlockEvents {
 
 		TileEntityGraveStone graveTileEntity = (TileEntityGraveStone) te;
 
-		ItemStack stack = event.getItemInHand();
+		ItemStack stack = event.getPlayer().getHeldItem(event.getHand());
 
 		if (stack == null || !stack.getItem().equals(Item.getItemFromBlock(ModBlocks.GRAVESTONE))) {
 			return;
@@ -111,8 +108,6 @@ public class BlockEvents {
 		if(!world.isAirBlock(event.getPos().up())){
 			return;
 		}
-		
-		EntityPlayer player = event.getPlayer();
 
 		TileEntity te = world.getTileEntity(event.getPos());
 

@@ -1,18 +1,12 @@
 package de.maxhenkel.gravestone;
 
-import java.util.Arrays;
 import java.util.UUID;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.math.BlockPos;
-import scala.reflect.internal.Trees.This;
 
 public class DeathInfo {
 	public static final String KEY_INFO = "info";

@@ -1,29 +1,19 @@
 package de.maxhenkel.gravestone.tileentity;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
-import javax.annotation.Nullable;
 import org.lwjgl.opengl.GL11;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 
 import de.maxhenkel.gravestone.Config;
 import de.maxhenkel.gravestone.util.PlayerSkins;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelHumanoidHead;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.ResourceLocation;
 
 public class TileentitySpecialRendererGraveStone extends TileEntitySpecialRenderer<TileEntityGraveStone> {

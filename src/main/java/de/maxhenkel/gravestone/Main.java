@@ -9,13 +9,13 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = Main.MODID, version = Main.VERSION, acceptedMinecraftVersions=Main.MC_VERSION/*, dependencies="required-after:forge@[13.19.1.2198,);"*/)
+@Mod(modid = Main.MODID, version = Main.VERSION, acceptedMinecraftVersions=Main.MC_VERSION)
 public class Main{
 	
     public static final String MODID = "gravestone";
-    public static final String VERSION = "1.7.2";
+    public static final String VERSION = "1.7.3";
     public static final String MC_VERSION = "[1.11.2]";
-    public static final int VERSION_NUMBER = 26;
+    public static final int VERSION_NUMBER = 27;
 
 	@Instance
     private static Main instance;

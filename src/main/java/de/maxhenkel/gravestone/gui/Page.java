@@ -3,9 +3,6 @@ package de.maxhenkel.gravestone.gui;
 import java.util.Arrays;
 import de.maxhenkel.gravestone.DeathInfo.ItemInfo;
 import de.maxhenkel.gravestone.util.Tools;
-import net.minecraft.block.Block;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.item.Item;
 import net.minecraft.util.text.TextFormatting;
 
 public class Page {
