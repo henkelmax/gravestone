@@ -12,6 +12,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -97,7 +98,12 @@ public class GraveProcessor {
 				EntityItem item=items.get(i);
 				try {
 					ItemStack stack=item.getEntityItem();
-					graveStone.setInventorySlotContents(i, stack);
+					if(graveStone.getSizeInventory()>i){
+						graveStone.setInventorySlotContents(i, stack);
+					}else{
+						InventoryHelper.spawnItemStack(world, graveStone.getPos().getX(), graveStone.getPos().getY(), graveStone.getPos().getZ(), stack);
+					}
+					
 				} catch (Exception e) {
 					Log.w("Failed to add Item '" +item.getEntityItem().getUnlocalizedName() +"' to gravestone");
 				}

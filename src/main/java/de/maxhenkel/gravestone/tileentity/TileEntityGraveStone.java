@@ -1,7 +1,6 @@
 package de.maxhenkel.gravestone.tileentity;
 
 import de.maxhenkel.gravestone.util.Tools;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
@@ -76,10 +75,7 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
 		this.playerName = compound.getString(PLAYER_NAME);
 		this.playerUUID = compound.getString(PLAYER_UUID);
 		this.deathTime = compound.getLong(DEATH_TIME);
-
-		if (compound.hasKey(RENDER_HEAD)) {
-			this.renderHead = compound.getBoolean(RENDER_HEAD);
-		}
+		this.renderHead = compound.getBoolean(RENDER_HEAD);
 
 	}
 
@@ -178,51 +174,6 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
 		return this.inventory.removeStackFromSlot(index);
 	}
 	
-	public String getPlayerName() {
-		return this.playerName;
-	}
-
-	public void setPlayerName(String playerName) {
-		this.playerName = playerName;
-		markDirty();
-		if (world != null) {
-			IBlockState state = world.getBlockState(getPos());
-			world.notifyBlockUpdate(getPos(), state, state, 3);
-		}
-	}
-
-	public long getDeathTime() {
-		return this.deathTime;
-	}
-
-	public void setDeathTime(long time) {
-		this.deathTime = time;
-	}
-
-	public void setPlayerName(long time) {
-		this.deathTime = time;
-	}
-
-	public String getPlayerUUID() {
-		return playerUUID;
-	}
-
-	public void setPlayerUUID(String playerUUID) {
-		this.playerUUID = playerUUID;
-	}
-
-	public boolean renderHead() {
-		return renderHead;
-	}
-
-	public void setRenderHead(boolean renderHead) {
-		this.renderHead = renderHead;
-	}
-
-	public String getTimeString() {
-		return Tools.timeToString(deathTime);
-	}
-
 	@Override
 	public boolean isEmpty() {
 		return inventory.isEmpty();
@@ -232,5 +183,44 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
 	public boolean isUsableByPlayer(EntityPlayer player) {
 		return inventory.isUsableByPlayer(player);
 	}
+	
+	public String getPlayerName() {
+		return this.playerName;
+	}
 
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;
+		markDirty();
+	}
+
+	public long getDeathTime() {
+		return this.deathTime;
+	}
+
+	public void setDeathTime(long time) {
+		this.deathTime = time;
+		markDirty();
+	}
+
+	public String getPlayerUUID() {
+		return playerUUID;
+	}
+
+	public void setPlayerUUID(String playerUUID) {
+		this.playerUUID = playerUUID;
+		markDirty();
+	}
+
+	public boolean renderHead() {
+		return renderHead;
+	}
+
+	public void setRenderHead(boolean renderHead) {
+		this.renderHead = renderHead;
+		markDirty();
+	}
+
+	public String getTimeString() {
+		return Tools.timeToString(deathTime);
+	}
 }
