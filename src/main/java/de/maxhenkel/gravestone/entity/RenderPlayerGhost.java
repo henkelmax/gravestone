@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerArrow;
 import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
-import net.minecraft.client.renderer.entity.layers.LayerElytra;
 import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.util.ResourceLocation;
 
@@ -22,7 +21,6 @@ public class RenderPlayerGhost extends RenderLivingBase<EntityGhostPlayer> {
 		this.addLayer(new LayerBipedArmor(this));
 		this.addLayer(new LayerHeldItem(this));
 		this.addLayer(new LayerArrow(this));
-		this.addLayer(new LayerElytra(this));
 	}
 
 	public void doRender(EntityGhostPlayer entity, double x, double y, double z, float entityYaw, float partialTicks) {

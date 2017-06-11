@@ -20,16 +20,17 @@ public class ItemDeathInfo extends Item{
 		this.setRegistryName(UNLOCALIZED_NAME);
 		this.setMaxStackSize(1);
 	}
-	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World worldIn, EntityPlayer playerIn,
+			EnumHand hand) {
 		if(!worldIn.isRemote){
-			return super.onItemRightClick(worldIn, playerIn, hand);
+			return super.onItemRightClick(stack, worldIn, playerIn, hand);
 		}
 		
 		playerIn.openGui(Main.MODID, GuiHandler.ID_INFO, worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ());
 		
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
+		
 	}
 
 }

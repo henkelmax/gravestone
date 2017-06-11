@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -86,10 +87,10 @@ public class BlockGraveStone extends BlockContainer {
 	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, new IProperty[] { FACING });
 	}
-
+	
 	@Override
 	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY,
-			float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+			float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing());
 	}
 
@@ -154,10 +155,9 @@ public class BlockGraveStone extends BlockContainer {
 	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 		return (Item) null;
 	}
-
 	@Override
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, EnumFacing heldItem, float side, float hitX, float hitY) {
+			EnumHand hand, ItemStack facing, EnumFacing hitX, float hitY, float hitZ, float p_180639_10_) {
 		if (worldIn.isRemote) {
 			return true;
 		}
@@ -165,15 +165,14 @@ public class BlockGraveStone extends BlockContainer {
 		TileEntity tileentity = worldIn.getTileEntity(pos);
 
 		if (!(tileentity instanceof TileEntityGraveStone)) {
-			return super.onBlockActivated(worldIn, pos, state, playerIn, hand, heldItem, side, hitX, hitY);
+			return super.onBlockActivated(worldIn, pos, state, playerIn, hand, facing, hitX, hitY, hitZ, p_180639_10_);
 		}
 
 		TileEntityGraveStone grave = (TileEntityGraveStone) tileentity;
 
 		return displayGraveInfo(grave, playerIn);
-
 	}
-
+	
 	private boolean displayGraveInfo(TileEntityGraveStone grave, EntityPlayer player) {
 		String name = grave.getPlayerName();
 		String time = grave.getTimeString();

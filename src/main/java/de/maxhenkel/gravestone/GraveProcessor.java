@@ -158,7 +158,7 @@ public class GraveProcessor {
 		for(int i=0; i<drops.size(); i++){
 			ItemStack stack=drops.get(i);
 			if(stack!=null){
-				items[i]=new ItemInfo(Tools.getStringFromItem(stack.getItem()), stack.getCount(), stack.getMetadata());
+				items[i]=new ItemInfo(Tools.getStringFromItem(stack.getItem()), stack.stackSize, stack.getMetadata());
 			}
 		}
 		

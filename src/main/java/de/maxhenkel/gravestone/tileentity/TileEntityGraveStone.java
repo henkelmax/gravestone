@@ -68,7 +68,7 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
 
 		for (int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
-			ItemStack stack=new ItemStack(tag);
+			ItemStack stack=ItemStack.func_77949_a(tag);
 			inventory.setInventorySlotContents(i, stack);
 		}
 
@@ -172,11 +172,6 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
 		return this.inventory.removeStackFromSlot(index);
-	}
-	
-	@Override
-	public boolean isEmpty() {
-		return inventory.isEmpty();
 	}
 
 	@Override
