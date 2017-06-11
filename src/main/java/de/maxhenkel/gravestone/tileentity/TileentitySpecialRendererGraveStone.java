@@ -25,8 +25,8 @@ public class TileentitySpecialRendererGraveStone extends TileEntitySpecialRender
 	}
 
 	@Override
-	public void renderTileEntityAt(TileEntityGraveStone target, double x, double y, double z, float partialTicks,
-			int destroyStage) {
+	public void func_192841_a(TileEntityGraveStone target, double x, double y, double z, float partialTicks,
+			int destroyStage, float f) {
 		String name = target.getPlayerName();
 
 		if (name == null || name.isEmpty()) {

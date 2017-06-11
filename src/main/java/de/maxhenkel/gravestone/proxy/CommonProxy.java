@@ -12,8 +12,6 @@ import de.maxhenkel.gravestone.events.DeathEvents;
 import de.maxhenkel.gravestone.events.UpdateCheckEvents;
 import de.maxhenkel.gravestone.gui.GuiHandler;
 import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -50,11 +48,11 @@ public class CommonProxy {
 
 		GameRegistry.registerTileEntity(TileEntityGraveStone.class, "TileEntityGaveStone");
 
-		GameRegistry.addRecipe(new ItemStack(ModBlocks.GRAVESTONE), new Object[] { "CXX", "CXX", "DDD",
+		/*GameRegistry.addRecipe(new ItemStack(ModBlocks.GRAVESTONE), new Object[] { "CXX", "CXX", "DDD",
 				Character.valueOf('C'), Blocks.COBBLESTONE, Character.valueOf('D'), Blocks.DIRT });
 
 		GameRegistry.addRecipe(new ItemStack(ModBlocks.GRAVESTONE), new Object[] { "XXC", "XXC", "DDD",
-				Character.valueOf('C'), Blocks.COBBLESTONE, Character.valueOf('D'), Blocks.DIRT });
+				Character.valueOf('C'), Blocks.COBBLESTONE, Character.valueOf('D'), Blocks.DIRT });*/
 
 		EntityRegistry.registerModEntity(new ResourceLocation(Main.MODID, "player_ghost"), EntityGhostPlayer.class,
 				"player_ghost", 378, Main.instance(), 32, 1, true);
