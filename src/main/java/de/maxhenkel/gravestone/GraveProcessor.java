@@ -44,7 +44,7 @@ public class GraveProcessor {
 	public boolean placeGraveStone(List<EntityItem> drops) {
 		
 		for(EntityItem ei:drops){
-			this.drops.add(ei.getEntityItem());
+			this.drops.add(ei.getItem());
 		}
 		
 		try {
@@ -97,7 +97,7 @@ public class GraveProcessor {
 			for (int i=0; i<items.size(); i++) {
 				EntityItem item=items.get(i);
 				try {
-					ItemStack stack=item.getEntityItem();
+					ItemStack stack=item.getItem();
 					if(graveStone.getSizeInventory()>i){
 						graveStone.setInventorySlotContents(i, stack);
 					}else{
@@ -105,7 +105,7 @@ public class GraveProcessor {
 					}
 					
 				} catch (Exception e) {
-					Log.w("Failed to add Item '" +item.getEntityItem().getUnlocalizedName() +"' to gravestone");
+					Log.w("Failed to add Item '" +item.getItem().getUnlocalizedName() +"' to gravestone");
 				}
 			}
 		} catch (Exception e) {

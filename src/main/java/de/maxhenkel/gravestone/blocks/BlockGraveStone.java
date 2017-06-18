@@ -97,9 +97,9 @@ public class BlockGraveStone extends BlockContainer {
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
 		return new AxisAlignedBB(0.0F, 0.0F, 0.0F, 1.0F, 0.11F, 1.0F);
 	}
-
+	
 	@Override
-	public boolean isFullyOpaque(IBlockState state) {
+	public boolean isFullBlock(IBlockState state) {
 		return false;
 	}
 

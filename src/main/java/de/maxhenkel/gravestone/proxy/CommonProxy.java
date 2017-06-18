@@ -47,7 +47,7 @@ public class CommonProxy {
 		NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance(), new GuiHandler());
 
 		GameRegistry.registerTileEntity(TileEntityGraveStone.class, "TileEntityGaveStone");
-
+		
 		/*GameRegistry.addRecipe(new ItemStack(ModBlocks.GRAVESTONE), new Object[] { "CXX", "CXX", "DDD",
 				Character.valueOf('C'), Blocks.COBBLESTONE, Character.valueOf('D'), Blocks.DIRT });
 

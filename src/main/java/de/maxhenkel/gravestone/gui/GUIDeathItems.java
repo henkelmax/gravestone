@@ -111,9 +111,9 @@ public class GUIDeathItems extends GuiScreen {
 
 		String title = new TextComponentTranslation("gui.deathinfo.title").getFormattedText();
 
-		int titleWidth = this.fontRendererObj.getStringWidth(title);
+		int titleWidth = this.fontRenderer.getStringWidth(title);
 
-		this.fontRendererObj.drawString(TextFormatting.BLACK +"" +TextFormatting.UNDERLINE +title, (this.width - titleWidth) / 2, 30, 0);
+		this.fontRenderer.drawString(TextFormatting.BLACK +"" +TextFormatting.UNDERLINE +title, (this.width - titleWidth) / 2, 30, 0);
 
 		// Name
 
@@ -165,33 +165,33 @@ public class GUIDeathItems extends GuiScreen {
 		int left = (this.width - TEXTURE_X) / 2;
 		int offset = 40;
 		int offsetLeft = left + offset;
-		this.fontRendererObj.drawString(string, offsetLeft, height, 0);
+		this.fontRenderer.drawString(string, offsetLeft, height, 0);
 	}
 
 	public void drawItemSize(String string, int height) {
 		int left = (this.width - TEXTURE_X) / 2;
 		int offset = 15;
 		int offsetLeft = left + offset;
-		this.fontRendererObj.drawString(string, offsetLeft, height, 0);
+		this.fontRenderer.drawString(string, offsetLeft, height, 0);
 	}
 
 	public void drawLeft(String string, int height) {
 		int left = (this.width - TEXTURE_X) / 2;
 		int offset = 7;
 		int offsetLeft = left + offset;
-		this.fontRendererObj.drawString(string, offsetLeft, height, 0);
+		this.fontRenderer.drawString(string, offsetLeft, height, 0);
 	}
 
 	public void drawRight(String string, int height) {
 		int left = (this.width - TEXTURE_X) / 2;
 		int offset = 14;
 		//int offsetLeft = left + offset;
-		int strWidth = this.fontRendererObj.getStringWidth(string);
-		this.fontRendererObj.drawString(string, left + TEXTURE_X - strWidth - offset, height, 0);
+		int strWidth = this.fontRenderer.getStringWidth(string);
+		this.fontRenderer.drawString(string, left + TEXTURE_X - strWidth - offset, height, 0);
 	}
 
 	public FontRenderer getFontRenderer() {
-		return this.fontRendererObj;
+		return this.fontRenderer;
 	}
 
 }

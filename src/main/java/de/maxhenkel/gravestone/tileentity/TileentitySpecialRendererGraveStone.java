@@ -23,10 +23,10 @@ public class TileentitySpecialRendererGraveStone extends TileEntitySpecialRender
 	public TileentitySpecialRendererGraveStone() {
 		this.renderSkull = Config.renderSkull;
 	}
-
+	
 	@Override
-	public void func_192841_a(TileEntityGraveStone target, double x, double y, double z, float partialTicks,
-			int destroyStage, float f) {
+	public void render(TileEntityGraveStone target, double x, double y, double z, float partialTicks, int destroyStage,
+			float alpha) {
 		String name = target.getPlayerName();
 
 		if (name == null || name.isEmpty()) {
@@ -79,7 +79,7 @@ public class TileentitySpecialRendererGraveStone extends TileEntitySpecialRender
 			}catch(Exception e){}
 		}
 	}
-
+	
 	public void renderSkull(double x, double y, double z, String uuid, String name, int rotation) {
 
 		ModelBase modelbase = new ModelHumanoidHead();
