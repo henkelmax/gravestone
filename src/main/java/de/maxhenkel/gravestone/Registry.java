@@ -5,7 +5,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 public class Registry {
 
@@ -15,7 +16,8 @@ public class Registry {
 	}
 	
 	public static void registerItem(Item i) {
-		GameRegistry.register(i);
+		ForgeRegistries.ITEMS.register(i);
+		//GameRegistry.register(i);
 	}
 	
 	public static void addRenderBlock(Block b) {
@@ -24,11 +26,19 @@ public class Registry {
 	}
 	
 	public static void registerBlock(Block b) {
-		GameRegistry.register(b);
+		ForgeRegistries.BLOCKS.register(b);
+		//GameRegistry.register(b);
 	}
 
 	public static void registerItemBlock(Block b) {
-		GameRegistry.register(b);
-		GameRegistry.register(new ItemBlock(b).setRegistryName(b.getRegistryName()));
+		//GameRegistry.register(b);
+		ForgeRegistries.BLOCKS.register(b);
+		ForgeRegistries.ITEMS.register(new ItemBlock(b).setRegistryName(b.getRegistryName()));
+		//GameRegistry.register(new ItemBlock(b).setRegistryName(b.getRegistryName()));
 	}
+	
+	public static void regiserRecipe(IRecipe recipe){
+		ForgeRegistries.RECIPES.register(recipe);
+	}
+	
 }
