@@ -120,7 +120,7 @@ public class GraveProcessor {
 			location = new BlockPos(location.getX(), 1, location.getZ());
 		}
 
-		while (location.getY()<entity.getEntityWorld().getHeight()) {
+		while (location.getY()<world.getHeight()) {
 			if (isReplaceable(location)) {
 				return location;
 			}
