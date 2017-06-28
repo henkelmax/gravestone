@@ -25,7 +25,8 @@ public class TileentitySpecialRendererGraveStone extends TileEntitySpecialRender
 	}
 
 	@Override
-	public void renderTileEntityAt(TileEntityGraveStone target, double x, double y, double z, float partialTicks, int destroyStage) {
+	public void renderTileEntityAt(TileEntityGraveStone target, double x, double y, double z, float partialTicks,
+			int destroyStage) {
 		String name = target.getPlayerName();
 
 		if (name == null || name.isEmpty()) {
@@ -78,7 +79,7 @@ public class TileentitySpecialRendererGraveStone extends TileEntitySpecialRender
 			}catch(Exception e){}
 		}
 	}
-	
+
 	public void renderSkull(double x, double y, double z, String uuid, String name, int rotation) {
 
 		ModelBase modelbase = new ModelHumanoidHead();

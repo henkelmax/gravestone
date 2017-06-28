@@ -116,11 +116,11 @@ public class GraveProcessor {
 	public BlockPos getGraveStoneLocation() throws NoSpaceException {
 		BlockPos location = new BlockPos(deathPosition.getX(), deathPosition.getY(), deathPosition.getZ());
 		
-		if (world.isOutsideBuildHeight(location) && location.getY()<world.getHeight()) {
+		if (location.getY() < 1) {
 			location = new BlockPos(location.getX(), 1, location.getZ());
 		}
 
-		while (location.getY()<world.getHeight()) {
+		while (location.getY()<entity.getEntityWorld().getHeight()) {
 			if (isReplaceable(location)) {
 				return location;
 			}
