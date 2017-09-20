@@ -6,7 +6,6 @@ import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.entity.EntityGhostPlayer;
 import de.maxhenkel.gravestone.events.BlockEvents;
 import de.maxhenkel.gravestone.events.DeathEvents;
-import de.maxhenkel.gravestone.events.UpdateCheckEvents;
 import de.maxhenkel.gravestone.gui.GuiHandler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -33,7 +32,6 @@ public class CommonProxy {
 	}
 
 	public void init(FMLInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(new UpdateCheckEvents());
 		MinecraftForge.EVENT_BUS.register(new DeathEvents());
 		MinecraftForge.EVENT_BUS.register(new BlockEvents());
 

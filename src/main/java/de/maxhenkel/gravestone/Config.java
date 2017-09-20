@@ -12,7 +12,6 @@ import net.minecraftforge.common.config.Configuration;
 
 public class Config {
 
-	public static boolean checkUpdates = true;
 	public static Map<Integer, String> dimensionNames = new HashMap<Integer, String>();
 	public static String dateFormat = new String();
 	public static boolean renderSkull = true;
@@ -26,7 +25,6 @@ public class Config {
 	public static void init(Configuration config) {
 		config.load();
 
-		checkUpdates = checkUpdates(config);
 		dimensionNames = Collections.unmodifiableMap(getDimensionNames(config));
 		dateFormat = getDateFormat(config);
 		renderSkull = renderSkull(config);
@@ -46,11 +44,6 @@ public class Config {
 	 * defaultValues; try { s = config.getStringList(key, category,
 	 * defaultValues, comment); } catch (Exception e) { } return s; }
 	 */
-
-	private static boolean checkUpdates(Configuration config) {
-		return config.getBoolean("check_updates", "gravestone", true,
-				"Whether the mod should notify you when an update is available");
-	}
 
 	private static Map<Integer, String> getDimensionNames(Configuration config) {
 		String[] def = new String[] { "-1: Nether", "0: Overworld", "1: The End" };
