@@ -1,6 +1,9 @@
 package de.maxhenkel.gravestone.blocks;
 
 import java.util.Random;
+
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
 import net.minecraft.block.BlockContainer;
@@ -35,7 +38,7 @@ public class BlockGraveStone extends BlockContainer {
 
 	public static final String NAME = "gravestone";
 
-	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+	public static final PropertyDirection FACING = PropertyDirection.create("facing", Collections2.filter(Lists.newArrayList(EnumFacing.values()), EnumFacing.Plane.HORIZONTAL));
 
 	public BlockGraveStone() {
 		super(new Material(MapColor.DIRT));

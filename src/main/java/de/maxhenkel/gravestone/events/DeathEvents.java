@@ -76,13 +76,18 @@ public class DeathEvents {
 		}
 
 		try {
+            EntityLivingBase entity = (EntityLivingBase) event.getEntity();
+            GraveProcessor graveProcessor = new GraveProcessor(entity);
+
+            if(graveProcessor.checkSpongeBug()){
+                return;
+            }
 
 			List<EntityItem> drops = event.getDrops();
 
-			EntityLivingBase entity = (EntityLivingBase) event.getEntity();
-			GraveProcessor graveProcessor = new GraveProcessor(entity);
 			if (graveProcessor.placeGraveStone(drops)) {
-				event.setCanceled(true);
+				//event.setCanceled(true);
+                drops.clear();
 			}else{
 				if(entity instanceof EntityPlayerMP){
 					String modname=new TextComponentTranslation("message.name").getFormattedText();

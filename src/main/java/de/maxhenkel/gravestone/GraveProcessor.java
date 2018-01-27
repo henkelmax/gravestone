@@ -41,8 +41,32 @@ public class GraveProcessor {
 		}
 	}
 
+	public boolean checkSpongeBug(){
+        if(!world.getBlockState(deathPosition).getBlock().equals(ModBlocks.GRAVESTONE)){
+            return false;
+        }
+
+        TileEntity tile=world.getTileEntity(deathPosition);
+
+        if(!(tile instanceof TileEntityGraveStone)){
+            return false;
+        }
+
+        TileEntityGraveStone graveTile= (TileEntityGraveStone) tile;
+
+        if(System.currentTimeMillis()-graveTile.getDeathTime()>500){
+            return false;
+        }
+
+        if(!graveTile.getPlayerUUID().equals(entity.getUniqueID().toString())){
+            return false;
+        }
+
+        Log.e("LivingDropsEvent fired multiple times!");
+        return true;
+	}
+
 	public boolean placeGraveStone(List<EntityItem> drops) {
-		
 		for(EntityItem ei:drops){
 			this.drops.add(ei.getItem());
 		}
