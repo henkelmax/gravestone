@@ -58,7 +58,7 @@ public class Registry {
 	public static void registerBlocks(RegistryEvent.Register<Block> event) {
 		registerBlock(event.getRegistry(), ModBlocks.GRAVESTONE);
 		
-		GameRegistry.registerTileEntity(TileEntityGraveStone.class, "TileEntityGaveStone");
+		GameRegistry.registerTileEntity(TileEntityGraveStone.class, new ResourceLocation("TileEntityGaveStone"));
 	}
 
 	@SubscribeEvent
