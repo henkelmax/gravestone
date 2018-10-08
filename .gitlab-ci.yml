@@ -6,6 +6,7 @@ stages:
 build:
   stage: build
   script:
+    - chmod +x gradlew
     - ./gradlew setupDecompWorkspace
     - ./gradlew build
     - rm build/libs/*-sources.jar
