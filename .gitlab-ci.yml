@@ -5,11 +5,13 @@ stages:
 
 cache:
   paths:
-    - /home/gradle/.gradle/
+    - ./gradle_cache/
 
 build:
   stage: build
   script:
+    - mkdir -d gradle_cache
+    - GRADLE_USER_HOME=./gradle_cache/
     - ./gradlew setupDecompWorkspace
     - ./gradlew build
     - rm build/libs/*-sources.jar
