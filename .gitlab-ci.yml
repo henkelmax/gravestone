@@ -1,0 +1,17 @@
+image: gradle:4.10.2-jdk8
+
+stages:
+  - build
+
+build:
+  stage: build
+  script:
+    - ./gradlew setupDecompWorkspace
+    - ./gradlew build
+    - rm build/libs/*-sources.jar
+    - BUILD_FILE=$(find build/libs/*.jar -printf "%f")
+    - BUILD_FILE_PATH=build/libs/${BUILD_FILE}
+    - curl -u $upload_user:$upload_password -i -X PUT -T ${BUILD_FILE_PATH} -i ${upload_url}${BUILD_FILE}
+    - echo Successfully uploaded file to ${upload_url}${BUILD_FILE}
+  only:
+    - master
