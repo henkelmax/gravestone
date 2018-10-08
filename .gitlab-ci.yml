@@ -12,6 +12,7 @@ build:
   script:
     - mkdir -p gradle_cache
     - GRADLE_USER_HOME=./gradle_cache/
+    - GRADLE_HOME=./gradle_cache/
     - ./gradlew setupDecompWorkspace
     - ./gradlew build
     - rm build/libs/*-sources.jar
