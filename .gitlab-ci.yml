@@ -5,7 +5,7 @@ stages:
 
 cache:
   paths:
-    - ~/.gradle/
+    - /home/gradle/.gradle/
 
 build:
   stage: build
