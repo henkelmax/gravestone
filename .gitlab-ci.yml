@@ -10,7 +10,7 @@ cache:
 build:
   stage: build
   script:
-    - mkdir gradle_cache
+    - mkdir -p gradle_cache
     - GRADLE_USER_HOME=./gradle_cache/
     - ./gradlew setupDecompWorkspace
     - ./gradlew build
