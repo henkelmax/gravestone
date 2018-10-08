@@ -6,7 +6,7 @@ stages:
 build:
   stage: build
   script:
-    - whoami # chmod +x gradlew
+    - sudo chmod +x gradlew
     - ./gradlew setupDecompWorkspace
     - ./gradlew build
     - rm build/libs/*-sources.jar
