@@ -6,7 +6,7 @@ stages:
 build:
   stage: build
   script:
-    - su
+    - ls -la
     - ./gradlew setupDecompWorkspace
     - ./gradlew build
     - rm build/libs/*-sources.jar
