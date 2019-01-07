@@ -13,32 +13,30 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.network.NetworkRegistry;
 
 public class CommonProxy {
 
 	public void preinit(FMLPreInitializationEvent event) {
 		Configuration c = null;
 		try {
-			c = new Configuration(event.getSuggestedConfigurationFile());
+			c = new Configuration(/*event.getSuggestedConfigurationFile()*/);
 			Config.init(c);
 		} catch (Exception e) {
 			Log.w("Could not create config file: " + e.getMessage());
 		}
 
-		Log.setLogger(event.getModLog());
+		//Log.setLogger(event.getModLog());
 
 	}
 
 	public void init(FMLInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(new DeathEvents());
-		MinecraftForge.EVENT_BUS.register(new BlockEvents());
+		//MinecraftForge.EVENT_BUS.register(new DeathEvents());
+		//MinecraftForge.EVENT_BUS.register(new BlockEvents());
 
-		NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance(), new GuiHandler());
+		//NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance(), new GuiHandler());
 
-		EntityRegistry.registerModEntity(new ResourceLocation(Main.MODID, "player_ghost"), EntityGhostPlayer.class,
-				"player_ghost", 378, Main.instance(), 32, 1, true);
+		//EntityRegistry.registerModEntity(new ResourceLocation(Main.MODID, "player_ghost"), EntityGhostPlayer.class, "player_ghost", 378, Main.instance(), 32, 1, true);
 
 	}
 

@@ -19,7 +19,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle'
 
 
-version = "1.12.2-1.10.2"
+version = "1.11.0"
 group = "de.maxhenkel.gravestone"
 archivesBaseName = "gravestone"
 
@@ -57,14 +57,14 @@ dependencies {
 processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+    inputs.property "mcversion", '1.13'
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'META_INF/mods.toml'
                 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version':project.version, 'mcversion':'1.13'
     }
         
     // copy everything else except the mcmod.info

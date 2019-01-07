@@ -38,10 +38,10 @@ public class GUIDeathItems extends GuiScreen {
 	}
 
 	public void initGui() {
-		this.buttonList.clear();
+		this.buttons.clear();
 		int left = (this.width - TEXTURE_X) / 2;
-		this.buttonPrev = addButton(new GuiButton(0, left, 190, 75, 20, new TextComponentTranslation("button.prev").getFormattedText()));
-		this.buttonNext = addButton(new GuiButton(1, left + TEXTURE_X - 75, 190, 75, 20, new TextComponentTranslation("button.next").getFormattedText()));
+		//this.buttonPrev = addButton(new GuiButton(0, left, 190, 75, 20, new TextComponentTranslation("button.prev").getFormattedText()));
+		//this.buttonNext = addButton(new GuiButton(1, left + TEXTURE_X - 75, 190, 75, 20, new TextComponentTranslation("button.next").getFormattedText()));
 		this.buttonPrev.enabled=false;
 		if(pageList.getPages()<=0){
 			this.buttonNext.enabled=false;
@@ -79,12 +79,13 @@ public class GUIDeathItems extends GuiScreen {
 		}
 	}
 
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		super.drawScreen(mouseX, mouseY, partialTicks);
+	@Override
+	public void render(int mouseX, int mouseY, float partialTicks) {
+		super.render(mouseX, mouseY, partialTicks);
 
 		int left = (this.width - TEXTURE_X) / 2;
 
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		this.mc.getTextureManager().bindTexture(GUI_TEXTURE);
 		this.drawTexturedModalRect(left, 20, 0, 0, TEXTURE_X, TEXTURE_Y);
 
@@ -98,7 +99,6 @@ public class GUIDeathItems extends GuiScreen {
 			}
 
 		}
-
 	}
 
 	public void drawFirstPage(int mouseX, int mouseY) {
@@ -154,7 +154,7 @@ public class GUIDeathItems extends GuiScreen {
 
 		// Player
 		
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 		
 		EntityPlayer player=new EntityOtherPlayerMP(this.mc.world, new GameProfile(info.getUuid(), info.getName()));
 		GuiInventory.drawEntityOnScreen(width / 2, 175, 30, (width / 2) - mouseX, 100 - mouseY, player);

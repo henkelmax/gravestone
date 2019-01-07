@@ -2,12 +2,11 @@ package de.maxhenkel.gravestone.entity;
 
 import java.util.UUID;
 import javax.annotation.Nullable;
-
 import com.google.common.base.Predicate;
 import de.maxhenkel.gravestone.Config;
+import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAILookIdle;
@@ -25,6 +24,8 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 public class EntityGhostPlayer extends EntityMob {
@@ -36,18 +37,18 @@ public class EntityGhostPlayer extends EntityMob {
         this(worldIn);
 
         this.setPlayerUUID(playerUUID);
-        this.setCustomNameTag(playerName);
+        this.setCustomName(new TextComponentString(playerName));
     }
 
     public EntityGhostPlayer(World worldIn) {
-        super(worldIn);
-        this.setAlwaysRenderNameTag(false);
+        super(null, worldIn);
+        //this.setAlwaysRenderNameTag(false);
         this.setSize(0.6F, 1.95F);
     }
 
     @Override
     public boolean getAlwaysRenderNameTagForRender() {
-        return getAlwaysRenderNameTag();
+        return false;
     }
 
     @Override
@@ -62,7 +63,7 @@ public class EntityGhostPlayer extends EntityMob {
         if (Config.friendlyGhost) {
             this.targetTasks.addTask(10, new EntityAINearestAttackableTarget<>(this, EntityLiving.class, 10, false, true, new Predicate<EntityLiving>() {
                 public boolean apply(@Nullable EntityLiving entityLiving) {
-                    return entityLiving != null && IMob.VISIBLE_MOB_SELECTOR.apply(entityLiving) && !(entityLiving instanceof EntityCreeper) && !(entityLiving instanceof EntityGhostPlayer);
+                    return entityLiving != null && IMob.VISIBLE_MOB_SELECTOR.test(entityLiving) && !(entityLiving instanceof EntityCreeper) && !(entityLiving instanceof EntityGhostPlayer);
                 }
             }));
         } else {
@@ -71,26 +72,29 @@ public class EntityGhostPlayer extends EntityMob {
 
     }
 
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23000000417232513D);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
-    }
-
-    protected void entityInit() {
-        super.entityInit();
+    @Override
+    protected void registerAttributes() {
+        super.registerAttributes();
+        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23000000417232513D);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
+        this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
         this.getDataManager().register(PLAYER_UUID, new UUID(0, 0).toString());
     }
+
+    /*protected void entityInit() {
+        super.entityInit();
+        this.getDataManager().register(PLAYER_UUID, new UUID(0, 0).toString());
+    }*/
 
     @Override
     public boolean isEntityUndead() {
         return true;
     }
 
-    public EnumCreatureAttribute getCreatureAttribute() {
-        return EnumCreatureAttribute.UNDEAD;
+    @Override
+    public CreatureAttribute getCreatureAttribute() {
+        return CreatureAttribute.UNDEAD;
     }
 
     @Nullable
@@ -106,16 +110,15 @@ public class EntityGhostPlayer extends EntityMob {
     }
 
     private void setOverpowered() {
-        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4D);
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(20.0D);
+        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4D);
+        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(20.0D);
     }
 
     @Override
-    public void setCustomNameTag(String name) {
-        super.setCustomNameTag(name);
-
-        if (name.equals("henkelmax")) {
+    public void setCustomName(@Nullable ITextComponent name) {
+        super.setCustomName(name);
+        if (name.getUnformattedComponentText().equals("henkelmax")) {
             setOverpowered();
         }
     }
@@ -134,15 +137,14 @@ public class EntityGhostPlayer extends EntityMob {
     }
 
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound) {
-        super.writeEntityToNBT(compound);
+    public void writeAdditional(NBTTagCompound compound) {
+        super.writeAdditional(compound);
         compound.setString("player_uuid", getPlayerUUID().toString());
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound) {
-        super.readEntityFromNBT(compound);
-
+    public void readAdditional(NBTTagCompound compound) {
+        super.readAdditional(compound);
         if (compound.hasKey("player_uuid")) {
             String uuidStr = compound.getString("player_uuid");
 

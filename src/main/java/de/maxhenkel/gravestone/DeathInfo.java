@@ -62,11 +62,11 @@ public class DeathInfo {
 	public NBTTagCompound toNBT() {
 		NBTTagCompound compound = new NBTTagCompound();
 
-		compound.setInteger(KEY_POS_X, deathLocation.getX());
-		compound.setInteger(KEY_POS_Y, deathLocation.getY());
-		compound.setInteger(KEY_POS_Z, deathLocation.getZ());
+		compound.setInt(KEY_POS_X, deathLocation.getX());
+		compound.setInt(KEY_POS_Y, deathLocation.getY());
+		compound.setInt(KEY_POS_Z, deathLocation.getZ());
 
-		compound.setInteger(KEY_DIM, dimension);
+		compound.setInt(KEY_DIM, dimension);
 		compound.setString(KEY_NAME, name);
 		compound.setString(KEY_UUID, uuid.toString());
 		compound.setLong(KEY_TIME, time);
@@ -74,7 +74,7 @@ public class DeathInfo {
 		NBTTagList itemList = new NBTTagList();
 
 		for (ItemInfo s : items) {
-			itemList.appendTag(s.toNBT());
+			itemList.add(s.toNBT());
 		}
 
 		compound.setTag(KEY_ITEMS, itemList);
@@ -85,18 +85,18 @@ public class DeathInfo {
 	public void addToItemStack(ItemStack stack) {
 		NBTTagCompound compound = new NBTTagCompound();
 		compound.setTag(KEY_INFO, toNBT());
-		stack.setTagCompound(compound);
+		stack.setTag(compound);
 	}
 
 	public static DeathInfo fromNBT(NBTTagCompound compound) {
 		try{
-			int x = compound.getInteger(KEY_POS_X);
-			int y = compound.getInteger(KEY_POS_Y);
-			int z = compound.getInteger(KEY_POS_Z);
+			int x = compound.getInt(KEY_POS_X);
+			int y = compound.getInt(KEY_POS_Y);
+			int z = compound.getInt(KEY_POS_Z);
 
 			BlockPos deathLocation = new BlockPos(x, y, z);
 
-			int dimension = compound.getInteger(KEY_DIM);
+			int dimension = compound.getInt(KEY_DIM);
 			String name = compound.getString(KEY_NAME);
 			String uuid = "";
 			
@@ -107,10 +107,10 @@ public class DeathInfo {
 			long time = compound.getLong(KEY_TIME);
 
 			NBTTagList itemList = (NBTTagList) compound.getTag(KEY_ITEMS);
-			ItemInfo[] items = new ItemInfo[itemList.tagCount()];
+			ItemInfo[] items = new ItemInfo[itemList.size()];
 
-			for (int i = 0; i < itemList.tagCount(); i++) {
-				NBTTagCompound s = itemList.getCompoundTagAt(i);
+			for (int i = 0; i < itemList.size(); i++) {
+				NBTTagCompound s = itemList.getCompound(i);
 				items[i] = ItemInfo.fromNBT(s);
 			}
 
@@ -132,17 +132,17 @@ public class DeathInfo {
 			return null;
 		}
 
-		if (!stack.hasTagCompound()) {
+		if (!stack.hasTag()) {
 			return null;
 		}
 
-		NBTTagCompound compound = stack.getTagCompound();
+		NBTTagCompound compound = stack.getTag();
 
 		if (!compound.hasKey(KEY_INFO)) {
 			return null;
 		}
 
-		NBTTagCompound info = compound.getCompoundTag(KEY_INFO);
+		NBTTagCompound info = compound.getCompound(KEY_INFO);
 
 		if (info == null) {
 			return null;
@@ -170,16 +170,13 @@ public class DeathInfo {
 	public static class ItemInfo {
 		public static final String KEY_NAME = "name";
 		public static final String KEY_STACK_SIZE = "stacksize";
-		public static final String KEY_META = "meta";
 
 		private String name;
 		private int stackSize;
-		private int meta;
 
-		public ItemInfo(String name, int stackSize, int meta) {
+		public ItemInfo(String name, int stackSize) {
 			this.name = name;
 			this.stackSize = stackSize;
-			this.meta=meta;
 		}
 
 		public String getName() {
@@ -189,27 +186,17 @@ public class DeathInfo {
 		public int getStackSize() {
 			return stackSize;
 		}
-		
-		public int getMeta() {
-			return meta;
-		}
+
 
 		public NBTTagCompound toNBT() {
 			NBTTagCompound compound = new NBTTagCompound();
 			compound.setString(KEY_NAME, name);
-			compound.setInteger(KEY_STACK_SIZE, stackSize);
-			compound.setInteger(KEY_META, meta);
+			compound.setInt(KEY_STACK_SIZE, stackSize);
 			return compound;
 		}
 
 		public static ItemInfo fromNBT(NBTTagCompound compound) {
-			int meta=0;
-			try{
-				meta=compound.getInteger(KEY_META);
-			}catch(Exception e){}
-			
-			
-			return new ItemInfo(compound.getString(KEY_NAME), compound.getInteger(KEY_STACK_SIZE), meta);
+			return new ItemInfo(compound.getString(KEY_NAME), compound.getInt(KEY_STACK_SIZE));
 		}
 
 	}

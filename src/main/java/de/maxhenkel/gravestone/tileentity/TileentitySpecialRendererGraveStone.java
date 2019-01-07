@@ -1,88 +1,82 @@
 package de.maxhenkel.gravestone.tileentity;
 
-import java.util.UUID;
+import de.maxhenkel.gravestone.blocks.BlockGraveStone;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.util.EnumFacing;
 import org.lwjgl.opengl.GL11;
-
 import de.maxhenkel.gravestone.Config;
-import de.maxhenkel.gravestone.util.PlayerSkins;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelHumanoidHead;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
 
-public class TileentitySpecialRendererGraveStone extends TileEntitySpecialRenderer<TileEntityGraveStone> {
+public class TileentitySpecialRendererGraveStone extends TileEntityRenderer<TileEntityGraveStone> {
 
-	private boolean renderSkull;
+    private boolean renderSkull;
 
-	public TileentitySpecialRendererGraveStone() {
-		this.renderSkull = Config.renderSkull;
-	}
-	
-	@Override
-	public void render(TileEntityGraveStone target, double x, double y, double z, float partialTicks, int destroyStage,
-			float alpha) {
-		String name = target.getPlayerName();
+    public TileentitySpecialRendererGraveStone() {
+        this.renderSkull = Config.renderSkull;
+    }
 
-		if (name == null || name.isEmpty()) {
-			return;
-		}
+    @Override
+    public void render(TileEntityGraveStone target, double x, double y, double z, float partialTicks, int destroyStage) {
+        String name = target.getPlayerName();
 
-		GL11.glPushMatrix();
-		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.0F, (float) z + 0.5F);
-		GL11.glRotatef(180.0F, 1.0F, 0.0F, 0.0F);
+        if (name == null || name.isEmpty()) {
+            return;
+        }
 
-		GL11.glRotatef(-getDirection(target.getBlockMetadata()), 0.0F, 1.0F, 0.0F);
+        EnumFacing facing = target.getBlockState().get(BlockGraveStone.FACING);
 
-		FontRenderer renderer = getFontRenderer();
+        GL11.glPushMatrix();
+        GL11.glTranslatef((float) x + 0.5F, (float) y + 1.0F, (float) z + 0.5F);
+        GL11.glRotatef(180.0F, 1.0F, 0.0F, 0.0F);
 
-		if (renderer != null) {
-			int textWidth = renderer.getStringWidth(name);
-			float textScale = 0.8F / textWidth;
-			textScale = Math.min(textScale, 0.02F);
+        GL11.glRotatef(-getDirection(facing), 0.0F, 1.0F, 0.0F);
 
-			GL11.glTranslatef(-(textScale * textWidth) / 2.0F, 0.3F, 0.37F);
+        FontRenderer renderer = getFontRenderer();
 
-			GL11.glScalef(textScale, textScale, textScale);
+        if (renderer != null) {
+            int textWidth = renderer.getStringWidth(name);
+            float textScale = 0.8F / textWidth;
+            textScale = Math.min(textScale, 0.02F);
 
-			GL11.glDepthMask(false);
-			renderer.drawString(name, 0, 0, 0);
-			GL11.glDepthMask(true);
-		}
+            GL11.glTranslatef(-(textScale * textWidth) / 2.0F, 0.3F, 0.37F);
 
-		GL11.glPopMatrix();
+            GL11.glScalef(textScale, textScale, textScale);
 
-		boolean render = false;
+            GL11.glDepthMask(false);
+            renderer.drawString(name, 0, 0, 0);
+            GL11.glDepthMask(true);
+        }
 
-		IBlockState state = target.getWorld().getBlockState(target.getPos().down());
-		if (state == null) {
-			return;
-		}
+        GL11.glPopMatrix();
 
-		Block block = state.getBlock();
-		if (block == null) {
-			return;
-		}
+        boolean render = false;
 
-		if (block.isNormalCube(state, target.getWorld(), target.getPos().down())) {//is opaque
-			render = true;
-		}
+        IBlockState state = target.getWorld().getBlockState(target.getPos().down());
+        if (state == null) {
+            return;
+        }
 
-		if (target.renderHead() && target.getPlayerUUID() != null && !target.getPlayerUUID().isEmpty() && renderSkull && render) {
-			try{
-				renderSkull(x, y, z, target.getPlayerUUID(), target.getPlayerName(), target.getBlockMetadata());
-			}catch(Exception e){}
-		}
-	}
-	
-	public void renderSkull(double x, double y, double z, String uuid, String name, int rotation) {
+        Block block = state.getBlock();
+        if (block == null) {
+            return;
+        }
 
-		ModelBase modelbase = new ModelHumanoidHead();
+        if (block.isNormalCube(state, target.getWorld(), target.getPos().down())) {//is opaque
+            render = true;
+        }
+
+        if (target.renderHead() && target.getPlayerUUID() != null && !target.getPlayerUUID().isEmpty() && renderSkull && render) {
+            try {
+                renderSkull(x, y, z, target.getPlayerUUID(), target.getPlayerName(), facing);
+            } catch (Exception e) {
+            }
+        }
+    }
+
+    public void renderSkull(double x, double y, double z, String uuid, String name, EnumFacing rotation) {
+		/*ModelBase modelbase = new ModelHumanoidHead();
 		ResourceLocation resourcelocation = DefaultPlayerSkin.getDefaultSkinLegacy();
 		
 		if (uuid != null) {
@@ -116,23 +110,23 @@ public class TileentitySpecialRendererGraveStone extends TileEntitySpecialRender
 
 		modelbase.render((Entity) null, 0.0F, 0.0F, 0.0F, yaw, pitch, scale);
 
-		GlStateManager.popMatrix();
+		GlStateManager.popMatrix();*/
 
-	}
+    }
 
-	private int getDirection(int i) {
-		switch (i) {
-		case 2:
-			return 0;
-		case 4:
-			return 90;
-		case 3:
-			return 180;
-		case 5:
-			return 270;
-		default:
-			return 0;
-		}
-	}
+    private int getDirection(EnumFacing facing) {
+        switch (facing) {
+            case NORTH:
+                return 0;
+            case EAST:
+                return 90;
+            case SOUTH:
+                return 180;
+            case WEST:
+                return 270;
+            default:
+                return 0;
+        }
+    }
 
 }

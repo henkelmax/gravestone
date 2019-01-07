@@ -6,60 +6,61 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.init.Items;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.world.*;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+import javax.annotation.Nullable;
 
 public class BlockGraveStone extends BlockContainer {
 
     public static final String NAME = "gravestone";
 
-    public static final PropertyDirection FACING = PropertyDirection.create("facing", Collections2.filter(Lists.newArrayList(EnumFacing.values()), EnumFacing.Plane.HORIZONTAL));
+    public static final DirectionProperty FACING = DirectionProperty.create("facing", EnumFacing.Plane.HORIZONTAL);
 
     public BlockGraveStone() {
-        super(new Material(MapColor.DIRT));
-
-        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-        this.setUnlocalizedName(NAME);
+        super(Builder.create(Material.CACTUS, MapColor.DIRT).hardnessAndResistance(0.3F, Float.MAX_VALUE));
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, EnumFacing.NORTH));
         this.setRegistryName(Main.MODID, NAME);
-        this.setCreativeTab(CreativeTabs.DECORATIONS);
-        this.setHardness(0.3F);
-        this.setResistance(Float.MAX_VALUE);
-        this.useNeighborBrightness = true;
+        //this.setCreativeTab(CreativeTabs.DECORATIONS);
+        //this.setHardness(0.3F);
+        //this.setResistance(Float.MAX_VALUE);
+        //this.useNeighborBrightness = true;
     }
 
     @Override
-    public void onBlockDestroyedByExplosion(World worldIn, BlockPos pos, Explosion explosionIn) {
+    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+        builder.add(FACING);
+    }
+
+    @Override
+    public void onBlockExploded(IBlockState state, World world, BlockPos pos, Explosion explosion) {
 
     }
 
     @Override
-    public void onBlockExploded(World world, BlockPos pos, Explosion explosion) {
+    public void onExplosionDestroy(World p_180652_1_, BlockPos p_180652_2_, Explosion p_180652_3_) {
 
     }
 
@@ -69,47 +70,55 @@ public class BlockGraveStone extends BlockContainer {
     }
 
     @Override
-    public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
+    public boolean doesSideBlockRendering(IBlockState state, IWorldReader world, BlockPos pos, EnumFacing face) {
         return false;
     }
 
+    @Nullable
     @Override
-    public IBlockState getStateFromMeta(int meta) {
-        EnumFacing enumFacing = EnumFacing.getFront(meta);
-
-        if (enumFacing.getAxis() == EnumFacing.Axis.Y) {
-            enumFacing = EnumFacing.NORTH;
-        }
-
-        return this.getDefaultState().withProperty(FACING, enumFacing);
+    public IBlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing());
     }
 
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return ((EnumFacing) state.getValue(FACING)).getIndex();
-    }
+    /*
 
-    @Override
-    protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, new IProperty[]{FACING});
-    }
+                @Override
+                public IBlockState getStateFromMeta(int meta) {
+                    EnumFacing enumFacing = EnumFacing.getFront(meta);
 
-    @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY,
-                                            float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing());
-    }
+                    if (enumFacing.getAxis() == EnumFacing.Axis.Y) {
+                        enumFacing = EnumFacing.NORTH;
+                    }
 
-    @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return new AxisAlignedBB(0.0F, 0.0F, 0.0F, 1.0F, 0.11F, 1.0F);
-    }
+                    return this.getDefaultState().withProperty(FACING, enumFacing);
+                }
 
-    @Override
-    public boolean isFullBlock(IBlockState state) {
-        return false;
-    }
+                @Override
+                public int getMetaFromState(IBlockState state) {
+                    return ((EnumFacing) state.getValue(FACING)).getIndex();
+                }
 
+                @Override
+                protected BlockStateContainer createBlockState() {
+                    return new BlockStateContainer(this, new IProperty[]{FACING});
+                }
+
+                @Override
+                public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY,
+                                                        float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+                    return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing());
+                }
+
+                @Override
+                public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+                    return new AxisAlignedBB(0.0F, 0.0F, 0.0F, 1.0F, 0.11F, 1.0F);
+                }
+
+                @Override
+                public boolean isFullBlock(IBlockState state) {
+                    return false;
+                }
+            */
     @Override
     public boolean isFullCube(IBlockState state) {
         return false;
@@ -121,18 +130,13 @@ public class BlockGraveStone extends BlockContainer {
     }
 
     @Override
-    public boolean isNormalCube(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public boolean isNormalCube(IBlockState state, IBlockReader world, BlockPos pos) {
         return false;
     }
 
     @Override
-    public boolean canEntityDestroy(IBlockState state, IBlockAccess world, BlockPos pos, Entity entity) {
+    public boolean canEntityDestroy(IBlockState state, IBlockReader world, BlockPos pos, Entity entity) {
         return false;
-    }
-
-    @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new TileEntityGraveStone();
     }
 
     @Override
@@ -140,11 +144,44 @@ public class BlockGraveStone extends BlockContainer {
         return EnumBlockRenderType.MODEL;
     }
 
-    @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer() {
+    @Override
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
+    @Override
+    protected boolean canSilkHarvest() {
+        return true;
+    }
+
+    @Override
+    public boolean canSilkHarvest(IBlockState p_canSilkHarvest_1_, IWorldReader p_canSilkHarvest_2_, BlockPos p_canSilkHarvest_3_, EntityPlayer p_canSilkHarvest_4_) {
+        return true;
+    }
+
+    @Override
+    public Item asItem() {
+        return Items.AIR;
+    }
+
+    @Override
+    public boolean onBlockActivated(IBlockState state, World world, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z) {
+        if (world.isRemote) {
+            return true;
+        }
+
+        TileEntity tileentity = world.getTileEntity(pos);
+
+        if (!(tileentity instanceof TileEntityGraveStone)) {
+            return super.onBlockActivated(state, world, pos, player, hand, facing, x, y, z);
+        }
+
+        TileEntityGraveStone grave = (TileEntityGraveStone) tileentity;
+
+        return displayGraveInfo(grave, player);
+    }
+
+    /*
     @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
@@ -184,7 +221,7 @@ public class BlockGraveStone extends BlockContainer {
 
         return displayGraveInfo(grave, playerIn);
 
-    }
+    }*/
 
     private boolean displayGraveInfo(TileEntityGraveStone grave, EntityPlayer player) {
         String name = grave.getPlayerName();
@@ -204,17 +241,17 @@ public class BlockGraveStone extends BlockContainer {
     }
 
     @Override
-    public boolean isReplaceable(IBlockAccess worldIn, BlockPos pos) {
+    public boolean isReplaceable(IBlockState p_196253_1_, BlockItemUseContext p_196253_2_) {
         return false;
     }
 
     @Override
-    public boolean canPlaceTorchOnTop(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public boolean canPlaceTorchOnTop(IBlockState state, IWorldReaderBase world, BlockPos pos) {
         return false;
     }
 
     @Override
-    public boolean canBeReplacedByLeaves(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public boolean canBeReplacedByLeaves(IBlockState state, IWorldReaderBase world, BlockPos pos) {
         return false;
     }
 
@@ -223,8 +260,25 @@ public class BlockGraveStone extends BlockContainer {
         return false;
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+    public BlockFaceShape getBlockFaceShape(IBlockReader p_193383_1_, IBlockState p_193383_2_, BlockPos p_193383_3_, EnumFacing face) {
         return face == EnumFacing.DOWN ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
+    }
+
+    /*@Override
+    public VoxelShape getCollisionShape(IBlockState p_196268_1_, IBlockReader p_196268_2_, BlockPos p_196268_3_) {
+        return super.getCollisionShape(p_196268_1_, p_196268_2_, p_196268_3_);
+    }
+
+    @Override
+    public VoxelShape getRenderShape(IBlockState p_196247_1_, IBlockReader p_196247_2_, BlockPos p_196247_3_) {
+        return super.getRenderShape(p_196247_1_, p_196247_2_, p_196247_3_);
+    }*/
+
+    @Nullable
+    @Override
+    public TileEntity createNewTileEntity(IBlockReader iBlockReader) {
+        return new TileEntityGraveStone();
     }
 }

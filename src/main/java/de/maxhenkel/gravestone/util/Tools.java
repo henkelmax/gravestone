@@ -30,21 +30,21 @@ public class Tools {
 			return null;
 		}
 
-		return item.getRegistryName().getResourceDomain() + ":" + item.getRegistryName().getResourcePath();
+		return item.getRegistryName().getNamespace() + ":" + item.getRegistryName().getPath();
 	}
 
-	public static String translateItem(String str, int meta) {
+	public static String translateItem(String str) {
 		if (str == null) {
 			return null;
 		}
 
-		Item i = Item.REGISTRY.getObject(new ResourceLocation(str));
+		Item i = Item.REGISTRY.get(new ResourceLocation(str));
 
 		if (i == null) {
 			return null;
 		}
 
-		return i.getItemStackDisplayName(new ItemStack(i, 1, meta));
+		return i.getDisplayName(new ItemStack(i)).getUnformattedComponentText();
 	}
 
 	public static boolean isArrayEmpty(Object[] obj) {
@@ -90,7 +90,7 @@ public class Tools {
 		try {
 			String[] split = name.split(":");
 			if (split.length == 2) {
-				Block b = Block.REGISTRY.getObject(new ResourceLocation(split[0], split[1]));
+				Block b = Block.REGISTRY.get(new ResourceLocation(split[0], split[1]));
 				if (b.equals(Blocks.AIR)) {
 					return null;
 				} else {

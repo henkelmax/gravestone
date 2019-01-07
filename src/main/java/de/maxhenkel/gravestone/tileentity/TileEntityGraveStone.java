@@ -11,6 +11,8 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import javax.annotation.Nullable;
 
 public class TileEntityGraveStone extends TileEntity implements IInventory {
 
@@ -27,7 +29,8 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
 	private static final String RENDER_HEAD = "RenderHead";
 
 	public TileEntityGraveStone() {
-		this.inventory = new InventoryBasic(INV_NAME, false, 127);
+		super(null);
+		this.inventory = new InventoryBasic(new TextComponentString(INV_NAME), 127);
 		this.playerName = "";
 		this.deathTime = 0L;
 		this.playerUUID = "";
@@ -35,40 +38,37 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		super.writeToNBT(compound);
-
+	public NBTTagCompound write(NBTTagCompound compound) {
 		compound.setString(PLAYER_NAME, playerName);
 		compound.setLong(DEATH_TIME, deathTime);
 		compound.setString(PLAYER_UUID, playerUUID);
 		compound.setBoolean(RENDER_HEAD, renderHead);
 
-		
-		
+
+
 		NBTTagList list = new NBTTagList();
 
 		for (int i = 0; i < inventory.getSizeInventory(); i++) {
 			if (inventory.getStackInSlot(i) != null) {
-				NBTTagCompound tag = new NBTTagCompound();
-				inventory.getStackInSlot(i).writeToNBT(tag);
-				list.appendTag(tag);
+				NBTTagCompound tag=inventory.getStackInSlot(i).serializeNBT();
+				list.add(tag);
 			}
 		}
 
 		compound.setTag(TAG_NAME, list);
 
-		return compound;
+		return super.write(compound);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound compound) {
-		super.readFromNBT(compound);
-		NBTTagList list = compound.getTagList(TAG_NAME, 10);
-		this.inventory = new InventoryBasic(INV_NAME, false, list.tagCount());
+	public void read(NBTTagCompound compound) {
+		super.read(compound);
+		NBTTagList list = compound.getList(TAG_NAME, 10);
+		this.inventory = new InventoryBasic(new TextComponentString(INV_NAME), list.size());
 
-		for (int i = 0; i < list.tagCount(); i++) {
-			NBTTagCompound tag = list.getCompoundTagAt(i);
-			ItemStack stack=new ItemStack(tag);
+		for (int i = 0; i < list.size(); i++) {
+			NBTTagCompound tag = list.getCompound(i);
+			ItemStack stack=ItemStack.read(tag);
 			inventory.setInventorySlotContents(i, stack);
 		}
 
@@ -76,7 +76,6 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
 		this.playerUUID = compound.getString(PLAYER_UUID);
 		this.deathTime = compound.getLong(DEATH_TIME);
 		this.renderHead = compound.getBoolean(RENDER_HEAD);
-
 	}
 
 	@Override
@@ -86,20 +85,20 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
 
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.getNbtCompound());
+		this.read(pkt.getNbtCompound());
 	}
 
 	@Override
 	public NBTTagCompound getUpdateTag() {
-		return this.writeToNBT(new NBTTagCompound());
+		return this.write(new NBTTagCompound());
 	}
 
-	@Override
-	public String getName() {
-		return inventory.getName();
-	}
+    @Override
+    public ITextComponent getName() {
+        return inventory.getName();
+    }
 
-	@Override
+    @Override
 	public boolean hasCustomName() {
 		return inventory.hasCustomName();
 	}
@@ -109,7 +108,13 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
 		return inventory.getDisplayName();
 	}
 
-	@Override
+    @Nullable
+    @Override
+    public ITextComponent getCustomName() {
+        return inventory.getName();
+    }
+
+    @Override
 	public int getSizeInventory() {
 		return inventory.getSizeInventory();
 	}

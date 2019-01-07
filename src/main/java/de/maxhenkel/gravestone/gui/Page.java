@@ -47,7 +47,7 @@ public class Page {
 				continue;
 			}
 
-			String name = Tools.translateItem(s.getName(), s.getMeta());
+			String name = Tools.translateItem(s.getName());
 
 			if (name == null) {
 				continue;

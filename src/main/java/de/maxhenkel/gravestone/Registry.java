@@ -12,8 +12,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -21,11 +21,11 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class Registry {
 
 	public static void addRenderItem(Item item) {
-		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+		//ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
 	}
 
 	public static void addRenderBlock(Block b) {
-		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(b), 0, new ModelResourceLocation(b.getRegistryName(), "inventory"));
+		//ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(b), 0, new ModelResourceLocation(b.getRegistryName(), "inventory"));
 	}
 
 	public static void registerItem(IForgeRegistry<Item> registry, Item i) {
@@ -37,10 +37,10 @@ public class Registry {
 	}
 
 	public static void registerItemBlock(IForgeRegistry<Item> registry, Block b) {
-		registerItem(registry, new ItemBlock(b).setRegistryName(b.getRegistryName()));
+		registerItem(registry, new ItemBlock(b, new Item.Builder()).setRegistryName(b.getRegistryName()));
 	}
 
-	public static void regiserRecipe(IForgeRegistry<IRecipe> registry, IRecipe recipe) {
+	/*public static void regiserRecipe(IForgeRegistry<IRecipe> registry, IRecipe recipe) {
 		registry.register(recipe);
 	}
 
@@ -71,6 +71,6 @@ public class Registry {
 	public static void registerModels(ModelRegistryEvent event) {
 		addRenderBlock(ModBlocks.GRAVESTONE);
 		addRenderItem(ModItems.DEATH_INFO);
-	}
+	}*/
 
 }

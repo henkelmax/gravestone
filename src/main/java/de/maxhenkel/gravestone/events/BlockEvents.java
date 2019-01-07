@@ -1,10 +1,8 @@
 package de.maxhenkel.gravestone.events;
 
 import java.util.UUID;
-import de.maxhenkel.gravestone.Config;
-import de.maxhenkel.gravestone.DeathInfo;
-import de.maxhenkel.gravestone.ModBlocks;
-import de.maxhenkel.gravestone.ModItems;
+
+import de.maxhenkel.gravestone.*;
 import de.maxhenkel.gravestone.entity.EntityGhostPlayer;
 import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,195 +12,202 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(modid = Main.MODID)
 public class BlockEvents {
 
-	private boolean removeDeathNote;
-	private boolean onlyOwnersCanBreak;
-	private boolean spawnGhost;
+    private boolean removeDeathNote;
+    private boolean onlyOwnersCanBreak;
+    private boolean spawnGhost;
 
-	public BlockEvents() {
-		this.removeDeathNote = Config.removeDeathNote;
-		this.onlyOwnersCanBreak = Config.onlyPlayersCanBreak;
-		this.spawnGhost= Config.spawnGhost;
-	}
+    public BlockEvents() {
+        this.removeDeathNote = Config.removeDeathNote;
+        this.onlyOwnersCanBreak = Config.onlyPlayersCanBreak;
+        this.spawnGhost = Config.spawnGhost;
+    }
 
-	@SubscribeEvent
-	public void onBlockPlace(BlockEvent.PlaceEvent event) {
-		if (event.isCanceled()) {
-			return;
-		}
+    @SubscribeEvent
+    public void onBlockPlace(BlockEvent.PlaceEvent event) {
+        if (event.isCanceled()) {
+            return;
+        }
 
-		World world = event.getWorld();
+        IWorld world = event.getWorld();
 
-		if (world.isRemote) {
-			return;
-		}
+        if (world.isRemote()) {
+            return;
+        }
 
-		if (!event.getState().getBlock().equals(ModBlocks.GRAVESTONE)) {
-			return;
-		}
+        if (!event.getState().getBlock().equals(ModBlocks.GRAVESTONE)) {
+            return;
+        }
 
-		TileEntity te = event.getWorld().getTileEntity(event.getPos());
+        TileEntity te = event.getWorld().getTileEntity(event.getPos());
 
-		if (!(te instanceof TileEntityGraveStone)) {
-			return;
-		}
+        if (!(te instanceof TileEntityGraveStone)) {
+            return;
+        }
 
-		TileEntityGraveStone graveTileEntity = (TileEntityGraveStone) te;
+        TileEntityGraveStone graveTileEntity = (TileEntityGraveStone) te;
 
-		ItemStack stack = event.getPlayer().getHeldItem(event.getHand());
+        ItemStack stack = event.getPlayer().getHeldItem(event.getHand());
 
-		if (stack == null || !stack.getItem().equals(Item.getItemFromBlock(ModBlocks.GRAVESTONE))) {
-			return;
-		}
+        if (stack == null || !stack.getItem().equals(Item.getItemFromBlock(ModBlocks.GRAVESTONE))) {
+            return;
+        }
 
-		if (!stack.hasDisplayName()) {
-			return;
-		}
+        if (!stack.hasDisplayName()) {
+            return;
+        }
 
-		String name = stack.getDisplayName();
+        String name = stack.getDisplayName().getUnformattedComponentText();
 
-		if (name == null) {
-			return;
-		}
+        if (name == null) {
+            return;
+        }
 
-		graveTileEntity.setPlayerName(name);
-	}
+        graveTileEntity.setPlayerName(name);
+    }
 
-	@SubscribeEvent
-	public void onBlockBreak(BlockEvent.BreakEvent event) {
-		if (event.isCanceled()) {
-			return;
-		}
-		
-		World world = event.getWorld();
+    @SubscribeEvent
+    public void onBlockBreak(BlockEvent.BreakEvent event) {
+        if (event.isCanceled()) {
+            return;
+        }
 
-		if (world.isRemote) {
-			return;
-		}
+        IWorld world = event.getWorld();
 
-		if (!event.getState().getBlock().equals(ModBlocks.GRAVESTONE)) {
-			return;
-		}
-		
-		if(!checkBreak(event)){
-			return;
-		}
-		
-		removeDeathNote(event);
-		spawnGhost(event);
-	}
+        if (world.isRemote()) {
+            return;
+        }
 
-	private void spawnGhost(BreakEvent event) {
-		if (!spawnGhost) {
-			return;
-		}
-		
-		World world=event.getWorld();
-		
-		if(!world.isAirBlock(event.getPos().up())){
-			return;
-		}
+        if (!event.getState().getBlock().equals(ModBlocks.GRAVESTONE)) {
+            return;
+        }
 
-		TileEntity te = world.getTileEntity(event.getPos());
+        if (!checkBreak(event)) {
+            return;
+        }
 
-		if (te == null || !(te instanceof TileEntityGraveStone)) {
-			return;
-		}
+        removeDeathNote(event);
+        spawnGhost(event);
+    }
 
-		TileEntityGraveStone tileentity = (TileEntityGraveStone) te;
-		
-		UUID uuid=new UUID(0, 0);
-		
-		try{
-			uuid=UUID.fromString(tileentity.getPlayerUUID());
-		}catch(Exception e){}
-		
-		EntityGhostPlayer z=new EntityGhostPlayer(event.getWorld(), uuid, tileentity.getPlayerName());
-		z.setPosition(event.getPos().getX()+0.5, event.getPos().getY()+0.1, event.getPos().getZ()+0.5);
-		world.spawnEntity(z);
-	}
+    private void spawnGhost(BreakEvent event) {
+        if (!spawnGhost) {
+            return;
+        }
+        IWorld iWorld = event.getWorld();
+        if (!(iWorld instanceof World)) {
+            return;
+        }
+        World world = (World) iWorld;
 
-	private void removeDeathNote(BlockEvent.BreakEvent event) {
-		if (!removeDeathNote) {
-			return;
-		}
-		
-		EntityPlayer player = event.getPlayer();
+        if (!world.isAirBlock(event.getPos().up())) {
+            return;
+        }
 
-		InventoryPlayer inv = player.inventory;
+        TileEntity te = world.getTileEntity(event.getPos());
 
-		BlockPos pos = event.getPos();
-		int dim = player.dimension;
+        if (te == null || !(te instanceof TileEntityGraveStone)) {
+            return;
+        }
 
-		for (ItemStack stack : inv.mainInventory) {
-			if (stack != null && stack.getItem().equals(ModItems.DEATH_INFO)) {
-				if (stack.hasTagCompound() && stack.getTagCompound().hasKey(DeathInfo.KEY_INFO)) {
-					DeathInfo info = DeathInfo.fromNBT(stack.getTagCompound().getCompoundTag(DeathInfo.KEY_INFO));
-					if (info != null && dim == info.getDimension() && pos.equals(info.getDeathLocation())) {
-						inv.deleteStack(stack);
-					}
-				}
-			}
-		}
+        TileEntityGraveStone tileentity = (TileEntityGraveStone) te;
 
-		for (ItemStack stack : inv.armorInventory) {
-			if (stack != null && stack.getItem().equals(ModItems.DEATH_INFO)) {
-				inv.deleteStack(stack);
-			}
-		}
+        UUID uuid = new UUID(0, 0);
 
-		for (ItemStack stack : inv.offHandInventory) {
-			if (stack != null && stack.getItem().equals(ModItems.DEATH_INFO)) {
-				inv.deleteStack(stack);
-			}
-		}
-	}
+        try {
+            uuid = UUID.fromString(tileentity.getPlayerUUID());
+        } catch (Exception e) {
+        }
 
-	public boolean checkBreak(BlockEvent.BreakEvent event) {
-		if (!onlyOwnersCanBreak) {
-			return true;
-		}
+        EntityGhostPlayer z = new EntityGhostPlayer(world, uuid, tileentity.getPlayerName());
+        z.setPosition(event.getPos().getX() + 0.5, event.getPos().getY() + 0.1, event.getPos().getZ() + 0.5);
+        world.spawnEntity(z);
+    }
 
-		World world = event.getWorld();
+    private void removeDeathNote(BlockEvent.BreakEvent event) {
+        if (!removeDeathNote) {
+            return;
+        }
 
-		EntityPlayer player = event.getPlayer();
+        EntityPlayer player = event.getPlayer();
 
-		TileEntity te = world.getTileEntity(event.getPos());
+        InventoryPlayer inv = player.inventory;
 
-		if (te == null || !(te instanceof TileEntityGraveStone)) {
-			return true;
-		}
+        BlockPos pos = event.getPos();
+        int dim = player.dimension;
 
-		TileEntityGraveStone tileentity = (TileEntityGraveStone) te;
+        for (ItemStack stack : inv.mainInventory) {
+            if (stack != null && stack.getItem().equals(ModItems.DEATH_INFO)) {
+                if (stack.hasTag() && stack.getTag().hasKey(DeathInfo.KEY_INFO)) {
+                    DeathInfo info = DeathInfo.fromNBT(stack.getTag().getCompound(DeathInfo.KEY_INFO));
+                    if (info != null && dim == info.getDimension() && pos.equals(info.getDeathLocation())) {
+                        inv.deleteStack(stack);
+                    }
+                }
+            }
+        }
 
-		if (player instanceof EntityPlayerMP) {
-			EntityPlayerMP p = (EntityPlayerMP) player;
+        for (ItemStack stack : inv.armorInventory) {
+            if (stack != null && stack.getItem().equals(ModItems.DEATH_INFO)) {
+                inv.deleteStack(stack);
+            }
+        }
 
-			boolean isOp = p.canUseCommand(p.mcServer.getOpPermissionLevel(), "op");
-			
-			if (isOp) {
-				return true;
-			}
-		}
+        for (ItemStack stack : inv.offHandInventory) {
+            if (stack != null && stack.getItem().equals(ModItems.DEATH_INFO)) {
+                inv.deleteStack(stack);
+            }
+        }
+    }
 
-		String uuid = tileentity.getPlayerUUID();
+    public boolean checkBreak(BlockEvent.BreakEvent event) {
+        if (!onlyOwnersCanBreak) {
+            return true;
+        }
 
-		if (uuid == null) {
-			return true;
-		}
+        IWorld world = event.getWorld();
 
-		if (player.getUniqueID().toString().equals(uuid)) {
-			return true;
-		}
+        EntityPlayer player = event.getPlayer();
 
-		event.setCanceled(true);
-		return false;
-	}
+        TileEntity te = world.getTileEntity(event.getPos());
+
+        if (te == null || !(te instanceof TileEntityGraveStone)) {
+            return true;
+        }
+
+        TileEntityGraveStone tileentity = (TileEntityGraveStone) te;
+
+        if (player instanceof EntityPlayerMP) {
+            EntityPlayerMP p = (EntityPlayerMP) player;
+
+            boolean isOp = p.hasPermissionLevel(p.server.getOpPermissionLevel());
+
+            if (isOp) {
+                return true;
+            }
+        }
+
+        String uuid = tileentity.getPlayerUUID();
+
+        if (uuid == null) {
+            return true;
+        }
+
+        if (player.getUniqueID().toString().equals(uuid)) {
+            return true;
+        }
+
+        event.setCanceled(true);
+        return false;
+    }
 
 }

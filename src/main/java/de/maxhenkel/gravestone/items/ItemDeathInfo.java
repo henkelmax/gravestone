@@ -15,10 +15,9 @@ public class ItemDeathInfo extends Item{
 	private static final String UNLOCALIZED_NAME="death_info";
 	
 	public ItemDeathInfo() {
-		super();
-		this.setUnlocalizedName(UNLOCALIZED_NAME);
+		super(new Builder().maxStackSize(1));
 		this.setRegistryName(UNLOCALIZED_NAME);
-		this.setMaxStackSize(1);
+		//this.setMaxStackSize(1);
 	}
 	
 	@Override
@@ -27,7 +26,7 @@ public class ItemDeathInfo extends Item{
 			return super.onItemRightClick(worldIn, playerIn, hand);
 		}
 		
-		playerIn.openGui(Main.MODID, GuiHandler.ID_INFO, worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ());
+		//playerIn.displayGui(Main.MODID, GuiHandler.ID_INFO, worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ());
 		
 		return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 	}

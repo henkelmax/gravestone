@@ -1,12 +1,8 @@
 package de.maxhenkel.gravestone.events;
 
-import java.util.List;
-import de.maxhenkel.gravestone.Config;
-import de.maxhenkel.gravestone.DeathInfo;
-import de.maxhenkel.gravestone.Log;
+import java.util.Collection;
+import de.maxhenkel.gravestone.*;
 import de.maxhenkel.gravestone.DeathInfo.ItemInfo;
-import de.maxhenkel.gravestone.GraveProcessor;
-import de.maxhenkel.gravestone.ModItems;
 import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -18,9 +14,11 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(modid = Main.MODID)
 public class DeathEvents {
 
 	private boolean livingGraves;
@@ -83,7 +81,7 @@ public class DeathEvents {
                 return;
             }
 
-			List<EntityItem> drops = event.getDrops();
+			Collection<EntityItem> drops = event.getDrops();
 
 			if (graveProcessor.placeGraveStone(drops)) {
 				//event.setCanceled(true);
@@ -134,13 +132,13 @@ public class DeathEvents {
 		try {
 			givePlayerNote(player);
 		} catch (Exception e) {
-			Log.w("Failed to give player '" +player.getDisplayNameString() +"' death note");
+			Log.w("Failed to give player '" +player.getName().getUnformattedComponentText() +"' death note");
 		}
 
 	}
 	
 	public static void givePlayerNote(EntityPlayer player){
-		DeathInfo info=new DeathInfo(player.getPosition(), player.dimension, new ItemInfo[0], player.getDisplayNameString(), System.currentTimeMillis(), player.getUniqueID());
+		DeathInfo info=new DeathInfo(player.getPosition(), player.dimension, new ItemInfo[0], player.getName().getUnformattedComponentText(), System.currentTimeMillis(), player.getUniqueID());
 		ItemStack stack=new ItemStack(ModItems.DEATH_INFO);
 		
 		info.addToItemStack(stack);
