@@ -1,13 +1,22 @@
 buildscript {
     repositories {
-        jcenter()
+        mavenLocal()
         maven { url = "http://files.minecraftforge.net/maven" }
+        jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+    }
+    // This is only here while i'm activly developing FG, Remind me to remove when we publically release
+    configurations {
+        classpath.resolutionStrategy {
+            cacheDynamicVersionsFor 10, 'seconds'
+            cacheChangingModulesFor 0, 'seconds'
+        }
     }
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
 
 
 version = "1.12.2-1.10.2"
@@ -20,14 +29,29 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.5.2768"
-    runDir = "run"
+    mappings channel: 'snapshot', version: '20180921-1.13'
 
-    mappings = "snapshot_20171003"
+    runConfig {
+        name= "Minecraft Client"
+        main= "net.minecraftforge.userdev.UserdevLauncher"
+        ideaModuleName = "${project.name}_main"
+        workingDirectory = project.file("run").canonicalPath
+        environment "target", "fmldevclient"
+        environment "assetDirectory", downloadAssets.output.absolutePath
+    }
+
+    runConfig {
+        name= "Minecraft Server"
+        main= "net.minecraftforge.userdev.UserdevLauncher"
+        ideaModuleName = "${project.name}_main"
+        workingDirectory = project.file("run").canonicalPath
+        environment "target", "fmldevserver"
+        environment "assetDirectory", downloadAssets.output.absolutePath
+    }
 }
 
 dependencies {
-
+    minecraft 'net.minecraftforge.test:userdev:1.13-24.0.59-1.13-pre'
 }
 
 processResources {
@@ -37,7 +61,7 @@ processResources {
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
+        include 'META_INF/mods.toml'
                 
         // replace version and mcversion
         expand 'version':project.version, 'mcversion':project.minecraft.version
@@ -45,6 +69,6 @@ processResources {
         
     // copy everything else except the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+        exclude 'META_INF/mods.toml'
     }
 }
