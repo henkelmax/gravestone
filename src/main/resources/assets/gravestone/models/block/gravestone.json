@@ -1,8 +1,8 @@
 {
     "textures": {
-        "particle": "blocks/dirt",
-        "0": "blocks/dirt",
-        "1": "blocks/cobblestone"
+        "particle": "block/dirt",
+        "0": "block/dirt",
+        "1": "block/cobblestone"
     },
     "elements": [
         {

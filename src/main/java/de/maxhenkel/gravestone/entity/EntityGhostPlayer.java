@@ -4,10 +4,8 @@ import java.util.UUID;
 import javax.annotation.Nullable;
 import com.google.common.base.Predicate;
 import de.maxhenkel.gravestone.Config;
-import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.SharedMonsterAttributes;
+import de.maxhenkel.gravestone.Main;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
@@ -33,17 +31,16 @@ public class EntityGhostPlayer extends EntityMob {
     private static final DataParameter<String> PLAYER_UUID = EntityDataManager
             .<String>createKey(EntityGhostPlayer.class, DataSerializers.STRING);
 
-    public EntityGhostPlayer(World worldIn, UUID playerUUID, String playerName) {
-        this(worldIn);
+    public EntityGhostPlayer(World world) {
+        super(Main.ghost, world);
+        this.setSize(0.6F, 1.95F);
+    }
+
+    public EntityGhostPlayer(World world, UUID playerUUID, String playerName) {
+        this(world);
 
         this.setPlayerUUID(playerUUID);
         this.setCustomName(new TextComponentString(playerName));
-    }
-
-    public EntityGhostPlayer(World worldIn) {
-        super(null, worldIn);
-        //this.setAlwaysRenderNameTag(false);
-        this.setSize(0.6F, 1.95F);
     }
 
     @Override
@@ -82,11 +79,6 @@ public class EntityGhostPlayer extends EntityMob {
         this.getDataManager().register(PLAYER_UUID, new UUID(0, 0).toString());
     }
 
-    /*protected void entityInit() {
-        super.entityInit();
-        this.getDataManager().register(PLAYER_UUID, new UUID(0, 0).toString());
-    }*/
-
     @Override
     public boolean isEntityUndead() {
         return true;
@@ -99,7 +91,7 @@ public class EntityGhostPlayer extends EntityMob {
 
     @Nullable
     protected ResourceLocation getLootTable() {
-        return null;
+        return Main.ghostLootTable;
     }
 
     public void setPlayerUUID(UUID uuid) {

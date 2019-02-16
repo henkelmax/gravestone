@@ -7,8 +7,6 @@
 modLoader="javafml" #mandatory
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
 loaderVersion="[24,)" #mandatory (24 is current forge version)
-# A URL to query for updates for this mod. See the JSON update specification <here>
-updateJSONURL="http://maxhenkel.de/update/gravestone.json" #optional
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="https://minecraft.curseforge.com/projects/gravestone-mod/issues" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
@@ -27,10 +25,10 @@ modId="gravestone" #mandatory
 version="${version}" #mandatory
  # A display name for the mod
 displayName="Gravestone Mod" #mandatory
+# A URL to query for updates for this mod. See the JSON update specification <here>
+updateJSONURL="http://maxhenkel.de/update/gravestone.json" #optional
 # The description text for the mod (multi line!) (#mandatory)
-description='''
-
-'''
+description='''This mod adds a gravestone that stores the items of the player when he dies'''
 
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.gravestone]] #optional
@@ -48,6 +46,6 @@ description='''
 [[dependencies.gravestone]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.13]"
+    versionRange="[1.13.2]"
     ordering="NONE"
     side="BOTH"

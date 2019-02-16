@@ -1,0 +1,6 @@
+{
+    "block.gravestone.gravestone": "墓碑",
+    "message.died": "%s 死亡时间 %s",
+    "message.deathlocation": "死亡地点",
+    "message.no_deathlocation": "无死亡地点记录"
+}

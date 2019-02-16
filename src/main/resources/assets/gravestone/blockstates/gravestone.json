@@ -1,8 +1,8 @@
 {
     "variants": {
-        "facing=north": { "model": "gravestone:gravestone" },
-        "facing=south": { "model": "gravestone:gravestone", "y": 180 },
-        "facing=west":  { "model": "gravestone:gravestone", "y": 270 },
-        "facing=east":  { "model": "gravestone:gravestone", "y": 90 }
+        "facing=north": { "model": "gravestone:block/gravestone" },
+        "facing=south": { "model": "gravestone:block/gravestone", "y": 180 },
+        "facing=west":  { "model": "gravestone:block/gravestone", "y": 270 },
+        "facing=east":  { "model": "gravestone:block/gravestone", "y": 90 }
     }
 }

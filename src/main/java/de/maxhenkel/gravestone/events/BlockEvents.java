@@ -1,14 +1,12 @@
 package de.maxhenkel.gravestone.events;
 
 import java.util.UUID;
-
 import de.maxhenkel.gravestone.*;
 import de.maxhenkel.gravestone.entity.EntityGhostPlayer;
 import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -22,18 +20,9 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = Main.MODID)
 public class BlockEvents {
 
-    private boolean removeDeathNote;
-    private boolean onlyOwnersCanBreak;
-    private boolean spawnGhost;
-
-    public BlockEvents() {
-        this.removeDeathNote = Config.removeDeathNote;
-        this.onlyOwnersCanBreak = Config.onlyPlayersCanBreak;
-        this.spawnGhost = Config.spawnGhost;
-    }
-
     @SubscribeEvent
     public void onBlockPlace(BlockEvent.PlaceEvent event) {
+        // TODO fix event not working
         if (event.isCanceled()) {
             return;
         }
@@ -44,7 +33,7 @@ public class BlockEvents {
             return;
         }
 
-        if (!event.getState().getBlock().equals(ModBlocks.GRAVESTONE)) {
+        if (!event.getState().getBlock().equals(Main.graveStone)) {
             return;
         }
 
@@ -58,7 +47,7 @@ public class BlockEvents {
 
         ItemStack stack = event.getPlayer().getHeldItem(event.getHand());
 
-        if (stack == null || !stack.getItem().equals(Item.getItemFromBlock(ModBlocks.GRAVESTONE))) {
+        if (stack == null || !stack.getItem().equals(Main.graveStoneItem)) {
             return;
         }
 
@@ -87,7 +76,7 @@ public class BlockEvents {
             return;
         }
 
-        if (!event.getState().getBlock().equals(ModBlocks.GRAVESTONE)) {
+        if (!event.getState().getBlock().equals(Main.graveStone)) {
             return;
         }
 
@@ -100,7 +89,7 @@ public class BlockEvents {
     }
 
     private void spawnGhost(BreakEvent event) {
-        if (!spawnGhost) {
+        if (!Config.spawnGhost) {
             return;
         }
         IWorld iWorld = event.getWorld();
@@ -121,20 +110,24 @@ public class BlockEvents {
 
         TileEntityGraveStone tileentity = (TileEntityGraveStone) te;
 
-        UUID uuid = new UUID(0, 0);
+        UUID uuid = null;
 
         try {
             uuid = UUID.fromString(tileentity.getPlayerUUID());
         } catch (Exception e) {
         }
 
-        EntityGhostPlayer z = new EntityGhostPlayer(world, uuid, tileentity.getPlayerName());
-        z.setPosition(event.getPos().getX() + 0.5, event.getPos().getY() + 0.1, event.getPos().getZ() + 0.5);
-        world.spawnEntity(z);
+        if (uuid == null) {
+            return;
+        }
+
+        EntityGhostPlayer ghost = new EntityGhostPlayer(world, uuid, tileentity.getPlayerName());
+        ghost.setPosition(event.getPos().getX() + 0.5, event.getPos().getY() + 0.1, event.getPos().getZ() + 0.5);
+        world.spawnEntity(ghost);
     }
 
     private void removeDeathNote(BlockEvent.BreakEvent event) {
-        if (!removeDeathNote) {
+        if (!Config.removeDeathNote) {
             return;
         }
 
@@ -143,13 +136,13 @@ public class BlockEvents {
         InventoryPlayer inv = player.inventory;
 
         BlockPos pos = event.getPos();
-        int dim = player.dimension;
+        String dim = player.dimension.toString();
 
         for (ItemStack stack : inv.mainInventory) {
-            if (stack != null && stack.getItem().equals(ModItems.DEATH_INFO)) {
+            if (stack != null && stack.getItem().equals(Main.deathInfo)) {
                 if (stack.hasTag() && stack.getTag().hasKey(DeathInfo.KEY_INFO)) {
                     DeathInfo info = DeathInfo.fromNBT(stack.getTag().getCompound(DeathInfo.KEY_INFO));
-                    if (info != null && dim == info.getDimension() && pos.equals(info.getDeathLocation())) {
+                    if (info != null && dim.equals(info.getDimension()) && pos.equals(info.getDeathLocation())) {
                         inv.deleteStack(stack);
                     }
                 }
@@ -157,20 +150,20 @@ public class BlockEvents {
         }
 
         for (ItemStack stack : inv.armorInventory) {
-            if (stack != null && stack.getItem().equals(ModItems.DEATH_INFO)) {
+            if (stack != null && stack.getItem().equals(Main.deathInfo)) {
                 inv.deleteStack(stack);
             }
         }
 
         for (ItemStack stack : inv.offHandInventory) {
-            if (stack != null && stack.getItem().equals(ModItems.DEATH_INFO)) {
+            if (stack != null && stack.getItem().equals(Main.deathInfo)) {
                 inv.deleteStack(stack);
             }
         }
     }
 
     public boolean checkBreak(BlockEvent.BreakEvent event) {
-        if (!onlyOwnersCanBreak) {
+        if (!Config.onlyOwnersCanBreak) {
             return true;
         }
 

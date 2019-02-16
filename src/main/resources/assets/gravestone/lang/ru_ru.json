@@ -1,0 +1,16 @@
+{
+  "block.gravestone.gravestone": "Надгробие",
+  "item.gravestone.death_info": "Информация о смерти",
+  "message.died": "%s умер %s",
+  "message.deathlocation": "Место смерти",
+  "message.no_deathlocation": "Нет доступных мест смертей",
+  "gui.deathinfo.name": "Имя",
+  "gui.deathinfo.title": "Информация о смерти",
+  "gui.deathinfo.location": "Расположение",
+  "gui.deathinfo.dimension": "Измерение",
+  "gui.deathinfo.title.items": "Предметы при смерти",
+  "gui.deathinfo.page": "Стр.",
+  "gui.deathinfo.time": "Время",
+  "button.next": "След.",
+  "button.prev": "Пред."
+}

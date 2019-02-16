@@ -1,5 +1,6 @@
 package de.maxhenkel.gravestone.tileentity;
 
+import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -16,82 +17,83 @@ import javax.annotation.Nullable;
 
 public class TileEntityGraveStone extends TileEntity implements IInventory {
 
-	private InventoryBasic inventory;
-	private String playerName;
-	private String playerUUID;
-	private long deathTime;
-	private boolean renderHead;
-	private static final String TAG_NAME = "ItemStacks";
-	private static final String INV_NAME = "GraveInventory";
-	private static final String PLAYER_NAME = "PlayerName";
-	private static final String PLAYER_UUID = "PlayerUUID";
-	private static final String DEATH_TIME = "DeathTime";
-	private static final String RENDER_HEAD = "RenderHead";
+    public static final int INVENTORY_SIZE = 127;
 
-	public TileEntityGraveStone() {
-		super(null);
-		this.inventory = new InventoryBasic(new TextComponentString(INV_NAME), 127);
-		this.playerName = "";
-		this.deathTime = 0L;
-		this.playerUUID = "";
-		this.renderHead = true;
-	}
+    private InventoryBasic inventory;
+    private String playerName;
+    private String playerUUID;
+    private long deathTime;
+    private boolean renderHead;
+    private static final String TAG_NAME = "ItemStacks";
+    private static final String INV_NAME = "GraveInventory";
+    private static final String PLAYER_NAME = "PlayerName";
+    private static final String PLAYER_UUID = "PlayerUUID";
+    private static final String DEATH_TIME = "DeathTime";
+    private static final String RENDER_HEAD = "RenderHead";
 
-	@Override
-	public NBTTagCompound write(NBTTagCompound compound) {
-		compound.setString(PLAYER_NAME, playerName);
-		compound.setLong(DEATH_TIME, deathTime);
-		compound.setString(PLAYER_UUID, playerUUID);
-		compound.setBoolean(RENDER_HEAD, renderHead);
+    public TileEntityGraveStone() {
+        super(Main.graveTileEntity);
+        this.inventory = new InventoryBasic(new TextComponentString(INV_NAME), INVENTORY_SIZE);
+        this.playerName = "";
+        this.deathTime = 0L;
+        this.playerUUID = "";
+        this.renderHead = true;
+    }
+
+    @Override
+    public NBTTagCompound write(NBTTagCompound compound) {
+        compound.setString(PLAYER_NAME, playerName);
+        compound.setLong(DEATH_TIME, deathTime);
+        compound.setString(PLAYER_UUID, playerUUID);
+        compound.setBoolean(RENDER_HEAD, renderHead);
 
 
+        NBTTagList list = new NBTTagList();
 
-		NBTTagList list = new NBTTagList();
+        for (int i = 0; i < inventory.getSizeInventory(); i++) {
+            if (inventory.getStackInSlot(i) != null) {
+                NBTTagCompound tag = inventory.getStackInSlot(i).serializeNBT();
+                list.add(tag);
+            }
+        }
 
-		for (int i = 0; i < inventory.getSizeInventory(); i++) {
-			if (inventory.getStackInSlot(i) != null) {
-				NBTTagCompound tag=inventory.getStackInSlot(i).serializeNBT();
-				list.add(tag);
-			}
-		}
+        compound.setTag(TAG_NAME, list);
 
-		compound.setTag(TAG_NAME, list);
+        return super.write(compound);
+    }
 
-		return super.write(compound);
-	}
+    @Override
+    public void read(NBTTagCompound compound) {
+        super.read(compound);
+        NBTTagList list = compound.getList(TAG_NAME, 10);
+        this.inventory = new InventoryBasic(new TextComponentString(INV_NAME), list.size());
 
-	@Override
-	public void read(NBTTagCompound compound) {
-		super.read(compound);
-		NBTTagList list = compound.getList(TAG_NAME, 10);
-		this.inventory = new InventoryBasic(new TextComponentString(INV_NAME), list.size());
+        for (int i = 0; i < list.size(); i++) {
+            NBTTagCompound tag = list.getCompound(i);
+            ItemStack stack = ItemStack.read(tag);
+            inventory.setInventorySlotContents(i, stack);
+        }
 
-		for (int i = 0; i < list.size(); i++) {
-			NBTTagCompound tag = list.getCompound(i);
-			ItemStack stack=ItemStack.read(tag);
-			inventory.setInventorySlotContents(i, stack);
-		}
+        this.playerName = compound.getString(PLAYER_NAME);
+        this.playerUUID = compound.getString(PLAYER_UUID);
+        this.deathTime = compound.getLong(DEATH_TIME);
+        this.renderHead = compound.getBoolean(RENDER_HEAD);
+    }
 
-		this.playerName = compound.getString(PLAYER_NAME);
-		this.playerUUID = compound.getString(PLAYER_UUID);
-		this.deathTime = compound.getLong(DEATH_TIME);
-		this.renderHead = compound.getBoolean(RENDER_HEAD);
-	}
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(this.pos, 1, getUpdateTag());
+    }
 
-	@Override
-	public SPacketUpdateTileEntity getUpdatePacket() {
-		return new SPacketUpdateTileEntity(this.pos, 1, getUpdateTag());
-	}
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        this.read(pkt.getNbtCompound());
+    }
 
-	@Override
-	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		this.read(pkt.getNbtCompound());
-	}
-
-	@Override
-	public NBTTagCompound getUpdateTag() {
-		return this.write(new NBTTagCompound());
-	}
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return this.write(new NBTTagCompound());
+    }
 
     @Override
     public ITextComponent getName() {
@@ -99,14 +101,14 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
     }
 
     @Override
-	public boolean hasCustomName() {
-		return inventory.hasCustomName();
-	}
+    public boolean hasCustomName() {
+        return inventory.hasCustomName();
+    }
 
-	@Override
-	public ITextComponent getDisplayName() {
-		return inventory.getDisplayName();
-	}
+    @Override
+    public ITextComponent getDisplayName() {
+        return inventory.getDisplayName();
+    }
 
     @Nullable
     @Override
@@ -115,117 +117,117 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
     }
 
     @Override
-	public int getSizeInventory() {
-		return inventory.getSizeInventory();
-	}
+    public int getSizeInventory() {
+        return inventory.getSizeInventory();
+    }
 
-	@Override
-	public ItemStack getStackInSlot(int index) {
-		return inventory.getStackInSlot(index);
-	}
+    @Override
+    public ItemStack getStackInSlot(int index) {
+        return inventory.getStackInSlot(index);
+    }
 
-	@Override
-	public ItemStack decrStackSize(int index, int count) {
-		return inventory.decrStackSize(index, count);
-	}
+    @Override
+    public ItemStack decrStackSize(int index, int count) {
+        return inventory.decrStackSize(index, count);
+    }
 
-	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) {
-		this.inventory.setInventorySlotContents(index, stack);
-	}
+    @Override
+    public void setInventorySlotContents(int index, ItemStack stack) {
+        this.inventory.setInventorySlotContents(index, stack);
+    }
 
-	@Override
-	public int getInventoryStackLimit() {
-		return inventory.getInventoryStackLimit();
-	}
+    @Override
+    public int getInventoryStackLimit() {
+        return inventory.getInventoryStackLimit();
+    }
 
-	@Override
-	public void openInventory(EntityPlayer player) {
-		this.inventory.openInventory(player);
-	}
+    @Override
+    public void openInventory(EntityPlayer player) {
+        this.inventory.openInventory(player);
+    }
 
-	@Override
-	public void closeInventory(EntityPlayer player) {
-		this.inventory.closeInventory(player);
-	}
+    @Override
+    public void closeInventory(EntityPlayer player) {
+        this.inventory.closeInventory(player);
+    }
 
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		return inventory.isItemValidForSlot(index, stack);
-	}
+    @Override
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+        return inventory.isItemValidForSlot(index, stack);
+    }
 
-	@Override
-	public int getField(int id) {
-		return inventory.getField(id);
-	}
+    @Override
+    public int getField(int id) {
+        return inventory.getField(id);
+    }
 
-	@Override
-	public void setField(int id, int value) {
-		inventory.setField(id, value);
-	}
+    @Override
+    public void setField(int id, int value) {
+        inventory.setField(id, value);
+    }
 
-	@Override
-	public int getFieldCount() {
-		return inventory.getFieldCount();
-	}
+    @Override
+    public int getFieldCount() {
+        return inventory.getFieldCount();
+    }
 
-	@Override
-	public void clear() {
-		this.inventory.clear();
-	}
+    @Override
+    public void clear() {
+        this.inventory.clear();
+    }
 
-	@Override
-	public ItemStack removeStackFromSlot(int index) {
-		return this.inventory.removeStackFromSlot(index);
-	}
-	
-	@Override
-	public boolean isEmpty() {
-		return inventory.isEmpty();
-	}
+    @Override
+    public ItemStack removeStackFromSlot(int index) {
+        return this.inventory.removeStackFromSlot(index);
+    }
 
-	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
-		return inventory.isUsableByPlayer(player);
-	}
-	
-	public String getPlayerName() {
-		return this.playerName;
-	}
+    @Override
+    public boolean isEmpty() {
+        return inventory.isEmpty();
+    }
 
-	public void setPlayerName(String playerName) {
-		this.playerName = playerName;
-		markDirty();
-	}
+    @Override
+    public boolean isUsableByPlayer(EntityPlayer player) {
+        return inventory.isUsableByPlayer(player);
+    }
 
-	public long getDeathTime() {
-		return this.deathTime;
-	}
+    public String getPlayerName() {
+        return this.playerName;
+    }
 
-	public void setDeathTime(long time) {
-		this.deathTime = time;
-		markDirty();
-	}
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+        markDirty();
+    }
 
-	public String getPlayerUUID() {
-		return playerUUID;
-	}
+    public long getDeathTime() {
+        return this.deathTime;
+    }
 
-	public void setPlayerUUID(String playerUUID) {
-		this.playerUUID = playerUUID;
-		markDirty();
-	}
+    public void setDeathTime(long time) {
+        this.deathTime = time;
+        markDirty();
+    }
 
-	public boolean renderHead() {
-		return renderHead;
-	}
+    public String getPlayerUUID() {
+        return playerUUID;
+    }
 
-	public void setRenderHead(boolean renderHead) {
-		this.renderHead = renderHead;
-		markDirty();
-	}
+    public void setPlayerUUID(String playerUUID) {
+        this.playerUUID = playerUUID;
+        markDirty();
+    }
 
-	public String getTimeString() {
-		return Tools.timeToString(deathTime);
-	}
+    public boolean renderHead() {
+        return renderHead;
+    }
+
+    public void setRenderHead(boolean renderHead) {
+        this.renderHead = renderHead;
+        markDirty();
+    }
+
+    public String getTimeString() {
+        return Tools.timeToString(deathTime);
+    }
 }

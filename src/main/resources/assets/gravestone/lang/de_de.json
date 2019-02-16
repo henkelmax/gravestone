@@ -1,0 +1,19 @@
+{
+  "block.gravestone.gravestone": "Grabstein",
+  "item.gravestone.death_info": "Todesinfo",
+  "entity.gravestone.player_ghost": "Geisterspieler",
+  "message.died": "%s starb am %s",
+  "message.deathlocation": "Todesposition",
+  "message.no_deathlocation": "Keine Todesposition vorhanden",
+  "message.create_grave_failed": "Grabstein konnte nicht platziert werden",
+  "gui.deathinfo.name": "Name",
+  "gui.deathinfo.title": "Todesinfo",
+  "gui.deathinfo.location": "Position",
+  "gui.deathinfo.dimension": "Dimension",
+  "gui.deathinfo.title.items": "Todesgegenstände",
+  "gui.deathinfo.page": "Seite",
+  "gui.deathinfo.time": "Zeit",
+  "gui.deathitems": "Todesgegenstände",
+  "button.next": "Weiter",
+  "button.prev": "Zurück"
+}

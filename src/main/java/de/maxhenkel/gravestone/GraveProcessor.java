@@ -3,12 +3,10 @@ package de.maxhenkel.gravestone;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import de.maxhenkel.gravestone.DeathInfo.ItemInfo;
+import java.util.stream.Collectors;
 import de.maxhenkel.gravestone.blocks.BlockGraveStone;
 import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
 import de.maxhenkel.gravestone.util.NoSpaceException;
-import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -26,7 +24,6 @@ public class GraveProcessor {
     private World world;
     private BlockPos deathPosition;
     private BlockPos gravePosition;
-    private static List<Block> replaceableBlocks;
     private List<ItemStack> drops;
     private long time;
 
@@ -37,35 +34,6 @@ public class GraveProcessor {
         this.gravePosition = deathPosition;
         this.drops = new ArrayList<ItemStack>();
         this.time = System.currentTimeMillis();
-
-        if (replaceableBlocks == null) {
-            replaceableBlocks = Config.replaceableBlocks;
-        }
-    }
-
-    public boolean checkSpongeBug() {
-        if (!world.getBlockState(deathPosition).getBlock().equals(ModBlocks.GRAVESTONE)) {
-            return false;
-        }
-
-        TileEntity tile = world.getTileEntity(deathPosition);
-
-        if (!(tile instanceof TileEntityGraveStone)) {
-            return false;
-        }
-
-        TileEntityGraveStone graveTile = (TileEntityGraveStone) tile;
-
-        if (System.currentTimeMillis() - graveTile.getDeathTime() > 500) {
-            return false;
-        }
-
-        if (!graveTile.getPlayerUUID().equals(entity.getUniqueID().toString())) {
-            return false;
-        }
-
-        Log.e("LivingDropsEvent fired multiple times!");
-        return true;
     }
 
     public boolean placeGraveStone(Collection<EntityItem> drops) {
@@ -77,12 +45,12 @@ public class GraveProcessor {
             this.gravePosition = getGraveStoneLocation();
         } catch (NoSpaceException e) {
             this.gravePosition = deathPosition;
-            Log.i("Grave from '" + entity.getName() + "' cant be created (No space)");
+            Log.i("Grave of '" + entity.getName().getUnformattedComponentText() + "' cant be created (No space)");
             return false;
         }
 
         try {
-            world.setBlockState(gravePosition, ModBlocks.GRAVESTONE.getDefaultState().with(BlockGraveStone.FACING,
+            world.setBlockState(gravePosition, Main.graveStone.getDefaultState().with(BlockGraveStone.FACING,
                     entity.getHorizontalFacing().getOpposite()));
 
             if (isReplaceable(gravePosition.down())) {
@@ -165,7 +133,7 @@ public class GraveProcessor {
             return true;
         }
 
-        for (Block replaceableBlock : replaceableBlocks) {
+        for (Block replaceableBlock : Config.replaceableBlocks) {
             if (b.getRegistryName().toString().equals(replaceableBlock.getRegistryName().toString())) {
                 return true;
             }
@@ -181,16 +149,8 @@ public class GraveProcessor {
 
         EntityPlayer player = (EntityPlayer) entity;
 
-        ItemInfo[] items = new ItemInfo[drops.size()];
-        for (int i = 0; i < drops.size(); i++) {
-            ItemStack stack = drops.get(i);
-            if (stack != null) {
-                items[i] = new ItemInfo(Tools.getStringFromItem(stack.getItem()), stack.getCount());
-            }
-        }
-
-        DeathInfo info = new DeathInfo(gravePosition, player.dimension, items, player.getName().getUnformattedComponentText(), time, player.getUniqueID());
-        ItemStack stack = new ItemStack(ModItems.DEATH_INFO);
+        DeathInfo info = new DeathInfo(gravePosition, player.dimension.toString(), drops.stream().collect(Collectors.toList()), player.getName().getUnformattedComponentText(), time, player.getUniqueID());
+        ItemStack stack = new ItemStack(Main.deathInfo);
 
         info.addToItemStack(stack);
         player.inventory.addItemStackToInventory(stack);
@@ -198,30 +158,6 @@ public class GraveProcessor {
 
     public EntityLivingBase getEntity() {
         return entity;
-    }
-
-    public World getWorld() {
-        return world;
-    }
-
-    public BlockPos getDeathPosition() {
-        return deathPosition;
-    }
-
-    public static List<Block> getReplaceableBlocks() {
-        return replaceableBlocks;
-    }
-
-    public List<ItemStack> getDrops() {
-        return drops;
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public BlockPos getGravePosition() {
-        return gravePosition;
     }
 
 }

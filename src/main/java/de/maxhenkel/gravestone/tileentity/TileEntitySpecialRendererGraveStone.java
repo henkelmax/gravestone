@@ -1,19 +1,26 @@
 package de.maxhenkel.gravestone.tileentity;
 
 import de.maxhenkel.gravestone.blocks.BlockGraveStone;
+import de.maxhenkel.gravestone.util.PlayerSkins;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.model.ModelBase;
+import net.minecraft.client.renderer.entity.model.ModelHumanoidHead;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import de.maxhenkel.gravestone.Config;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.FontRenderer;
+import java.util.UUID;
 
-public class TileentitySpecialRendererGraveStone extends TileEntityRenderer<TileEntityGraveStone> {
+public class TileEntitySpecialRendererGraveStone extends TileEntityRenderer<TileEntityGraveStone> {
 
     private boolean renderSkull;
 
-    public TileentitySpecialRendererGraveStone() {
+    public TileEntitySpecialRendererGraveStone() {
         this.renderSkull = Config.renderSkull;
     }
 
@@ -76,42 +83,42 @@ public class TileentitySpecialRendererGraveStone extends TileEntityRenderer<Tile
     }
 
     public void renderSkull(double x, double y, double z, String uuid, String name, EnumFacing rotation) {
-		/*ModelBase modelbase = new ModelHumanoidHead();
-		ResourceLocation resourcelocation = DefaultPlayerSkin.getDefaultSkinLegacy();
-		
-		if (uuid != null) {
-			try{
-				resourcelocation=PlayerSkins.getSkin(UUID.fromString(uuid), name);
-			}catch(Exception e){}
-		}
+        ModelBase modelbase = new ModelHumanoidHead();
+        ResourceLocation resourcelocation = DefaultPlayerSkin.getDefaultSkinLegacy();
 
-		this.bindTexture(resourcelocation);
+        if (uuid != null) {
+            try {
+                resourcelocation = PlayerSkins.getSkin(UUID.fromString(uuid), name);
+            } catch (Exception e) {
+            }
+        }
 
-		GlStateManager.pushMatrix();
-		GlStateManager.disableCull();
+        this.bindTexture(resourcelocation);
 
-		GlStateManager.translate(x + 0.5F, y, z + 0.5F);
+        GlStateManager.pushMatrix();
+        GlStateManager.disableCull();
 
-		GlStateManager.enableRescaleNormal();
-		GlStateManager.scale(-1.0F, -1.0F, 1.0F);
-		GlStateManager.enableAlpha();
+        GlStateManager.translated(x + 0.5D, y, z + 0.5D);
 
-		GlStateManager.enableBlendProfile(GlStateManager.Profile.PLAYER_SKIN);
+        GlStateManager.enableRescaleNormal();
+        GlStateManager.scalef(-1.0F, -1.0F, 1.0F);
+        GlStateManager.enableAlphaTest();//enableAlpha
 
-		float yaw = 26F;
-		float pitch = -61.0F;
-		float scale = 0.0625F;
+        GlStateManager.enableBlendProfile(GlStateManager.Profile.PLAYER_SKIN);
 
-		GL11.glRotatef(180 - getDirection(rotation), 0.0F, 1.0F, 0.0F);
+        float yaw = 26F;
+        float pitch = -61.0F;
+        float scale = 0.0625F;
 
-		GL11.glTranslatef(0.0F, 0.14F, -0.18F);
+        GL11.glRotatef(180 - getDirection(rotation), 0.0F, 1.0F, 0.0F);
 
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glTranslatef(0.0F, 0.14F, -0.18F);
 
-		modelbase.render((Entity) null, 0.0F, 0.0F, 0.0F, yaw, pitch, scale);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		GlStateManager.popMatrix();*/
+        modelbase.render(null, 0.0F, 0.0F, 0.0F, yaw, pitch, scale);
 
+        GlStateManager.popMatrix();
     }
 
     private int getDirection(EnumFacing facing) {
@@ -119,11 +126,11 @@ public class TileentitySpecialRendererGraveStone extends TileEntityRenderer<Tile
             case NORTH:
                 return 0;
             case EAST:
-                return 90;
+                return 270;
             case SOUTH:
                 return 180;
             case WEST:
-                return 270;
+                return 90;
             default:
                 return 0;
         }

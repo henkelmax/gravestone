@@ -1,8 +1,8 @@
 package de.maxhenkel.gravestone.events;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import de.maxhenkel.gravestone.*;
-import de.maxhenkel.gravestone.DeathInfo.ItemInfo;
 import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -18,130 +18,116 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Main.MODID)
+@Mod.EventBusSubscriber
 public class DeathEvents {
 
-	private boolean livingGraves;
-	private boolean givePlayerNote;
-	
-	public DeathEvents() {
-		this.livingGraves=Config.livingGraves;
-		this.givePlayerNote=Config.giveDeathNotes;
-	}
+    public DeathEvents() {
+    }
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onPlayerCloneLast(PlayerEvent.Clone event) {
-		if (!givePlayerNote) {
-			return;
-		}
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onPlayerCloneLast(PlayerEvent.Clone event) {
+        if (!Config.giveDeathNotes) {
+            return;
+        }
 
-		if (event.isCanceled()) {
-			return;
-		}
+        if (event.isCanceled()) {
+            return;
+        }
 
-		if (!event.isWasDeath()) {
-			return;
-		}
+        if (!event.isWasDeath()) {
+            return;
+        }
 
-		if (Tools.keepInventory(event.getEntityPlayer())) {
-			return;
-		}
+        if (Tools.keepInventory(event.getEntityPlayer())) {
+            return;
+        }
 
-		for (ItemStack stack : event.getOriginal().inventory.mainInventory) {
-			if (DeathInfo.isDeathInfoItem(stack)) {
-				event.getEntityPlayer().inventory.addItemStackToInventory(stack);
-			}
-		}
+        for (ItemStack stack : event.getOriginal().inventory.mainInventory) {
+            if (DeathInfo.isDeathInfoItem(stack)) {
+                event.getEntityPlayer().inventory.addItemStackToInventory(stack);
+            }
+        }
 
-	}
+    }
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void playerDeath(LivingDropsEvent event) {
-		if (event.isCanceled()) {
-			return;
-		}
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void playerDeath(LivingDropsEvent event) {
+        if (event.isCanceled()) {
+            return;
+        }
 
-		if (!(event.getEntity() instanceof EntityLivingBase)) {
-			return;
-		}
+        if (!(event.getEntity() instanceof EntityLivingBase)) {
+            return;
+        }
 
-		if (!(event.getEntity() instanceof EntityPlayer) && !livingGraves) {
-			return;
-		}
+        if (!(event.getEntity() instanceof EntityPlayer) && !Config.livingGraves) {
+            return;
+        }
 
-		if (event.getEntity().getEntityWorld().isRemote) {
-			return;
-		}
+        if (event.getEntity().getEntityWorld().isRemote) {
+            return;
+        }
 
-		try {
+        try {
             EntityLivingBase entity = (EntityLivingBase) event.getEntity();
             GraveProcessor graveProcessor = new GraveProcessor(entity);
 
-            if(graveProcessor.checkSpongeBug()){
-                return;
-            }
+            Collection<EntityItem> drops = event.getDrops();
 
-			Collection<EntityItem> drops = event.getDrops();
-
-			if (graveProcessor.placeGraveStone(drops)) {
-				//event.setCanceled(true);
+            if (graveProcessor.placeGraveStone(drops)) {
                 drops.clear();
-			}else{
-				if(entity instanceof EntityPlayerMP){
-					String modname=new TextComponentTranslation("message.name").getFormattedText();
-					String message=new TextComponentTranslation("message.create_grave_failed").getFormattedText();
-					
-					EntityPlayerMP player=(EntityPlayerMP) entity;
-					
-					player.sendMessage(new TextComponentString("[" + modname + "] " +message));
-				}
-			}
-			if (givePlayerNote) {
-				graveProcessor.givePlayerNote();
-			}
-		} catch (Exception e) {
-			Log.w("Failed to process death of '" +event.getEntity().getName() +"'");
-		}
+            } else {
+                if (entity instanceof EntityPlayerMP) {
+                    String modname = new TextComponentTranslation("message.name").getFormattedText();
+                    String message = new TextComponentTranslation("message.create_grave_failed").getFormattedText();
 
-	}
+                    EntityPlayerMP player = (EntityPlayerMP) entity;
 
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void playerDeath(LivingDeathEvent event) {
-		if (event.isCanceled()) {
-			return;
-		}
+                    player.sendMessage(new TextComponentString("[" + modname + "] " + message));
+                }
+            }
+            if (Config.giveDeathNotes) {
+                graveProcessor.givePlayerNote();
+            }
+        } catch (Exception e) {
+            Log.w("Failed to process death of '" + event.getEntity().getName().getUnformattedComponentText() + "'");
+            e.printStackTrace();
+        }
 
-		if (!(event.getEntity() instanceof EntityPlayer)) {
-			return;
-		}
+    }
 
-		if (event.getEntity().getEntityWorld().isRemote) {
-			return;
-		}
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void playerDeath(LivingDeathEvent event) {
+        if (event.isCanceled()) {
+            return;
+        }
 
-		EntityPlayer player = (EntityPlayer) event.getEntity();
+        if (!(event.getEntity() instanceof EntityPlayer)) {
+            return;
+        }
 
-		if (!Tools.keepInventory(player)) {
-			return;
-		}
+        if (event.getEntity().getEntityWorld().isRemote) {
+            return;
+        }
 
-		/*
-		 * Give the player a note without items when he dies with keepInventory true
-		 */
-		
-		try {
-			givePlayerNote(player);
-		} catch (Exception e) {
-			Log.w("Failed to give player '" +player.getName().getUnformattedComponentText() +"' death note");
-		}
+        EntityPlayer player = (EntityPlayer) event.getEntity();
 
-	}
-	
-	public static void givePlayerNote(EntityPlayer player){
-		DeathInfo info=new DeathInfo(player.getPosition(), player.dimension, new ItemInfo[0], player.getName().getUnformattedComponentText(), System.currentTimeMillis(), player.getUniqueID());
-		ItemStack stack=new ItemStack(ModItems.DEATH_INFO);
-		
-		info.addToItemStack(stack);
-		player.inventory.addItemStackToInventory(stack);
-	}
+        if (!Tools.keepInventory(player)) {
+            return;
+        }
+
+        /*
+         * Give the player a note without items when he dies with keepInventory true
+         */
+        try {
+            DeathInfo info = new DeathInfo(player.getPosition(), player.dimension.getRegistryName().toString(), new ArrayList<>(), player.getName().getUnformattedComponentText(), System.currentTimeMillis(), player.getUniqueID());
+            ItemStack stack = new ItemStack(Main.deathInfo);
+
+            info.addToItemStack(stack);
+            player.inventory.addItemStackToInventory(stack);
+        } catch (Exception e) {
+            Log.w("Failed to give player '" + player.getName().getUnformattedComponentText() + "' death note");
+        }
+
+    }
 }

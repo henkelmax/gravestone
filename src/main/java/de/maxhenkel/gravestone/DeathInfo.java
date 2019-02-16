@@ -1,5 +1,7 @@
 package de.maxhenkel.gravestone;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -9,196 +11,161 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 
 public class DeathInfo {
-	public static final String KEY_INFO = "info";
-	public static final String KEY_POS_X = "pos_x";
-	public static final String KEY_POS_Y = "pos_y";
-	public static final String KEY_POS_Z = "pos_z";
-	public static final String KEY_DIM = "dim";
-	public static final String KEY_TIME = "time";
-	public static final String KEY_ITEMS = "items";
-	public static final String KEY_NAME = "name";
-	public static final String KEY_UUID = "uuid";
+    public static final String KEY_INFO = "info";
+    public static final String KEY_POS_X = "pos_x";
+    public static final String KEY_POS_Y = "pos_y";
+    public static final String KEY_POS_Z = "pos_z";
+    public static final String KEY_DIM = "dim";
+    public static final String KEY_TIME = "time";
+    public static final String KEY_ITEMS = "items";
+    public static final String KEY_NAME = "name";
+    public static final String KEY_UUID = "uuid";
 
-	private BlockPos deathLocation;
-	private int dimension;
-	private ItemInfo[] items;
-	private String name;
-	private UUID uuid;
-	private long time;
+    private BlockPos deathLocation;
+    private String dimension;
+    private List<ItemStack> items;
+    private String name;
+    private UUID uuid;
+    private long time;
 
-	public DeathInfo(BlockPos deathLocation, int dimension, ItemInfo[] items, String name, long time, UUID uuid) {
-		this.deathLocation = deathLocation;
-		this.dimension = dimension;
-		this.items = items;
-		this.name = name;
-		this.time = time;
-		this.uuid=uuid;
-	}
+    public DeathInfo(BlockPos deathLocation, String dimension, List<ItemStack> items, String name, long time, UUID uuid) {
+        this.deathLocation = deathLocation;
+        this.dimension = dimension;
+        this.items = items;
+        this.name = name;
+        this.time = time;
+        this.uuid = uuid;
+    }
 
-	public BlockPos getDeathLocation() {
-		return deathLocation;
-	}
+    public BlockPos getDeathLocation() {
+        return deathLocation;
+    }
 
-	public int getDimension() {
-		return dimension;
-	}
+    public String getDimension() {
+        return dimension;
+    }
 
-	public ItemInfo[] getItems() {
-		return items;
-	}
+    public List<ItemStack> getItems() {
+        return items;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public long getTime() {
-		return time;
-	}
+    public long getTime() {
+        return time;
+    }
 
-	public UUID getUuid() {
-		return uuid;
-	}
+    public UUID getUuid() {
+        return uuid;
+    }
 
-	public NBTTagCompound toNBT() {
-		NBTTagCompound compound = new NBTTagCompound();
+    public NBTTagCompound toNBT() {
+        NBTTagCompound compound = new NBTTagCompound();
 
-		compound.setInt(KEY_POS_X, deathLocation.getX());
-		compound.setInt(KEY_POS_Y, deathLocation.getY());
-		compound.setInt(KEY_POS_Z, deathLocation.getZ());
+        compound.setInt(KEY_POS_X, deathLocation.getX());
+        compound.setInt(KEY_POS_Y, deathLocation.getY());
+        compound.setInt(KEY_POS_Z, deathLocation.getZ());
 
-		compound.setInt(KEY_DIM, dimension);
-		compound.setString(KEY_NAME, name);
-		compound.setString(KEY_UUID, uuid.toString());
-		compound.setLong(KEY_TIME, time);
+        compound.setString(KEY_DIM, dimension);
+        compound.setString(KEY_NAME, name);
+        compound.setString(KEY_UUID, uuid.toString());
+        compound.setLong(KEY_TIME, time);
 
-		NBTTagList itemList = new NBTTagList();
+        NBTTagList itemList = new NBTTagList();
 
-		for (ItemInfo s : items) {
-			itemList.add(s.toNBT());
-		}
+        for (ItemStack s : items) {
+            itemList.add(s.serializeNBT());
+        }
 
-		compound.setTag(KEY_ITEMS, itemList);
+        compound.setTag(KEY_ITEMS, itemList);
 
-		return compound;
-	}
+        return compound;
+    }
 
-	public void addToItemStack(ItemStack stack) {
-		NBTTagCompound compound = new NBTTagCompound();
-		compound.setTag(KEY_INFO, toNBT());
-		stack.setTag(compound);
-	}
+    public void addToItemStack(ItemStack stack) {
+        NBTTagCompound compound = new NBTTagCompound();
+        compound.setTag(KEY_INFO, toNBT());
+        stack.setTag(compound);
+    }
 
-	public static DeathInfo fromNBT(NBTTagCompound compound) {
-		try{
-			int x = compound.getInt(KEY_POS_X);
-			int y = compound.getInt(KEY_POS_Y);
-			int z = compound.getInt(KEY_POS_Z);
+    public static DeathInfo fromNBT(NBTTagCompound compound) {
+        try {
+            int x = compound.getInt(KEY_POS_X);
+            int y = compound.getInt(KEY_POS_Y);
+            int z = compound.getInt(KEY_POS_Z);
 
-			BlockPos deathLocation = new BlockPos(x, y, z);
+            BlockPos deathLocation = new BlockPos(x, y, z);
 
-			int dimension = compound.getInt(KEY_DIM);
-			String name = compound.getString(KEY_NAME);
-			String uuid = "";
-			
-			if(compound.hasKey(KEY_UUID)){
-				uuid=compound.getString(KEY_UUID);
-			}
-			
-			long time = compound.getLong(KEY_TIME);
+            String dimension = compound.getString(KEY_DIM);
+            String name = compound.getString(KEY_NAME);
+            String uuid = "";
 
-			NBTTagList itemList = (NBTTagList) compound.getTag(KEY_ITEMS);
-			ItemInfo[] items = new ItemInfo[itemList.size()];
+            if (compound.hasKey(KEY_UUID)) {
+                uuid = compound.getString(KEY_UUID);
+            }
 
-			for (int i = 0; i < itemList.size(); i++) {
-				NBTTagCompound s = itemList.getCompound(i);
-				items[i] = ItemInfo.fromNBT(s);
-			}
+            long time = compound.getLong(KEY_TIME);
 
-			return new DeathInfo(deathLocation, dimension, items, name, time, UUID.fromString(uuid));
-		}catch(Exception e){
-			e.printStackTrace();
-			return null;
-		}
-	}
+            NBTTagList itemList = (NBTTagList) compound.getTag(KEY_ITEMS);
+            List<ItemStack> items = new ArrayList<>();
 
-	public static DeathInfo getDeathInfoFromPlayerHand(EntityPlayer player) {
-		ItemStack stack = null;
+            for (int i = 0; i < itemList.size(); i++) {
+                NBTTagCompound comp = itemList.getCompound(i);
+                items.add(ItemStack.read(comp));
+            }
 
-		if (player.getHeldItemMainhand() != null && isDeathInfoItem(player.getHeldItemMainhand().getItem())) {
-			stack = player.getHeldItemMainhand();
-		} else if (player.getHeldItemOffhand() != null && isDeathInfoItem(player.getHeldItemOffhand().getItem())) {
-			stack = player.getHeldItemOffhand();
-		} else {
-			return null;
-		}
+            return new DeathInfo(deathLocation, dimension, items, name, time, UUID.fromString(uuid));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-		if (!stack.hasTag()) {
-			return null;
-		}
+    public static DeathInfo getDeathInfoFromPlayerHand(EntityPlayer player) {
+        ItemStack stack = null;
 
-		NBTTagCompound compound = stack.getTag();
+        if (player.getHeldItemMainhand() != null && isDeathInfoItem(player.getHeldItemMainhand().getItem())) {
+            stack = player.getHeldItemMainhand();
+        } else if (player.getHeldItemOffhand() != null && isDeathInfoItem(player.getHeldItemOffhand().getItem())) {
+            stack = player.getHeldItemOffhand();
+        } else {
+            return null;
+        }
 
-		if (!compound.hasKey(KEY_INFO)) {
-			return null;
-		}
+        if (!stack.hasTag()) {
+            return null;
+        }
 
-		NBTTagCompound info = compound.getCompound(KEY_INFO);
+        NBTTagCompound compound = stack.getTag();
 
-		if (info == null) {
-			return null;
-		}
+        if (!compound.hasKey(KEY_INFO)) {
+            return null;
+        }
 
-		return fromNBT(info);
-	}
+        NBTTagCompound info = compound.getCompound(KEY_INFO);
 
-	public static boolean isDeathInfoItem(Item item) {
-		if (item == null) {
-			return false;
-		} else {
-			return ModItems.DEATH_INFO.equals(item);
-		}
-	}
+        if (info == null) {
+            return null;
+        }
 
-	public static boolean isDeathInfoItem(ItemStack item) {
-		if (item == null) {
-			return false;
-		} else {
-			return isDeathInfoItem(item.getItem());
-		}
-	}
+        return fromNBT(info);
+    }
 
-	public static class ItemInfo {
-		public static final String KEY_NAME = "name";
-		public static final String KEY_STACK_SIZE = "stacksize";
+    public static boolean isDeathInfoItem(Item item) {
+        if (item == null) {
+            return false;
+        } else {
+            return Main.deathInfo.equals(item);
+        }
+    }
 
-		private String name;
-		private int stackSize;
-
-		public ItemInfo(String name, int stackSize) {
-			this.name = name;
-			this.stackSize = stackSize;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public int getStackSize() {
-			return stackSize;
-		}
-
-
-		public NBTTagCompound toNBT() {
-			NBTTagCompound compound = new NBTTagCompound();
-			compound.setString(KEY_NAME, name);
-			compound.setInt(KEY_STACK_SIZE, stackSize);
-			return compound;
-		}
-
-		public static ItemInfo fromNBT(NBTTagCompound compound) {
-			return new ItemInfo(compound.getString(KEY_NAME), compound.getInt(KEY_STACK_SIZE));
-		}
-
-	}
-
+    public static boolean isDeathInfoItem(ItemStack item) {
+        if (item == null) {
+            return false;
+        } else {
+            return isDeathInfoItem(item.getItem());
+        }
+    }
 }
