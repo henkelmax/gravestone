@@ -7,11 +7,10 @@ import de.maxhenkel.gravestone.Config;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.IRegistry;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nullable;
 
 public class Tools {
@@ -68,7 +67,7 @@ public class Tools {
         try {
             String[] split = name.split(":");
             if (split.length == 2) {
-                Block b = IRegistry.field_212618_g.get(new ResourceLocation(split[0], split[1])); //Block.REGISTRY.get(new ResourceLocation(split[0], split[1]));
+                Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(split[0], split[1]));
                 if (isAirBlock(b)) {
                     return null;
                 } else {
