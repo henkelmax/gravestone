@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -120,7 +121,7 @@ public class DeathEvents {
          * Give the player a note without items when he dies with keepInventory true
          */
         try {
-            DeathInfo info = new DeathInfo(player.getPosition(), player.dimension.getRegistryName().toString(), new ArrayList<>(), player.getName().getUnformattedComponentText(), System.currentTimeMillis(), player.getUniqueID());
+            DeathInfo info = new DeathInfo(player.getPosition(), DimensionType.func_212678_a(player.dimension).toString(), new ArrayList<>(), player.getName().getUnformattedComponentText(), System.currentTimeMillis(), player.getUniqueID());
             ItemStack stack = new ItemStack(Main.deathInfo);
 
             info.addToItemStack(stack);

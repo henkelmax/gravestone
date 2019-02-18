@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 
 public class GraveProcessor {
 
@@ -149,7 +150,7 @@ public class GraveProcessor {
 
         EntityPlayer player = (EntityPlayer) entity;
 
-        DeathInfo info = new DeathInfo(gravePosition, player.dimension.toString(), drops.stream().collect(Collectors.toList()), player.getName().getUnformattedComponentText(), time, player.getUniqueID());
+        DeathInfo info = new DeathInfo(gravePosition, DimensionType.func_212678_a(player.dimension).toString(), drops.stream().collect(Collectors.toList()), player.getName().getUnformattedComponentText(), time, player.getUniqueID());
         ItemStack stack = new ItemStack(Main.deathInfo);
 
         info.addToItemStack(stack);
