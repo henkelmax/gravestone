@@ -90,7 +90,7 @@ public class Main {
         MinecraftForge.EVENT_BUS.register(new BlockEvents());
         MinecraftForge.EVENT_BUS.register(this);
 
-        ghostLootTable = LootTableList.register(new ResourceLocation(Main.MODID, "entities/ghost_player"));
+        ghostLootTable = LootTableList.register(new ResourceLocation(Main.MODID, "entities/player_ghost"));
     }
 
     @SubscribeEvent
