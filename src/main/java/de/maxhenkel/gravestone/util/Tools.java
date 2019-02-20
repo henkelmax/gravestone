@@ -3,14 +3,18 @@ package de.maxhenkel.gravestone.util;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
+
 import de.maxhenkel.gravestone.Config;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.registries.ForgeRegistries;
+
 import javax.annotation.Nullable;
 
 public class Tools {
@@ -79,6 +83,19 @@ public class Tools {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static VoxelShape combine(VoxelShape... shapes) {
+        if (shapes.length <= 0) {
+            return VoxelShapes.empty();
+        }
+        VoxelShape combined = shapes[0];
+
+        for (int i = 1; i < shapes.length; i++) {
+            combined = VoxelShapes.or(combined, shapes[i]);
+        }
+
+        return combined;
     }
 
 }

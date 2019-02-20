@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
 import de.maxhenkel.gravestone.util.IItemBlock;
+import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
@@ -262,28 +263,41 @@ public class BlockGraveStone extends Block implements ITileEntityProvider, IItem
         return SHAPES.get(state.get(FACING));
     }
 
-    private static final VoxelShape BASE = Block.makeCuboidShape(0D, 0D, 0D, 16D, 2D, 16D);
+    private static final VoxelShape BASE1 = Block.makeCuboidShape(0D, 0D, 0D, 16D, 1D, 16D);
+    private static final VoxelShape BASE2 = Block.makeCuboidShape(1D, 1D, 1D, 15D, 2D, 15D);
 
     private static final Map<EnumFacing, VoxelShape> SHAPES = Maps.newEnumMap(ImmutableMap.of(
             EnumFacing.NORTH,
-            VoxelShapes.or(
-                    BASE,
-                    Block.makeCuboidShape(1D, 2D, 1D, 15D, 15D, 2D)
+            Tools.combine(
+                    BASE1,
+                    BASE2,
+                    Block.makeCuboidShape(1D, 2D, 1D, 15D, 12D, 2D),
+                    Block.makeCuboidShape(2D, 12D, 1D, 14D, 14D, 2D),
+                    Block.makeCuboidShape(3D, 14D, 1D, 13D, 15D, 2D)
             ),
             EnumFacing.SOUTH,
-            VoxelShapes.or(
-                    BASE,
-                    Block.makeCuboidShape(1D, 2D, 15D, 15D, 15D, 14D)
+            Tools.combine(
+                    BASE1,
+                    BASE2,
+                    Block.makeCuboidShape(1D, 2D, 15D, 15D, 12D, 14D),
+                    Block.makeCuboidShape(2D, 12D, 15D, 14D, 14D, 14D),
+                    Block.makeCuboidShape(3D, 14D, 15D, 13D, 15D, 14D)
             ),
             EnumFacing.EAST,
-            VoxelShapes.or(
-                    BASE,
-                    Block.makeCuboidShape(15D, 2D, 1D, 14D, 15D, 15D)
+            Tools.combine(
+                    BASE1,
+                    BASE2,
+                    Block.makeCuboidShape(15D, 2D, 1D, 14D, 12D, 15D),
+                    Block.makeCuboidShape(15D, 12D, 2D, 14D, 14D, 14D),
+                    Block.makeCuboidShape(15D, 14D, 3D, 14D, 15D, 13D)
             ),
             EnumFacing.WEST,
-            VoxelShapes.or(
-                    BASE,
-                    Block.makeCuboidShape(1D, 2D, 1D, 2D, 15D, 15D)
+            Tools.combine(
+                    BASE1,
+                    BASE2,
+                    Block.makeCuboidShape(1D, 2D, 1D, 2D, 12D, 15D),
+                    Block.makeCuboidShape(1D, 12D, 2D, 2D, 14D, 14D),
+                    Block.makeCuboidShape(1D, 14D, 3D, 2D, 15D, 13D)
             )
     ));
 
