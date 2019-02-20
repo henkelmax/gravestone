@@ -4,17 +4,23 @@ import de.maxhenkel.gravestone.DeathInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import javax.annotation.Nullable;
-import java.util.List;
 
 public class InventoryDeathItems implements IInventory {
 
-    private List<ItemStack> items;
+    private NonNullList<ItemStack> items;
+    private int invSize;
 
     public InventoryDeathItems(DeathInfo deathInfo) {
-        this.items = deathInfo.getItems();
+        invSize=54;
+        items = NonNullList.withSize(invSize, ItemStack.EMPTY);
+
+        for(int i=0; i<deathInfo.getItems().size()&&i<invSize; i++){
+            items.set(i, deathInfo.getItems().get(i));
+        }
     }
 
     @Override
@@ -35,12 +41,12 @@ public class InventoryDeathItems implements IInventory {
     @Nullable
     @Override
     public ITextComponent getCustomName() {
-        return getName();
+        return null;
     }
 
     @Override
     public int getSizeInventory() {
-        return 54;
+        return invSize;
     }
 
     @Override

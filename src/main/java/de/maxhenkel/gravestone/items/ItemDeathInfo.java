@@ -2,6 +2,7 @@ package de.maxhenkel.gravestone.items;
 
 import de.maxhenkel.gravestone.DeathInfo;
 import de.maxhenkel.gravestone.gui.GUIDeathItems;
+import de.maxhenkel.gravestone.gui.InventoryDeathItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -24,10 +25,9 @@ public class ItemDeathInfo extends Item {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
         DeathInfo info = DeathInfo.getDeathInfoFromPlayerHand(playerIn);
 
-        /*if (playerIn.isSneaking() && playerIn.abilities.isCreativeMode) {
+        if (playerIn.isSneaking() && playerIn.abilities.isCreativeMode) {
             playerIn.displayGUIChest(new InventoryDeathItems(info));
-        }else */
-        if (worldIn.isRemote) {
+        }else if (worldIn.isRemote) {
             openClientGui(info);
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
