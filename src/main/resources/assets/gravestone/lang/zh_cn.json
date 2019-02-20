@@ -1,6 +1,19 @@
 {
-    "block.gravestone.gravestone": "墓碑",
-    "message.died": "%s 死亡时间 %s",
-    "message.deathlocation": "死亡地点",
-    "message.no_deathlocation": "无死亡地点记录"
+  "block.gravestone.gravestone": "墓碑",
+  "item.gravestone.death_info": "死亡笔记",
+  "entity.gravestone.player_ghost": "幽灵玩家",
+  "message.died": "%s 死亡时间 %s",
+  "message.deathlocation": "死亡地点",
+  "message.no_deathlocation": "无死亡地点记录",
+  "message.create_grave_failed": "无法放置坟墓",
+  "gui.deathinfo.name": "名字",
+  "gui.deathinfo.title": "死亡笔记",
+  "gui.deathinfo.location": "位置",
+  "gui.deathinfo.dimension": "维度",
+  "gui.deathinfo.title.items": "生前物品",
+  "gui.deathinfo.page": "页",
+  "gui.deathinfo.time": "时间",
+  "gui.deathitems": "生前物品",
+  "button.next": "下一页",
+  "button.prev": "上一页"
 }
