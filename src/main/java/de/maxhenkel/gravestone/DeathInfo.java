@@ -18,7 +18,7 @@ public class DeathInfo {
     public static final String KEY_DIM = "dim";
     public static final String KEY_TIME = "time";
     public static final String KEY_ITEMS = "items";
-    public static final String KEY_NAME = "name";
+    public static final String KEY_NAME = "mod.name";
     public static final String KEY_UUID = "uuid";
 
     private BlockPos deathLocation;

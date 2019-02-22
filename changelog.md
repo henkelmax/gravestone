@@ -1,0 +1,4 @@
+- Improved GraveStone bounding volume
+- Fixed gradle buildscript
+- Updated Forge version
+- Added mod logo
