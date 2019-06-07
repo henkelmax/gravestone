@@ -1,6 +1,7 @@
 package de.maxhenkel.gravestone.events;
 
 import java.util.UUID;
+
 import de.maxhenkel.gravestone.*;
 import de.maxhenkel.gravestone.entity.EntityGhostPlayer;
 import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
@@ -21,8 +22,7 @@ import net.minecraftforge.fml.common.Mod;
 public class BlockEvents {
 
     @SubscribeEvent
-    public void onBlockPlace(BlockEvent.PlaceEvent event) {
-        // TODO fix event not working
+    public void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
         if (event.isCanceled()) {
             return;
         }
@@ -37,6 +37,12 @@ public class BlockEvents {
             return;
         }
 
+        if (!(event.getEntity() instanceof EntityPlayer)) {
+            return;
+        }
+
+        EntityPlayer player = (EntityPlayer) event.getEntity();
+
         TileEntity te = event.getWorld().getTileEntity(event.getPos());
 
         if (!(te instanceof TileEntityGraveStone)) {
@@ -45,10 +51,13 @@ public class BlockEvents {
 
         TileEntityGraveStone graveTileEntity = (TileEntityGraveStone) te;
 
-        ItemStack stack = event.getPlayer().getHeldItem(event.getHand());
+        ItemStack stack = player.getHeldItemMainhand();
 
         if (stack == null || !stack.getItem().equals(Main.graveStoneItem)) {
-            return;
+            stack = player.getHeldItemOffhand();
+            if (stack == null || !stack.getItem().equals(Main.graveStoneItem)) {
+                return;
+            }
         }
 
         if (!stack.hasDisplayName()) {

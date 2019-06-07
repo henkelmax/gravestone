@@ -2,9 +2,9 @@ package de.maxhenkel.gravestone;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
 import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -74,7 +74,43 @@ public class Config {
             replaceableBlocks = builder
                     .comment("The blocks that can be replaced with a grave when someone dies there")
                     .translation("replaceable_blocks")
-                    .define("replaceable_blocks", Arrays.asList(
+                    .define("replaceable_blocks",
+                            Arrays.asList(
+                                    "minecraft:tall_grass",
+                                    "minecraft:grass",
+                                    "minecraft:water",
+                                    "minecraft:lava",
+                                    "minecraft:dandelion",
+                                    "minecraft:lilac",
+                                    "minecraft:rose_bush",
+                                    "minecraft:peony",
+                                    "minecraft:sunflower",
+                                    "minecraft:poppy",
+                                    "minecraft:blue_orchid",
+                                    "minecraft:azure_bluet",
+                                    "minecraft:oxeye_daisy",
+                                    "minecraft:orange_tulip",
+                                    "minecraft:pink_tulip",
+                                    "minecraft:red_tulip",
+                                    "minecraft:white_tulip",
+                                    "minecraft:allium",
+                                    "minecraft:fern",
+                                    "minecraft:large_fern",
+                                    "minecraft:spruce_sapling",
+                                    "minecraft:acacia_sapling",
+                                    "minecraft:birch_sapling",
+                                    "minecraft:dark_oak_sapling",
+                                    "minecraft:jungle_sapling",
+                                    "minecraft:oak_sapling",
+                                    "minecraft:brown_mushroom",
+                                    "minecraft:red_mushroom",
+                                    "minecraft:snow",
+                                    "minecraft:vine",
+                                    "minecraft:dead_bush",
+                                    "minecraft:fire")
+                    );
+
+                    /*      Arrays.asList(
                             Blocks.TALL_GRASS, Blocks.GRASS, Blocks.WATER, Blocks.LAVA, Blocks.DANDELION,
                             Blocks.LILAC, Blocks.ROSE_BUSH, Blocks.PEONY, Blocks.SUNFLOWER,
                             Blocks.POPPY, Blocks.BLUE_ORCHID, Blocks.AZURE_BLUET, Blocks.OXEYE_DAISY,
@@ -83,7 +119,9 @@ public class Config {
                             Blocks.ACACIA_SAPLING, Blocks.BIRCH_SAPLING, Blocks.DARK_OAK_SAPLING,
                             Blocks.JUNGLE_SAPLING, Blocks.OAK_SAPLING, Blocks.BROWN_MUSHROOM, Blocks.RED_MUSHROOM,
                             Blocks.SNOW, Blocks.VINE, Blocks.DEAD_BUSH, Blocks.FIRE
-                    ).stream().map(b -> b.getRegistryName().toString()).collect(Collectors.toList()));//TODO add all
+                            ).stream().map(b -> b.getRegistryName().toString()).collect(Collectors.toList()));//TODO add all
+                    */
+
             removeDeathNote = builder
                     .comment("If this is set to true the death note will be taken out of your inventory when you destroyed the gravestone")
                     .translation("remove_death_note")
