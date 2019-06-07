@@ -1,4 +1,2 @@
-- Improved GraveStone bounding volume
-- Fixed gradle buildscript
-- Updated Forge version
-- Added mod logo
+- Fixed bug that crashed the game
+- Updated to newest forge version
