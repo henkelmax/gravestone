@@ -1,0 +1,19 @@
+{
+  "block.gravestone.gravestone": "墓碑",
+  "item.gravestone.death_info": "死亡資訊",
+  "entity.gravestone.player_ghost": "亡魂玩家",
+  "message.died": "%s 在 %s 死亡",
+  "message.deathlocation": "死亡地點",
+  "message.no_deathlocation": "找不到任何死亡地點",
+  "message.create_grave_failed": "你無法放置墓碑",
+  "gui.deathinfo.name": "名字",
+  "gui.deathinfo.title": "死亡資訊",
+  "gui.deathinfo.location": "地點",
+  "gui.deathinfo.dimension": "維度",
+  "gui.deathinfo.title.items": "死亡時攜帶的物品",
+  "gui.deathinfo.page": "頁數",
+  "gui.deathinfo.time": "時間",
+  "gui.deathitems": "生前物品",
+  "button.next": "下一頁",
+  "button.prev": "上一頁"
+}

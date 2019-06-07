@@ -1,2 +1,2 @@
-- Fixed bug that crashed the game
-- Updated to newest forge version
+- Fixed bug that gave the player a death note even if he had disabled them
+- Added zh_tw language

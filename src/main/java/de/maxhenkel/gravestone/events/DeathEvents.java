@@ -2,6 +2,7 @@ package de.maxhenkel.gravestone.events;
 
 import java.util.ArrayList;
 import java.util.Collection;
+
 import de.maxhenkel.gravestone.*;
 import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.entity.EntityLivingBase;
@@ -100,6 +101,10 @@ public class DeathEvents {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void playerDeath(LivingDeathEvent event) {
         if (event.isCanceled()) {
+            return;
+        }
+
+        if (!Config.giveDeathNotes) {
             return;
         }
 
