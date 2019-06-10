@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import de.maxhenkel.gravestone.blocks.BlockGraveStone;
-import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
+import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
+import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import de.maxhenkel.gravestone.util.NoSpaceException;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -52,7 +52,7 @@ public class GraveProcessor {
         }
 
         try {
-            world.setBlockState(gravePosition, Main.GRAVESTONE.getDefaultState().with(BlockGraveStone.FACING,
+            world.setBlockState(gravePosition, Main.GRAVESTONE.getDefaultState().with(GraveStoneBlock.FACING,
                     entity.getHorizontalFacing().getOpposite()));
 
             if (isReplaceable(gravePosition.down())) {
@@ -66,12 +66,12 @@ public class GraveProcessor {
 
         TileEntity tileentity = world.getTileEntity(gravePosition);
 
-        if (tileentity == null || !(tileentity instanceof TileEntityGraveStone)) {
+        if (tileentity == null || !(tileentity instanceof GraveStoneTileEntity)) {
             return false;
         }
 
         try {
-            TileEntityGraveStone graveTileEntity = (TileEntityGraveStone) tileentity;
+            GraveStoneTileEntity graveTileEntity = (GraveStoneTileEntity) tileentity;
 
             graveTileEntity.setPlayerName(entity.getName().getFormattedText());
             graveTileEntity.setPlayerUUID(entity.getUniqueID().toString());
@@ -88,7 +88,7 @@ public class GraveProcessor {
         return true;
     }
 
-    private void addItems(TileEntityGraveStone graveStone, Collection<ItemEntity> items) {
+    private void addItems(GraveStoneTileEntity graveStone, Collection<ItemEntity> items) {
         try {
             int i = 0;
             for (ItemEntity item : items) {

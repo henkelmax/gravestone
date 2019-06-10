@@ -15,7 +15,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 
-public class GUIDeathInfo extends Screen {
+public class DeathInfoScreen extends Screen {
 
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/info.png");
     private static final int TEXTURE_X = 163;
@@ -30,7 +30,7 @@ public class GUIDeathInfo extends Screen {
 
     private PageList pageList;
 
-    public GUIDeathInfo(DeathInfo info) {
+    public DeathInfoScreen(DeathInfo info) {
         super(new TranslationTextComponent("gui.deathinfo.title"));
         this.info = info;
         this.page = 0;

@@ -2,16 +2,16 @@ package de.maxhenkel.gravestone;
 
 import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.types.Type;
-import de.maxhenkel.gravestone.blocks.BlockGraveStone;
-import de.maxhenkel.gravestone.entity.EntityGhostPlayer;
-import de.maxhenkel.gravestone.entity.RenderFactoryGhostPlayer;
+import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
+import de.maxhenkel.gravestone.entity.GhostPlayerEntity;
+import de.maxhenkel.gravestone.entity.GhostPlayerRenderFactory;
 import de.maxhenkel.gravestone.events.BlockEvents;
 import de.maxhenkel.gravestone.events.DeathEvents;
-import de.maxhenkel.gravestone.gui.ContainerDeathItems;
-import de.maxhenkel.gravestone.gui.GuiDeathItems;
-import de.maxhenkel.gravestone.items.ItemDeathInfo;
-import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
-import de.maxhenkel.gravestone.tileentity.TileEntitySpecialRendererGraveStone;
+import de.maxhenkel.gravestone.gui.DeathItemsContainer;
+import de.maxhenkel.gravestone.gui.DeathItemsScreen;
+import de.maxhenkel.gravestone.items.DeathInfoItem;
+import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
+import de.maxhenkel.gravestone.tileentity.GravestoneRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.Entity;
@@ -57,23 +57,23 @@ public class Main {
     private static Main instance;
 
     @ObjectHolder(MODID + ":gravestone")
-    public static BlockGraveStone GRAVESTONE;
+    public static GraveStoneBlock GRAVESTONE;
 
     @ObjectHolder(MODID + ":gravestone")
     public static Item GRAVESTONE_ITEM;
 
     @ObjectHolder(MODID + ":gravestone")
-    public static TileEntityType<TileEntityGraveStone> GRAVESTONE_TILEENTITY;
+    public static TileEntityType<GraveStoneTileEntity> GRAVESTONE_TILEENTITY;
 
     @ObjectHolder(MODID + ":death_info")
-    public static ItemDeathInfo DEATHINFO;
+    public static DeathInfoItem DEATHINFO;
 
     @ObjectHolder(MODID + ":player_ghost")
-    public static EntityType<EntityGhostPlayer> GHOST;
+    public static EntityType<GhostPlayerEntity> GHOST;
 
     public static ResourceLocation GHOST_LOOT_TABLE;
 
-    public static ContainerType DEATH_INFO_INVENTORY_CONTAINER = registerContainer("death_items", ContainerDeathItems::new);
+    public static ContainerType DEATH_INFO_INVENTORY_CONTAINER = registerContainer("death_items", DeathItemsContainer::new);
 
     public Main() {
         instance = this;
@@ -116,17 +116,17 @@ public class Main {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void clientSetup(FMLClientSetupEvent event) {
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGraveStone.class, new TileEntitySpecialRendererGraveStone());
-        RenderingRegistry.registerEntityRenderingHandler(EntityGhostPlayer.class, new RenderFactoryGhostPlayer());
+        ClientRegistry.bindTileEntitySpecialRenderer(GraveStoneTileEntity.class, new GravestoneRenderer());
+        RenderingRegistry.registerEntityRenderingHandler(GhostPlayerEntity.class, new GhostPlayerRenderFactory());
 
-        ScreenManager.IScreenFactory factory = (ScreenManager.IScreenFactory<ContainerDeathItems, GuiDeathItems>) (container, playerInventory, name) -> new GuiDeathItems(playerInventory, container, name);
+        ScreenManager.IScreenFactory factory = (ScreenManager.IScreenFactory<DeathItemsContainer, DeathItemsScreen>) (container, playerInventory, name) -> new DeathItemsScreen(playerInventory, container, name);
         ScreenManager.registerFactory(Main.DEATH_INFO_INVENTORY_CONTAINER, factory);
     }
 
     @SubscribeEvent
     public void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().registerAll(
-                GRAVESTONE = new BlockGraveStone()
+                GRAVESTONE = new GraveStoneBlock()
         );
     }
 
@@ -134,7 +134,7 @@ public class Main {
     public void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
                 GRAVESTONE_ITEM = GRAVESTONE.toItem(),
-                DEATHINFO = new ItemDeathInfo()
+                DEATHINFO = new DeathInfoItem()
         );
 
         Item.BLOCK_TO_ITEM.put(GRAVESTONE, GRAVESTONE_ITEM);
@@ -142,7 +142,7 @@ public class Main {
 
     @SubscribeEvent
     public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-        GRAVESTONE_TILEENTITY = /*TileEntityType.register*/registerTileEntityType(GRAVESTONE.getRegistryName().toString(), TileEntityType.Builder.func_223042_a(TileEntityGraveStone::new));
+        GRAVESTONE_TILEENTITY = /*TileEntityType.register*/registerTileEntityType(GRAVESTONE.getRegistryName().toString(), TileEntityType.Builder.func_223042_a(GraveStoneTileEntity::new));
     }
 
     public static <T extends TileEntity> TileEntityType<T> registerTileEntityType(final String id, final TileEntityType.Builder<T> builder) {
@@ -172,7 +172,7 @@ public class Main {
 
     @SubscribeEvent
     public void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
-        GHOST = /*EntityType.register*/registerEntity(Main.MODID + ":player_ghost", EntityType.Builder.<EntityGhostPlayer>create(EntityGhostPlayer::new, EntityClassification.MONSTER).size(0.6F, 1.95F));
+        GHOST = /*EntityType.register*/registerEntity(Main.MODID + ":player_ghost", EntityType.Builder.<GhostPlayerEntity>create(GhostPlayerEntity::new, EntityClassification.MONSTER).size(0.6F, 1.95F));
     }
 
     private static <T extends Entity> EntityType<T> registerEntity(String id, EntityType.Builder<T> builder) {

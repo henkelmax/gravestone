@@ -6,10 +6,10 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Slot;
 
-public class ContainerDeathItems extends ContainerBase {
+public class DeathItemsContainer extends ContainerBase {
     private IInventory albumInventory;
 
-    public ContainerDeathItems(int id, IInventory playerInventory, IInventory inventory) {
+    public DeathItemsContainer(int id, IInventory playerInventory, IInventory inventory) {
         super(Main.DEATH_INFO_INVENTORY_CONTAINER, id, playerInventory, inventory);
         this.albumInventory = inventory;
 
@@ -23,7 +23,7 @@ public class ContainerDeathItems extends ContainerBase {
         addInvSlots();
     }
 
-    public ContainerDeathItems(int id, IInventory playerInventory) {
+    public DeathItemsContainer(int id, IInventory playerInventory) {
         this(id, playerInventory, new Inventory(54));
     }
 

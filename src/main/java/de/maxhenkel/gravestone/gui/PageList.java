@@ -11,7 +11,7 @@ public class PageList {
 
     private List<Page> list;
 
-    public PageList(List<ItemStack> items, GUIDeathInfo gui) {
+    public PageList(List<ItemStack> items, DeathInfoScreen gui) {
         this.list = new ArrayList<>();
 
         ItemStack[] temp = new ItemStack[10];

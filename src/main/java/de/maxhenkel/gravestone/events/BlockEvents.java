@@ -3,8 +3,8 @@ package de.maxhenkel.gravestone.events;
 import java.util.UUID;
 
 import de.maxhenkel.gravestone.*;
-import de.maxhenkel.gravestone.entity.EntityGhostPlayer;
-import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
+import de.maxhenkel.gravestone.entity.GhostPlayerEntity;
+import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -45,11 +45,11 @@ public class BlockEvents {
 
         TileEntity te = event.getWorld().getTileEntity(event.getPos());
 
-        if (!(te instanceof TileEntityGraveStone)) {
+        if (!(te instanceof GraveStoneTileEntity)) {
             return;
         }
 
-        TileEntityGraveStone graveTileEntity = (TileEntityGraveStone) te;
+        GraveStoneTileEntity graveTileEntity = (GraveStoneTileEntity) te;
 
         ItemStack stack = player.getHeldItemMainhand();
 
@@ -113,11 +113,11 @@ public class BlockEvents {
 
         TileEntity te = world.getTileEntity(event.getPos());
 
-        if (te == null || !(te instanceof TileEntityGraveStone)) {
+        if (te == null || !(te instanceof GraveStoneTileEntity)) {
             return;
         }
 
-        TileEntityGraveStone tileentity = (TileEntityGraveStone) te;
+        GraveStoneTileEntity tileentity = (GraveStoneTileEntity) te;
 
         UUID uuid = null;
 
@@ -130,7 +130,7 @@ public class BlockEvents {
             return;
         }
 
-        EntityGhostPlayer ghost = new EntityGhostPlayer(world, uuid, tileentity.getPlayerName());
+        GhostPlayerEntity ghost = new GhostPlayerEntity(world, uuid, tileentity.getPlayerName());
         ghost.setPosition(event.getPos().getX() + 0.5, event.getPos().getY() + 0.1, event.getPos().getZ() + 0.5);
         world.func_217376_c(ghost);
     }
@@ -182,11 +182,11 @@ public class BlockEvents {
 
         TileEntity te = world.getTileEntity(event.getPos());
 
-        if (te == null || !(te instanceof TileEntityGraveStone)) {
+        if (te == null || !(te instanceof GraveStoneTileEntity)) {
             return true;
         }
 
-        TileEntityGraveStone tileentity = (TileEntityGraveStone) te;
+        GraveStoneTileEntity tileentity = (GraveStoneTileEntity) te;
 
         if (player instanceof ServerPlayerEntity) {
             ServerPlayerEntity p = (ServerPlayerEntity) player;

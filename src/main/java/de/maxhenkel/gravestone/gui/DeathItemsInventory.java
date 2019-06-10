@@ -6,12 +6,12 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
-public class InventoryDeathItems implements IInventory {
+public class DeathItemsInventory implements IInventory {
 
     private NonNullList<ItemStack> items;
     private int invSize;
 
-    public InventoryDeathItems(DeathInfo deathInfo) {
+    public DeathItemsInventory(DeathInfo deathInfo) {
         invSize = 54;
         items = NonNullList.withSize(invSize, ItemStack.EMPTY);
 

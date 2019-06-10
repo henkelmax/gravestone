@@ -10,9 +10,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 public class Page {
 
     private ItemStack[] items;
-    private GUIDeathInfo gui;
+    private DeathInfoScreen gui;
 
-    public Page(ItemStack[] it, GUIDeathInfo gui) {
+    public Page(ItemStack[] it, DeathInfoScreen gui) {
         this.gui = gui;
         int arraySize = 10;
         items = new ItemStack[10];

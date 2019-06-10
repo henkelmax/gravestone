@@ -5,13 +5,13 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-public class GuiDeathItems extends GUIBase<ContainerDeathItems> {
+public class DeathItemsScreen extends ScreenBase<DeathItemsContainer> {
 
     public static final ResourceLocation DEFAULT_IMAGE = new ResourceLocation(Main.MODID, "textures/gui/death_items.png");
 
     private PlayerInventory playerInventory;
 
-    public GuiDeathItems(PlayerInventory playerInventory, ContainerDeathItems container, ITextComponent name) {
+    public DeathItemsScreen(PlayerInventory playerInventory, DeathItemsContainer container, ITextComponent name) {
         super(DEFAULT_IMAGE, container, playerInventory, name);
 
         this.playerInventory = playerInventory;
