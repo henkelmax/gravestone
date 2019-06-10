@@ -7,13 +7,18 @@ import de.maxhenkel.gravestone.entity.EntityGhostPlayer;
 import de.maxhenkel.gravestone.entity.RenderFactoryGhostPlayer;
 import de.maxhenkel.gravestone.events.BlockEvents;
 import de.maxhenkel.gravestone.events.DeathEvents;
+import de.maxhenkel.gravestone.gui.ContainerDeathItems;
+import de.maxhenkel.gravestone.gui.GuiDeathItems;
 import de.maxhenkel.gravestone.items.ItemDeathInfo;
 import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
 import de.maxhenkel.gravestone.tileentity.TileEntitySpecialRendererGraveStone;
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -66,6 +71,8 @@ public class Main {
     @ObjectHolder(MODID + ":player_ghost")
     public static EntityType<EntityGhostPlayer> ghost;
 
+    public static ContainerType DEATH_INFO_INVENTORY_CONTAINER = registerContainer("death_items", ContainerDeathItems::new);
+
     public static ResourceLocation ghostLootTable;
 
     public Main() {
@@ -111,6 +118,9 @@ public class Main {
     public void clientSetup(FMLClientSetupEvent event) {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGraveStone.class, new TileEntitySpecialRendererGraveStone());
         RenderingRegistry.registerEntityRenderingHandler(EntityGhostPlayer.class, new RenderFactoryGhostPlayer());
+
+        ScreenManager.IScreenFactory factory = (ScreenManager.IScreenFactory<ContainerDeathItems, GuiDeathItems>) (container, playerInventory, name) -> new GuiDeathItems(playerInventory, container, name);
+        ScreenManager.registerFactory(Main.DEATH_INFO_INVENTORY_CONTAINER, factory);
     }
 
     @SubscribeEvent
@@ -167,6 +177,10 @@ public class Main {
 
     private static <T extends Entity> EntityType<T> registerEntity(String id, EntityType.Builder<T> builder) {
         return Registry.register(Registry.field_212629_r, id, builder.build(id));
+    }
+
+    private static <T extends Container> ContainerType<T> registerContainer(String name, ContainerType.IFactory<T> factory) {
+        return Registry.register(Registry.field_218366_G, new ResourceLocation(Main.MODID, name), new ContainerType<>(factory));
     }
 
 }

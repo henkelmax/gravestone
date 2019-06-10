@@ -1,17 +1,28 @@
 package de.maxhenkel.gravestone.items;
 
 import de.maxhenkel.gravestone.DeathInfo;
-import de.maxhenkel.gravestone.gui.GUIDeathItems;
+import de.maxhenkel.gravestone.gui.ContainerDeathItems;
+import de.maxhenkel.gravestone.gui.GUIDeathInfo;
+import de.maxhenkel.gravestone.gui.InventoryDeathItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.NetworkHooks;
+
+import javax.annotation.Nullable;
 
 public class ItemDeathInfo extends Item {
 
@@ -25,20 +36,21 @@ public class ItemDeathInfo extends Item {
         DeathInfo info = DeathInfo.getDeathInfoFromPlayerHand(playerIn);
 
         if (playerIn.isSneaking() && playerIn.playerAbilities.isCreativeMode) {
-            // TODO
-            //playerIn.openContainer(new InventoryDeathItems(info));
-            /*playerIn.openContainer(new INamedContainerProvider() {
-                @Override
-                public ITextComponent getDisplayName() {
-                    return null;
-                }
+            if (playerIn instanceof ServerPlayerEntity) {
+                NetworkHooks.openGui((ServerPlayerEntity) playerIn, new INamedContainerProvider() {
 
-                @Nullable
-                @Override
-                public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                    return new ChestContainer(ContainerType.field_221512_f, );
-                }
-            });*/
+                    @Nullable
+                    @Override
+                    public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+                        return new ContainerDeathItems(id, playerInventory, new InventoryDeathItems(info));
+                    }
+
+                    @Override
+                    public ITextComponent getDisplayName() {
+                        return new TranslationTextComponent(ItemDeathInfo.this.getTranslationKey());
+                    }
+                });
+            }
         } else if (worldIn.isRemote) {
             openClientGui(info);
         }
@@ -47,6 +59,6 @@ public class ItemDeathInfo extends Item {
 
     @OnlyIn(Dist.CLIENT)
     private void openClientGui(DeathInfo info) {
-        Minecraft.getInstance().displayGuiScreen(new GUIDeathItems(info));
+        Minecraft.getInstance().displayGuiScreen(new GUIDeathInfo(info));
     }
 }
