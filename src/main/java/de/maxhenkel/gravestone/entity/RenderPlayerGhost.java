@@ -1,32 +1,35 @@
 package de.maxhenkel.gravestone.entity;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import de.maxhenkel.gravestone.util.PlayerSkins;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderLivingBase;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.entity.layers.LayerArrow;
-import net.minecraft.client.renderer.entity.layers.LayerBipedArmor;
-import net.minecraft.client.renderer.entity.layers.LayerElytra;
-import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
-import net.minecraft.client.renderer.entity.model.ModelPlayer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.layers.ArrowLayer;
+import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
+import net.minecraft.client.renderer.entity.layers.ElytraLayer;
+import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
+import net.minecraft.client.renderer.entity.model.BipedModel;
+import net.minecraft.client.renderer.entity.model.PlayerModel;
 import net.minecraft.util.ResourceLocation;
 
-public class RenderPlayerGhost extends RenderLivingBase<EntityGhostPlayer> {
+import javax.annotation.Nullable;
 
-    public RenderPlayerGhost(RenderManager renderManager) {
+public class RenderPlayerGhost extends LivingRenderer<EntityGhostPlayer, PlayerModel<EntityGhostPlayer>> {
+
+    public RenderPlayerGhost(EntityRendererManager renderManager) {
         this(renderManager, true);
     }
 
-    public RenderPlayerGhost(RenderManager renderManager, boolean useSmallArms) {
-        super(renderManager, new ModelPlayer(0.0F, useSmallArms), 0.5F);
-        this.addLayer(new LayerBipedArmor(this));
-        this.addLayer(new LayerHeldItem(this));
-        this.addLayer(new LayerArrow(this));
-        this.addLayer(new LayerElytra(this));
+    public RenderPlayerGhost(EntityRendererManager renderManager, boolean useSmallArms) {
+        super(renderManager, new PlayerModel<>(0.0F, useSmallArms), 0.5F);
+        this.addLayer(new BipedArmorLayer(this, new BipedModel(0.5F), new BipedModel(1.0F)));
+        this.addLayer(new HeldItemLayer(this));
+        this.addLayer(new ArrowLayer(this));
+        this.addLayer(new ElytraLayer(this));
     }
 
     public void doRender(EntityGhostPlayer entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        GlStateManager.enableBlendProfile(GlStateManager.Profile.PLAYER_SKIN);
+        GlStateManager.setProfile(GlStateManager.Profile.PLAYER_SKIN);
 
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.alphaFunc(516, 0.003921569F);
@@ -40,7 +43,7 @@ public class RenderPlayerGhost extends RenderLivingBase<EntityGhostPlayer> {
         GlStateManager.disableBlend();
         GlStateManager.alphaFunc(516, 0.1F);
 
-        GlStateManager.disableBlendProfile(GlStateManager.Profile.PLAYER_SKIN);
+        GlStateManager.unsetProfile(GlStateManager.Profile.PLAYER_SKIN);
     }
 
     @Override
@@ -50,9 +53,10 @@ public class RenderPlayerGhost extends RenderLivingBase<EntityGhostPlayer> {
         }
     }
 
+    @Nullable
     @Override
-    protected ResourceLocation getEntityTexture(EntityGhostPlayer entity) {
-        return PlayerSkins.getSkin(entity.getPlayerUUID(), entity.getName().getUnformattedComponentText());
+    protected ResourceLocation getEntityTexture(EntityGhostPlayer entityGhostPlayer) {
+        return PlayerSkins.getSkin(entityGhostPlayer.getUniqueID(), entityGhostPlayer.getName().getUnformattedComponentText());
     }
 
 }

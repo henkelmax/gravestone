@@ -110,18 +110,6 @@ public class Config {
                                     "minecraft:fire")
                     );
 
-                    /*      Arrays.asList(
-                            Blocks.TALL_GRASS, Blocks.GRASS, Blocks.WATER, Blocks.LAVA, Blocks.DANDELION,
-                            Blocks.LILAC, Blocks.ROSE_BUSH, Blocks.PEONY, Blocks.SUNFLOWER,
-                            Blocks.POPPY, Blocks.BLUE_ORCHID, Blocks.AZURE_BLUET, Blocks.OXEYE_DAISY,
-                            Blocks.ORANGE_TULIP, Blocks.PINK_TULIP, Blocks.RED_TULIP, Blocks.WHITE_TULIP,
-                            Blocks.ALLIUM, Blocks.FERN, Blocks.LARGE_FERN, Blocks.SPRUCE_SAPLING,
-                            Blocks.ACACIA_SAPLING, Blocks.BIRCH_SAPLING, Blocks.DARK_OAK_SAPLING,
-                            Blocks.JUNGLE_SAPLING, Blocks.OAK_SAPLING, Blocks.BROWN_MUSHROOM, Blocks.RED_MUSHROOM,
-                            Blocks.SNOW, Blocks.VINE, Blocks.DEAD_BUSH, Blocks.FIRE
-                            ).stream().map(b -> b.getRegistryName().toString()).collect(Collectors.toList()));//TODO add all
-                    */
-
             removeDeathNote = builder
                     .comment("If this is set to true the death note will be taken out of your inventory when you destroyed the gravestone")
                     .translation("remove_death_note")

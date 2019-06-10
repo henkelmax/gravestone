@@ -3,6 +3,7 @@ package de.maxhenkel.gravestone.gui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.item.ItemStack;
 
@@ -11,7 +12,7 @@ public class PageList {
     private List<Page> list;
 
     public PageList(List<ItemStack> items, GUIDeathItems gui) {
-        this.list = new ArrayList<Page>();
+        this.list = new ArrayList<>();
 
         ItemStack[] temp = new ItemStack[10];
         int i = 0;

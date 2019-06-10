@@ -1,15 +1,14 @@
 modLoader="javafml"
 loaderVersion="${mod_forge_version}"
 issueTrackerURL="https://minecraft.curseforge.com/projects/gravestone-mod/issues"
-displayURL="http://minecraft.curseforge.com/projects/gravestone-mod"
-logoFile="gravestone.png"
-# credits=""
-authors="${mod_vendor}"
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
 updateJSONURL="http://maxhenkel.de/update/gravestone.json"
+displayURL="http://minecraft.curseforge.com/projects/gravestone-mod"
+logoFile="gravestone.png"
+authors="${mod_vendor}"
 description='''This mod adds a gravestone that stores the items of the player when he dies'''
 [[dependencies.${mod_id}]]
     modId="forge"

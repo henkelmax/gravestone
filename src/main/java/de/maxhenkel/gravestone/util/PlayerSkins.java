@@ -3,12 +3,13 @@ package de.maxhenkel.gravestone.util;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.tileentity.TileEntitySkull;
+import net.minecraft.tileentity.SkullTileEntity;
 import net.minecraft.util.ResourceLocation;
 
 public class PlayerSkins {
@@ -32,7 +33,7 @@ public class PlayerSkins {
         if (players.containsKey(uuid.toString())) {
             return players.get(uuid.toString());
         } else {
-            GameProfile profile = TileEntitySkull.updateGameProfile(new GameProfile(uuid, name));
+            GameProfile profile = SkullTileEntity.updateGameProfile(new GameProfile(uuid, name));
             players.put(uuid.toString(), profile);
             return profile;
         }

@@ -2,24 +2,20 @@ package de.maxhenkel.gravestone.tileentity;
 
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.util.Tools;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
-import javax.annotation.Nullable;
 
 public class TileEntityGraveStone extends TileEntity implements IInventory {
 
     public static final int INVENTORY_SIZE = 127;
-
-    private InventoryBasic inventory;
+    private Inventory inventory;
     private String playerName;
     private String playerUUID;
     private long deathTime;
@@ -33,7 +29,7 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
 
     public TileEntityGraveStone() {
         super(Main.graveTileEntity);
-        this.inventory = new InventoryBasic(new TextComponentString(INV_NAME), INVENTORY_SIZE);
+        this.inventory = new Inventory(INVENTORY_SIZE);
         this.playerName = "";
         this.deathTime = 0L;
         this.playerUUID = "";
@@ -41,35 +37,35 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
     }
 
     @Override
-    public NBTTagCompound write(NBTTagCompound compound) {
-        compound.setString(PLAYER_NAME, playerName);
-        compound.setLong(DEATH_TIME, deathTime);
-        compound.setString(PLAYER_UUID, playerUUID);
-        compound.setBoolean(RENDER_HEAD, renderHead);
+    public CompoundNBT write(CompoundNBT compound) {
+        compound.putString(PLAYER_NAME, playerName);
+        compound.putLong(DEATH_TIME, deathTime);
+        compound.putString(PLAYER_UUID, playerUUID);
+        compound.putBoolean(RENDER_HEAD, renderHead);
 
 
-        NBTTagList list = new NBTTagList();
+        ListNBT list = new ListNBT();
 
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             if (inventory.getStackInSlot(i) != null) {
-                NBTTagCompound tag = inventory.getStackInSlot(i).serializeNBT();
+                CompoundNBT tag = inventory.getStackInSlot(i).serializeNBT();
                 list.add(tag);
             }
         }
 
-        compound.setTag(TAG_NAME, list);
+        compound.put(TAG_NAME, list);
 
         return super.write(compound);
     }
 
     @Override
-    public void read(NBTTagCompound compound) {
+    public void read(CompoundNBT compound) {
         super.read(compound);
-        NBTTagList list = compound.getList(TAG_NAME, 10);
-        this.inventory = new InventoryBasic(new TextComponentString(INV_NAME), list.size());
+        ListNBT list = compound.getList(TAG_NAME, 10);
+        this.inventory = new Inventory(list.size());
 
         for (int i = 0; i < list.size(); i++) {
-            NBTTagCompound tag = list.getCompound(i);
+            CompoundNBT tag = list.getCompound(i);
             ItemStack stack = ItemStack.read(tag);
             inventory.setInventorySlotContents(i, stack);
         }
@@ -81,39 +77,18 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
     }
 
     @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(this.pos, 1, getUpdateTag());
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(this.pos, 1, getUpdateTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         this.read(pkt.getNbtCompound());
     }
 
     @Override
-    public NBTTagCompound getUpdateTag() {
-        return this.write(new NBTTagCompound());
-    }
-
-    @Override
-    public ITextComponent getName() {
-        return inventory.getName();
-    }
-
-    @Override
-    public boolean hasCustomName() {
-        return inventory.hasCustomName();
-    }
-
-    @Override
-    public ITextComponent getDisplayName() {
-        return inventory.getDisplayName();
-    }
-
-    @Nullable
-    @Override
-    public ITextComponent getCustomName() {
-        return inventory.getName();
+    public CompoundNBT getUpdateTag() {
+        return this.write(new CompoundNBT());
     }
 
     @Override
@@ -142,33 +117,18 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {
+    public void openInventory(PlayerEntity player) {
         this.inventory.openInventory(player);
     }
 
     @Override
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory(PlayerEntity player) {
         this.inventory.closeInventory(player);
     }
 
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
         return inventory.isItemValidForSlot(index, stack);
-    }
-
-    @Override
-    public int getField(int id) {
-        return inventory.getField(id);
-    }
-
-    @Override
-    public void setField(int id, int value) {
-        inventory.setField(id, value);
-    }
-
-    @Override
-    public int getFieldCount() {
-        return inventory.getFieldCount();
     }
 
     @Override
@@ -187,7 +147,7 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
     }
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer player) {
+    public boolean isUsableByPlayer(PlayerEntity player) {
         return inventory.isUsableByPlayer(player);
     }
 

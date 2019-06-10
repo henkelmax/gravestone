@@ -1,2 +1,1 @@
-- Fixed bug that gave the player a death note even if he had disabled them
-- Added zh_tw language
+- Update to 1.14.2

@@ -6,13 +6,13 @@ import java.util.Map;
 
 import de.maxhenkel.gravestone.Config;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ public class Tools {
     }
 
     public static String translateItem(ItemStack stack) {
-        return new TextComponentTranslation(stack.getTranslationKey()).getUnformattedComponentText();
+        return new TranslationTextComponent(stack.getTranslationKey()).getUnformattedComponentText();
     }
 
     public static boolean isArrayEmpty(Object[] obj) {
@@ -43,7 +43,7 @@ public class Tools {
         return true;
     }
 
-    public static boolean keepInventory(EntityPlayer player) {
+    public static boolean keepInventory(PlayerEntity player) {
         try {
             return player.getEntityWorld().getWorldInfo().getGameRulesInstance().getBoolean("keepInventory");
         } catch (Exception e) {

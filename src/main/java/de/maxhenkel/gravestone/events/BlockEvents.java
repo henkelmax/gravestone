@@ -5,9 +5,9 @@ import java.util.UUID;
 import de.maxhenkel.gravestone.*;
 import de.maxhenkel.gravestone.entity.EntityGhostPlayer;
 import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -37,11 +37,11 @@ public class BlockEvents {
             return;
         }
 
-        if (!(event.getEntity() instanceof EntityPlayer)) {
+        if (!(event.getEntity() instanceof PlayerEntity)) {
             return;
         }
 
-        EntityPlayer player = (EntityPlayer) event.getEntity();
+        PlayerEntity player = (PlayerEntity) event.getEntity();
 
         TileEntity te = event.getWorld().getTileEntity(event.getPos());
 
@@ -132,7 +132,7 @@ public class BlockEvents {
 
         EntityGhostPlayer ghost = new EntityGhostPlayer(world, uuid, tileentity.getPlayerName());
         ghost.setPosition(event.getPos().getX() + 0.5, event.getPos().getY() + 0.1, event.getPos().getZ() + 0.5);
-        world.spawnEntity(ghost);
+        world.func_217376_c(ghost);
     }
 
     private void removeDeathNote(BlockEvent.BreakEvent event) {
@@ -140,16 +140,16 @@ public class BlockEvents {
             return;
         }
 
-        EntityPlayer player = event.getPlayer();
+        PlayerEntity player = event.getPlayer();
 
-        InventoryPlayer inv = player.inventory;
+        PlayerInventory inv = player.inventory;
 
         BlockPos pos = event.getPos();
         String dim = player.dimension.toString();
 
         for (ItemStack stack : inv.mainInventory) {
             if (stack != null && stack.getItem().equals(Main.deathInfo)) {
-                if (stack.hasTag() && stack.getTag().hasKey(DeathInfo.KEY_INFO)) {
+                if (stack.hasTag() && stack.getTag().contains(DeathInfo.KEY_INFO)) {
                     DeathInfo info = DeathInfo.fromNBT(stack.getTag().getCompound(DeathInfo.KEY_INFO));
                     if (info != null && dim.equals(info.getDimension()) && pos.equals(info.getDeathLocation())) {
                         inv.deleteStack(stack);
@@ -178,7 +178,7 @@ public class BlockEvents {
 
         IWorld world = event.getWorld();
 
-        EntityPlayer player = event.getPlayer();
+        PlayerEntity player = event.getPlayer();
 
         TileEntity te = world.getTileEntity(event.getPos());
 
@@ -188,8 +188,8 @@ public class BlockEvents {
 
         TileEntityGraveStone tileentity = (TileEntityGraveStone) te;
 
-        if (player instanceof EntityPlayerMP) {
-            EntityPlayerMP p = (EntityPlayerMP) player;
+        if (player instanceof ServerPlayerEntity) {
+            ServerPlayerEntity p = (ServerPlayerEntity) player;
 
             boolean isOp = p.hasPermissionLevel(p.server.getOpPermissionLevel());
 

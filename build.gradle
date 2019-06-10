@@ -24,19 +24,18 @@ archivesBaseName = mod_id
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 minecraft {
-    mappings channel: 'snapshot', version: '20180921-1.13'
+    mappings channel: 'snapshot', version: '20190608-1.14.2'
 
     runs {
         client {
-            workingDirectory project.file('run').canonicalPath
+            workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-            // properties 'username': 'henkelmax'
             source sourceSets.main
         }
 
         server {
-            workingDirectory project.file('run/server').canonicalPath
+            workingDirectory project.file('run/server')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
             source sourceSets.main

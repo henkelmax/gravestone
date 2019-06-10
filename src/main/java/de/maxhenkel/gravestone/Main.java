@@ -1,5 +1,7 @@
 package de.maxhenkel.gravestone;
 
+import com.mojang.datafixers.DataFixUtils;
+import com.mojang.datafixers.types.Type;
 import de.maxhenkel.gravestone.blocks.BlockGraveStone;
 import de.maxhenkel.gravestone.entity.EntityGhostPlayer;
 import de.maxhenkel.gravestone.entity.RenderFactoryGhostPlayer;
@@ -9,11 +11,18 @@ import de.maxhenkel.gravestone.items.ItemDeathInfo;
 import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
 import de.maxhenkel.gravestone.tileentity.TileEntitySpecialRendererGraveStone;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootTableList;
+import net.minecraft.util.SharedConstants;
+import net.minecraft.util.datafix.DataFixesManager;
+import net.minecraft.util.datafix.TypeReferences;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.storage.loot.LootTables;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -24,11 +33,15 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ObjectHolder;
+import org.apache.logging.log4j.LogManager;
+
+import java.util.Set;
 
 @Mod.EventBusSubscriber(modid = Main.MODID)
 @Mod(Main.MODID)
@@ -57,14 +70,12 @@ public class Main {
 
     public Main() {
         instance = this;
-        //this.proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new CommonProxy());
 
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::registerBlocks);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::registerItems);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(TileEntityType.class, this::registerTileEntities);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(EntityType.class, this::registerEntities);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
-        //FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::configEvent);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC);
@@ -90,14 +101,16 @@ public class Main {
         MinecraftForge.EVENT_BUS.register(new BlockEvents());
         MinecraftForge.EVENT_BUS.register(this);
 
-        ghostLootTable = LootTableList.register(new ResourceLocation(Main.MODID, "entities/player_ghost"));
+        Set<ResourceLocation> lootTables = ObfuscationReflectionHelper.getPrivateValue(LootTables.class, null, "LOOT_TABLES");
+        lootTables.add(new ResourceLocation(Main.MODID, "entities/player_ghost"));
+        //ghostLootTable = LootTables.register(new ResourceLocation(Main.MODID, "entities/player_ghost"));
     }
 
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void clientSetup(FMLClientSetupEvent event) {
-        RenderingRegistry.registerEntityRenderingHandler(EntityGhostPlayer.class, new RenderFactoryGhostPlayer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGraveStone.class, new TileEntitySpecialRendererGraveStone());
+        RenderingRegistry.registerEntityRenderingHandler(EntityGhostPlayer.class, new RenderFactoryGhostPlayer());
     }
 
     @SubscribeEvent
@@ -119,12 +132,41 @@ public class Main {
 
     @SubscribeEvent
     public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-        graveTileEntity = TileEntityType.register(graveStone.getRegistryName().toString(), TileEntityType.Builder.create(TileEntityGraveStone::new));
+        graveTileEntity = /*TileEntityType.register*/registerTileEntityType(graveStone.getRegistryName().toString(), TileEntityType.Builder.func_223042_a(TileEntityGraveStone::new));
     }
+
+    public static <T extends TileEntity> TileEntityType<T> registerTileEntityType(final String id, final TileEntityType.Builder<T> builder) {
+        Type<?> type = null;
+
+        try {
+            type = DataFixesManager.getDataFixer().getSchema(DataFixUtils.makeKey(SharedConstants.getVersion().getWorldVersion())).getChoiceType(TypeReferences.BLOCK_ENTITY, id);
+        } catch (final IllegalArgumentException illegalstateexception) {
+            if (SharedConstants.developmentMode) {
+                throw illegalstateexception;
+            }
+
+            LogManager.getLogger(Main.MODID).warn("No data fixer registered for block entity {}", id);
+        }
+
+        if (getBlocksFromBuilder(builder).isEmpty()) {
+            LogManager.getLogger(Main.MODID).warn("Block entity type {} requires at least one valid block to be defined!", id);
+        }
+
+        return Registry.register(Registry.field_212626_o, id, builder.build(type));
+    }
+
+    private static <T extends TileEntity> Set<Block> getBlocksFromBuilder(final TileEntityType.Builder<T> builder) {
+        return ObfuscationReflectionHelper.getPrivateValue(TileEntityType.Builder.class, builder, "field_223044_b");
+    }
+
 
     @SubscribeEvent
     public void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
-        ghost = EntityType.register(Main.MODID + ":player_ghost", EntityType.Builder.create(EntityGhostPlayer.class, EntityGhostPlayer::new));
+        ghost = /*EntityType.register*/registerEntity(Main.MODID + ":player_ghost", EntityType.Builder.<EntityGhostPlayer>create(EntityGhostPlayer::new, EntityClassification.MONSTER).size(0.6F, 1.95F));
+    }
+
+    private static <T extends Entity> EntityType<T> registerEntity(String id, EntityType.Builder<T> builder) {
+        return Registry.register(Registry.field_212629_r, id, builder.build(id));
     }
 
 }

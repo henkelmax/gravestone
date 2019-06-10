@@ -2,14 +2,13 @@ package de.maxhenkel.gravestone.items;
 
 import de.maxhenkel.gravestone.DeathInfo;
 import de.maxhenkel.gravestone.gui.GUIDeathItems;
-import de.maxhenkel.gravestone.gui.InventoryDeathItems;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -22,15 +21,28 @@ public class ItemDeathInfo extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand) {
         DeathInfo info = DeathInfo.getDeathInfoFromPlayerHand(playerIn);
 
-        if (playerIn.isSneaking() && playerIn.abilities.isCreativeMode) {
-            playerIn.displayGUIChest(new InventoryDeathItems(info));
-        }else if (worldIn.isRemote) {
+        if (playerIn.isSneaking() && playerIn.playerAbilities.isCreativeMode) {
+            // TODO
+            //playerIn.openContainer(new InventoryDeathItems(info));
+            /*playerIn.openContainer(new INamedContainerProvider() {
+                @Override
+                public ITextComponent getDisplayName() {
+                    return null;
+                }
+
+                @Nullable
+                @Override
+                public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+                    return new ChestContainer(ContainerType.field_221512_f, );
+                }
+            });*/
+        } else if (worldIn.isRemote) {
             openClientGui(info);
         }
-        return new ActionResult<>(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
+        return ActionResult.newResult(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
     }
 
     @OnlyIn(Dist.CLIENT)

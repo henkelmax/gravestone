@@ -2,45 +2,36 @@ package de.maxhenkel.gravestone.entity;
 
 import java.util.UUID;
 import javax.annotation.Nullable;
-import com.google.common.base.Predicate;
+
 import de.maxhenkel.gravestone.Config;
 import de.maxhenkel.gravestone.Main;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.EntityAIAttackMelee;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWanderAvoidWater;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
-public class EntityGhostPlayer extends EntityMob {
+public class EntityGhostPlayer extends MonsterEntity {
 
-    private static final DataParameter<String> PLAYER_UUID = EntityDataManager
-            .<String>createKey(EntityGhostPlayer.class, DataSerializers.STRING);
+    private static final DataParameter<String> PLAYER_UUID = EntityDataManager.createKey(EntityGhostPlayer.class, DataSerializers.field_187194_d);
 
-    public EntityGhostPlayer(World world) {
-        super(Main.ghost, world);
-        this.setSize(0.6F, 1.95F);
+    public EntityGhostPlayer(EntityType type, World world) {
+        super(type, world);
     }
 
     public EntityGhostPlayer(World world, UUID playerUUID, String playerName) {
-        this(world);
+        this(Main.ghost, world);
 
         this.setPlayerUUID(playerUUID);
-        this.setCustomName(new TextComponentString(playerName));
+        this.setCustomName(new StringTextComponent(playerName));
     }
 
     @Override
@@ -50,21 +41,19 @@ public class EntityGhostPlayer extends EntityMob {
 
     @Override
     protected void initEntityAI() {
-        this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(1, new EntityAIAttackMelee(this, 1.0D, false));
-        this.tasks.addTask(5, new EntityAIMoveTowardsRestriction(this, 1.0D));
-        this.tasks.addTask(7, new EntityAIWanderAvoidWater(this, 1.0D));
-        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-        this.tasks.addTask(9, new EntityAILookIdle(this));
+        this.field_70714_bg.addTask(0, new SwimGoal(this));
+        this.field_70714_bg.addTask(1, new MeleeAttackGoal(this, 1.0D, false));
+        this.field_70714_bg.addTask(5, new MoveTowardsRestrictionGoal(this, 1.0D));
+        this.field_70714_bg.addTask(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.field_70714_bg.addTask(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+        this.field_70714_bg.addTask(9, new LookRandomlyGoal(this));
 
         if (Config.friendlyGhost) {
-            this.targetTasks.addTask(10, new EntityAINearestAttackableTarget<>(this, EntityLiving.class, 10, false, true, new Predicate<EntityLiving>() {
-                public boolean apply(@Nullable EntityLiving entityLiving) {
-                    return entityLiving != null && IMob.VISIBLE_MOB_SELECTOR.test(entityLiving) && !(entityLiving instanceof EntityCreeper) && !(entityLiving instanceof EntityGhostPlayer);
-                }
+            this.field_70715_bh.addTask(10, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, false, true, (entityLiving) -> {
+                return entityLiving != null && !entityLiving.isInvisible() && entityLiving instanceof MonsterEntity && !(entityLiving instanceof CreeperEntity) && !(entityLiving instanceof EntityGhostPlayer);
             }));
         } else {
-            this.targetTasks.addTask(10, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, true));
+            this.field_70715_bh.addTask(10, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
         }
 
     }
@@ -72,10 +61,13 @@ public class EntityGhostPlayer extends EntityMob {
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23000000417232513D);
         this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
+
         this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
+
+        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23000000417232513D);
+        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
+
         this.getDataManager().register(PLAYER_UUID, new UUID(0, 0).toString());
     }
 
@@ -129,15 +121,15 @@ public class EntityGhostPlayer extends EntityMob {
     }
 
     @Override
-    public void writeAdditional(NBTTagCompound compound) {
+    public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
-        compound.setString("player_uuid", getPlayerUUID().toString());
+        compound.putString("player_uuid", getPlayerUUID().toString());
     }
 
     @Override
-    public void readAdditional(NBTTagCompound compound) {
+    public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
-        if (compound.hasKey("player_uuid")) {
+        if (compound.contains("player_uuid")) {
             String uuidStr = compound.getString("player_uuid");
 
             try {

@@ -5,13 +5,13 @@ import java.util.Collection;
 
 import de.maxhenkel.gravestone.*;
 import de.maxhenkel.gravestone.util.Tools;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -58,11 +58,11 @@ public class DeathEvents {
             return;
         }
 
-        if (!(event.getEntity() instanceof EntityLivingBase)) {
+        if (!(event.getEntity() instanceof LivingEntity)) {
             return;
         }
 
-        if (!(event.getEntity() instanceof EntityPlayer) && !Config.livingGraves) {
+        if (!(event.getEntity() instanceof PlayerEntity) && !Config.livingGraves) {
             return;
         }
 
@@ -71,21 +71,21 @@ public class DeathEvents {
         }
 
         try {
-            EntityLivingBase entity = (EntityLivingBase) event.getEntity();
+            LivingEntity entity = (LivingEntity) event.getEntity();
             GraveProcessor graveProcessor = new GraveProcessor(entity);
 
-            Collection<EntityItem> drops = event.getDrops();
+            Collection<ItemEntity> drops = event.getDrops();
 
             if (graveProcessor.placeGraveStone(drops)) {
                 drops.clear();
             } else {
-                if (entity instanceof EntityPlayerMP) {
-                    String modname = new TextComponentTranslation("message.name").getFormattedText();
-                    String message = new TextComponentTranslation("message.create_grave_failed").getFormattedText();
+                if (entity instanceof ServerPlayerEntity) {
+                    String modname = new TranslationTextComponent("message.name").getFormattedText();
+                    String message = new TranslationTextComponent("message.create_grave_failed").getFormattedText();
 
-                    EntityPlayerMP player = (EntityPlayerMP) entity;
+                    ServerPlayerEntity player = (ServerPlayerEntity) entity;
 
-                    player.sendMessage(new TextComponentString("[" + modname + "] " + message));
+                    player.sendMessage(new StringTextComponent("[" + modname + "] " + message));
                 }
             }
             if (Config.giveDeathNotes) {
@@ -108,7 +108,7 @@ public class DeathEvents {
             return;
         }
 
-        if (!(event.getEntity() instanceof EntityPlayer)) {
+        if (!(event.getEntity() instanceof PlayerEntity)) {
             return;
         }
 
@@ -116,7 +116,7 @@ public class DeathEvents {
             return;
         }
 
-        EntityPlayer player = (EntityPlayer) event.getEntity();
+        PlayerEntity player = (PlayerEntity) event.getEntity();
 
         if (!Tools.keepInventory(player)) {
             return;
@@ -126,7 +126,7 @@ public class DeathEvents {
          * Give the player a note without items when he dies with keepInventory true
          */
         try {
-            DeathInfo info = new DeathInfo(player.getPosition(), DimensionType.func_212678_a(player.dimension).toString(), new ArrayList<>(), player.getName().getUnformattedComponentText(), System.currentTimeMillis(), player.getUniqueID());
+            DeathInfo info = new DeathInfo(player.getPosition(), DimensionType.getKey(player.dimension).toString(), new ArrayList<>(), player.getName().getUnformattedComponentText(), System.currentTimeMillis(), player.getUniqueID());
             ItemStack stack = new ItemStack(Main.deathInfo);
 
             info.addToItemStack(stack);

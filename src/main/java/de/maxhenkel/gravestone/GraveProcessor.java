@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import de.maxhenkel.gravestone.blocks.BlockGraveStone;
 import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
 import de.maxhenkel.gravestone.util.NoSpaceException;
 import net.minecraft.block.Block;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.Blocks;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -21,14 +22,14 @@ import net.minecraft.world.dimension.DimensionType;
 
 public class GraveProcessor {
 
-    private EntityLivingBase entity;
+    private LivingEntity entity;
     private World world;
     private BlockPos deathPosition;
     private BlockPos gravePosition;
     private List<ItemStack> drops;
     private long time;
 
-    public GraveProcessor(EntityLivingBase entity) {
+    public GraveProcessor(LivingEntity entity) {
         this.entity = entity;
         this.world = entity.getEntityWorld();
         this.deathPosition = entity.getPosition();
@@ -37,8 +38,8 @@ public class GraveProcessor {
         this.time = System.currentTimeMillis();
     }
 
-    public boolean placeGraveStone(Collection<EntityItem> drops) {
-        for (EntityItem ei : drops) {
+    public boolean placeGraveStone(Collection<ItemEntity> drops) {
+        for (ItemEntity ei : drops) {
             this.drops.add(ei.getItem());
         }
 
@@ -76,7 +77,7 @@ public class GraveProcessor {
             graveTileEntity.setPlayerUUID(entity.getUniqueID().toString());
             graveTileEntity.setDeathTime(time);
 
-            graveTileEntity.setRenderHead(entity instanceof EntityPlayer);
+            graveTileEntity.setRenderHead(entity instanceof PlayerEntity);
 
             addItems(graveTileEntity, drops);
 
@@ -87,10 +88,10 @@ public class GraveProcessor {
         return true;
     }
 
-    private void addItems(TileEntityGraveStone graveStone, Collection<EntityItem> items) {
+    private void addItems(TileEntityGraveStone graveStone, Collection<ItemEntity> items) {
         try {
             int i = 0;
-            for (EntityItem item : items) {
+            for (ItemEntity item : items) {
                 try {
                     ItemStack stack = item.getItem();
                     if (graveStone.getSizeInventory() > i) {
@@ -112,11 +113,11 @@ public class GraveProcessor {
     public BlockPos getGraveStoneLocation() throws NoSpaceException {
         BlockPos location = new BlockPos(deathPosition.getX(), deathPosition.getY(), deathPosition.getZ());
 
-        if (world.isOutsideBuildHeight(location) && location.getY() < world.getHeight()) {
+        if (world.isOutsideBuildHeight(location) && location.getY() < world.getMaxHeight()) {
             location = new BlockPos(location.getX(), 1, location.getZ());
         }
 
-        while (location.getY() < world.getHeight()) {
+        while (location.getY() < world.getMaxHeight()) {
             if (isReplaceable(location)) {
                 return location;
             }
@@ -144,20 +145,20 @@ public class GraveProcessor {
 
     public void givePlayerNote() {
 
-        if (!(entity instanceof EntityPlayer)) {
+        if (!(entity instanceof PlayerEntity)) {
             return;
         }
 
-        EntityPlayer player = (EntityPlayer) entity;
+        PlayerEntity player = (PlayerEntity) entity;
 
-        DeathInfo info = new DeathInfo(gravePosition, DimensionType.func_212678_a(player.dimension).toString(), drops.stream().collect(Collectors.toList()), player.getName().getUnformattedComponentText(), time, player.getUniqueID());
+        DeathInfo info = new DeathInfo(gravePosition, DimensionType.getKey(player.dimension).toString(), drops.stream().collect(Collectors.toList()), player.getName().getUnformattedComponentText(), time, player.getUniqueID());
         ItemStack stack = new ItemStack(Main.deathInfo);
 
         info.addToItemStack(stack);
         player.inventory.addItemStackToInventory(stack);
     }
 
-    public EntityLivingBase getEntity() {
+    public LivingEntity getEntity() {
         return entity;
     }
 

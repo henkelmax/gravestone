@@ -9,13 +9,11 @@ import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
-import net.minecraft.block.state.BlockFaceShape;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.fluid.IFluidState;
-import net.minecraft.init.Fluids;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.*;
@@ -26,39 +24,39 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.*;
 
 import javax.annotation.Nullable;
 import java.util.Map;
-import java.util.Random;
 
 public class BlockGraveStone extends Block implements ITileEntityProvider, IItemBlock, IBucketPickupHandler, ILiquidContainer {
 
-    public static final DirectionProperty FACING = DirectionProperty.create("facing", EnumFacing.Plane.HORIZONTAL);
+    public static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.Plane.HORIZONTAL);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public BlockGraveStone() {
         super(Properties.create(Material.CACTUS, MaterialColor.DIRT).hardnessAndResistance(0.3F, Float.MAX_VALUE));
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, EnumFacing.NORTH).with(WATERLOGGED, false));
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
         this.setRegistryName(Main.MODID, "gravestone");
     }
 
     @Override
     public Item toItem() {
-        return new ItemBlock(this, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(this.getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(this.getRegistryName());
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, IBlockState> builder) {
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
         builder.add(WATERLOGGED);
     }
 
-    public Fluid pickupFluid(IWorld worldIn, BlockPos pos, IBlockState state) {
+    public Fluid pickupFluid(IWorld worldIn, BlockPos pos, BlockState state) {
         if (state.get(WATERLOGGED)) {
             worldIn.setBlockState(pos, state.with(WATERLOGGED, false), 3);
             return Fluids.WATER;
@@ -68,17 +66,17 @@ public class BlockGraveStone extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public IFluidState getFluidState(IBlockState state) {
+    public IFluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
     @Override
-    public boolean canContainFluid(IBlockReader worldIn, BlockPos pos, IBlockState state, Fluid fluidIn) {
+    public boolean canContainFluid(IBlockReader worldIn, BlockPos pos, BlockState state, Fluid fluidIn) {
         return !state.get(WATERLOGGED) && fluidIn == Fluids.WATER;
     }
 
     @Override
-    public boolean receiveFluid(IWorld worldIn, BlockPos pos, IBlockState state, IFluidState fluidStateIn) {
+    public boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, IFluidState fluidStateIn) {
         if (!state.get(WATERLOGGED) && fluidStateIn.getFluid() == Fluids.WATER) {
             if (!worldIn.isRemote()) {
                 worldIn.setBlockState(pos, state.with(WATERLOGGED, true), 3);
@@ -91,7 +89,7 @@ public class BlockGraveStone extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public IBlockState updatePostPlacement(IBlockState stateIn, EnumFacing facing, IBlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (stateIn.get(WATERLOGGED)) {
             worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
         }
@@ -100,64 +98,56 @@ public class BlockGraveStone extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public void onBlockExploded(IBlockState state, World world, BlockPos pos, Explosion explosion) {
-
-    }
-
-    @Override
     public void onExplosionDestroy(World p_180652_1_, BlockPos p_180652_2_, Explosion p_180652_3_) {
 
     }
 
     @Override
-    public boolean isBlockNormalCube(IBlockState state) {
-        return false;
-    }
-
-    @Override
-    public boolean doesSideBlockRendering(IBlockState state, IWorldReader world, BlockPos pos, EnumFacing face) {
+    public boolean doesSideBlockRendering(BlockState state, IEnviromentBlockReader world, BlockPos pos, Direction face) {
         return false;
     }
 
     @Nullable
     @Override
-    public IBlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
         IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
         return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(WATERLOGGED, ifluidstate.getFluid() == Fluids.WATER);
     }
 
+
     @Override
-    public boolean isFullCube(IBlockState state) {
+    public boolean func_220060_c(BlockState p_220060_1_, IBlockReader p_220060_2_, BlockPos p_220060_3_) {
         return false;
     }
 
     @Override
-    public boolean isNormalCube(IBlockState state) {
+    public boolean func_220074_n(BlockState p_220074_1_) {
         return false;
     }
 
     @Override
-    public boolean isNormalCube(IBlockState state, IBlockReader world, BlockPos pos) {
+    public boolean func_220081_d(BlockState p_220081_1_, IBlockReader p_220081_2_, BlockPos p_220081_3_) {
         return false;
     }
 
     @Override
-    public boolean canEntityDestroy(IBlockState state, IBlockReader world, BlockPos pos, Entity entity) {
+    public boolean canEntityDestroy(BlockState state, IBlockReader world, BlockPos pos, Entity entity) {
         return false;
     }
 
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        return EnumBlockRenderType.MODEL;
+    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+        return BlockRenderType.MODEL;
     }
 
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
-
+    //TODO
+    /*
     @Override
-    public boolean canSilkHarvest(IBlockState p_canSilkHarvest_1_, IWorldReader p_canSilkHarvest_2_, BlockPos p_canSilkHarvest_3_, EntityPlayer p_canSilkHarvest_4_) {
+    public boolean canSilkHarvest(BlockState p_canSilkHarvest_1_, IWorldReader p_canSilkHarvest_2_, BlockPos p_canSilkHarvest_3_, PlayerEntity p_canSilkHarvest_4_) {
         return true;
     }
 
@@ -165,14 +155,15 @@ public class BlockGraveStone extends Block implements ITileEntityProvider, IItem
     protected ItemStack getSilkTouchDrop(IBlockState p_180643_1_) {
         return new ItemStack(this);
     }
-
+    */
+    /*
     @Override
-    public int quantityDropped(IBlockState p_196264_1_, Random p_196264_2_) {
+    public int quantityDropped(BlockState p_196264_1_, Random p_196264_2_) {
         return 0;
-    }
+    }*/
 
     @Override
-    public boolean onBlockActivated(IBlockState state, World world, BlockPos pos, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z) {
+    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
         if (world.isRemote) {
             return true;
         }
@@ -189,19 +180,18 @@ public class BlockGraveStone extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public void onReplaced(IBlockState state, World worldIn, BlockPos pos, IBlockState newState, boolean isMoving) {
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
             if (tileentity instanceof IInventory) {
                 InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tileentity);
                 worldIn.updateComparatorOutputLevel(pos, this);
             }
-
             super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
     }
 
-    private boolean displayGraveInfo(TileEntityGraveStone grave, EntityPlayer player) {
+    private boolean displayGraveInfo(TileEntityGraveStone grave, PlayerEntity player) {
         String name = grave.getPlayerName();
         String time = grave.getTimeString();
 
@@ -210,64 +200,56 @@ public class BlockGraveStone extends Block implements ITileEntityProvider, IItem
         }
 
         if (time == null || time.isEmpty()) {
-            player.sendMessage(new TextComponentString(name));
+            player.sendMessage(new StringTextComponent(name));
         } else {
-            player.sendMessage(new TextComponentTranslation("message.died", name, time));
+            player.sendMessage(new TranslationTextComponent("message.died", name, time));
         }
 
         return true;
     }
 
     @Override
-    public boolean isReplaceable(IBlockState p_196253_1_, BlockItemUseContext p_196253_2_) {
+    public boolean isReplaceable(BlockState p_196253_1_, BlockItemUseContext p_196253_2_) {
         return false;
     }
 
     @Override
-    public boolean canPlaceTorchOnTop(IBlockState state, IWorldReaderBase world, BlockPos pos) {
+    public boolean canBeReplacedByLeaves(BlockState state, IWorldReader world, BlockPos pos) {
         return false;
     }
 
-    @Override
-    public boolean canBeReplacedByLeaves(IBlockState state, IWorldReaderBase world, BlockPos pos) {
-        return false;
-    }
-
-    @Override
-    public boolean isTopSolid(IBlockState state) {
-        return false;
-    }
-
+    //TODO
+    /*
     @Override
     public BlockFaceShape getBlockFaceShape(IBlockReader p_193383_1_, IBlockState p_193383_2_, BlockPos p_193383_3_, EnumFacing face) {
         return face == EnumFacing.DOWN ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
-    }
+    }*/
 
     @Override
-    public VoxelShape getCollisionShape(IBlockState state, IBlockReader reader, BlockPos pos) {
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
         return SHAPES.get(state.get(FACING));
     }
 
     @Override
-    public VoxelShape getRenderShape(IBlockState state, IBlockReader reader, BlockPos pos) {
+    public VoxelShape getRenderShape(BlockState state, IBlockReader reader, BlockPos pos) {
         return SHAPES.get(state.get(FACING));
     }
 
     @Override
-    public VoxelShape getShape(IBlockState state, IBlockReader reader, BlockPos pos) {
+    public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
         return SHAPES.get(state.get(FACING));
     }
 
     @Override
-    public VoxelShape getRaytraceShape(IBlockState state, IBlockReader reader, BlockPos pos) {
+    public VoxelShape getRaytraceShape(BlockState state, IBlockReader reader, BlockPos pos) {
         return SHAPES.get(state.get(FACING));
     }
 
     private static final VoxelShape BASE1 = Block.makeCuboidShape(0D, 0D, 0D, 16D, 1D, 16D);
     private static final VoxelShape BASE2 = Block.makeCuboidShape(1D, 1D, 1D, 15D, 2D, 15D);
 
-    private static final Map<EnumFacing, VoxelShape> SHAPES = Maps.newEnumMap(ImmutableMap.of(
-            EnumFacing.NORTH,
+    private static final Map<Direction, VoxelShape> SHAPES = Maps.newEnumMap(ImmutableMap.of(
+            Direction.NORTH,
             Tools.combine(
                     BASE1,
                     BASE2,
@@ -275,7 +257,7 @@ public class BlockGraveStone extends Block implements ITileEntityProvider, IItem
                     Block.makeCuboidShape(2D, 12D, 1D, 14D, 14D, 2D),
                     Block.makeCuboidShape(3D, 14D, 1D, 13D, 15D, 2D)
             ),
-            EnumFacing.SOUTH,
+            Direction.SOUTH,
             Tools.combine(
                     BASE1,
                     BASE2,
@@ -283,7 +265,7 @@ public class BlockGraveStone extends Block implements ITileEntityProvider, IItem
                     Block.makeCuboidShape(2D, 12D, 15D, 14D, 14D, 14D),
                     Block.makeCuboidShape(3D, 14D, 15D, 13D, 15D, 14D)
             ),
-            EnumFacing.EAST,
+            Direction.EAST,
             Tools.combine(
                     BASE1,
                     BASE2,
@@ -291,7 +273,7 @@ public class BlockGraveStone extends Block implements ITileEntityProvider, IItem
                     Block.makeCuboidShape(15D, 12D, 2D, 14D, 14D, 14D),
                     Block.makeCuboidShape(15D, 14D, 3D, 14D, 15D, 13D)
             ),
-            EnumFacing.WEST,
+            Direction.WEST,
             Tools.combine(
                     BASE1,
                     BASE2,
@@ -307,7 +289,7 @@ public class BlockGraveStone extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public TileEntity createTileEntity(IBlockState state, IBlockReader world) {
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new TileEntityGraveStone();
     }
 

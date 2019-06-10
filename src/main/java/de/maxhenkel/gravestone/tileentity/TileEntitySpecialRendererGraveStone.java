@@ -1,19 +1,19 @@
 package de.maxhenkel.gravestone.tileentity;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import de.maxhenkel.gravestone.blocks.BlockGraveStone;
 import de.maxhenkel.gravestone.util.PlayerSkins;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.model.ModelBase;
-import net.minecraft.client.renderer.entity.model.ModelHumanoidHead;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.entity.model.HumanoidHeadModel;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import de.maxhenkel.gravestone.Config;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.FontRenderer;
+
 import java.util.UUID;
 
 public class TileEntitySpecialRendererGraveStone extends TileEntityRenderer<TileEntityGraveStone> {
@@ -27,12 +27,12 @@ public class TileEntitySpecialRendererGraveStone extends TileEntityRenderer<Tile
     @Override
     public void render(TileEntityGraveStone target, double x, double y, double z, float partialTicks, int destroyStage) {
         String name = target.getPlayerName();
-
+        System.out.println("123");
         if (name == null || name.isEmpty()) {
             return;
         }
 
-        EnumFacing facing = target.getBlockState().get(BlockGraveStone.FACING);
+        Direction facing = target.getBlockState().get(BlockGraveStone.FACING);
 
         GL11.glPushMatrix();
         GL11.glTranslatef((float) x + 0.5F, (float) y + 1.0F, (float) z + 0.5F);
@@ -60,7 +60,7 @@ public class TileEntitySpecialRendererGraveStone extends TileEntityRenderer<Tile
 
         boolean render = false;
 
-        IBlockState state = target.getWorld().getBlockState(target.getPos().down());
+        BlockState state = target.getWorld().getBlockState(target.getPos().down());
         if (state == null) {
             return;
         }
@@ -70,7 +70,7 @@ public class TileEntitySpecialRendererGraveStone extends TileEntityRenderer<Tile
             return;
         }
 
-        if (block.isNormalCube(state, target.getWorld(), target.getPos().down())) {//is opaque
+        if (block.func_220081_d(state, target.getWorld(), target.getPos().down())) {//is opaque
             render = true;
         }
 
@@ -82,8 +82,8 @@ public class TileEntitySpecialRendererGraveStone extends TileEntityRenderer<Tile
         }
     }
 
-    public void renderSkull(double x, double y, double z, String uuid, String name, EnumFacing rotation) {
-        ModelBase modelbase = new ModelHumanoidHead();
+    public void renderSkull(double x, double y, double z, String uuid, String name, Direction rotation) {
+        HumanoidHeadModel model = new HumanoidHeadModel();
         ResourceLocation resourcelocation = DefaultPlayerSkin.getDefaultSkinLegacy();
 
         if (uuid != null) {
@@ -104,7 +104,7 @@ public class TileEntitySpecialRendererGraveStone extends TileEntityRenderer<Tile
         GlStateManager.scalef(-1.0F, -1.0F, 1.0F);
         GlStateManager.enableAlphaTest();//enableAlpha
 
-        GlStateManager.enableBlendProfile(GlStateManager.Profile.PLAYER_SKIN);
+        GlStateManager.setProfile(GlStateManager.Profile.PLAYER_SKIN);
 
         float yaw = 26F;
         float pitch = -61.0F;
@@ -116,21 +116,20 @@ public class TileEntitySpecialRendererGraveStone extends TileEntityRenderer<Tile
 
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        modelbase.render(null, 0.0F, 0.0F, 0.0F, yaw, pitch, scale);
+        model.func_217104_a(0.0F, 0.0F, 0.0F, yaw, pitch, scale);
 
         GlStateManager.popMatrix();
     }
 
-    private int getDirection(EnumFacing facing) {
+    private int getDirection(Direction facing) {
         switch (facing) {
-            case NORTH:
-                return 0;
             case EAST:
                 return 270;
             case SOUTH:
                 return 180;
             case WEST:
                 return 90;
+            case NORTH:
             default:
                 return 0;
         }

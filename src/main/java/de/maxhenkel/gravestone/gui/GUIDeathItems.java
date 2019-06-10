@@ -1,21 +1,21 @@
 package de.maxhenkel.gravestone.gui;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.blaze3d.platform.GlStateManager;
 import de.maxhenkel.gravestone.DeathInfo;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.util.Tools;
-import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.client.entity.player.RemoteClientPlayerEntity;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiInventory;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 
-public class GUIDeathItems extends GuiScreen {
+public class GUIDeathItems extends Screen {
 
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/info.png");
     private static final int TEXTURE_X = 163;
@@ -23,62 +23,64 @@ public class GUIDeathItems extends GuiScreen {
 
     private DeathInfo info;
 
-    private GuiButton buttonPrev;
-    private GuiButton buttonNext;
+    private Button buttonPrev;
+    private Button buttonNext;
 
     private int page;
 
     private PageList pageList;
 
     public GUIDeathItems(DeathInfo info) {
+        super(new TranslationTextComponent("gui.deathinfo.title"));
         this.info = info;
         this.page = 0;
         this.pageList = new PageList(info.getItems(), this);
     }
 
-    public void initGui() {
+    @Override
+    protected void init() {
+        super.init();
+
         buttons.clear();
         int left = (this.width - TEXTURE_X) / 2;
-        buttonPrev = addButton(new GuiButton(0, left, 190, 75, 20, new TextComponentTranslation("button.prev").getFormattedText()) {
+        buttonPrev = addButton(new Button(left, 190, 75, 20, new TranslationTextComponent("button.prev").getFormattedText(), new Button.IPressable() {
             @Override
-            public void onClick(double x, double y) {
-                super.onClick(x, y);
+            public void onPress(Button button) {
                 page--;
                 if (page < 0) {
                     page = 0;
                 }
                 checkButtons();
             }
-        });
-        buttonNext = addButton(new GuiButton(1, left + TEXTURE_X - 75, 190, 75, 20, new TextComponentTranslation("button.next").getFormattedText()) {
+        }));
+
+        buttonNext = addButton(new Button(left + TEXTURE_X - 75, 190, 75, 20, new TranslationTextComponent("button.next").getFormattedText(), new Button.IPressable() {
             @Override
-            public void onClick(double x, double y) {
-                super.onClick(x, y);
+            public void onPress(Button button) {
                 page++;
                 if (page > pageList.getPages()) {
                     page = pageList.getPages();
                 }
                 checkButtons();
             }
-        });
-        buttonPrev.enabled = false;
+        }));
+        buttonPrev.active = false;
         if (pageList.getPages() <= 0) {
-            this.buttonNext.enabled = false;
+            this.buttonNext.active = false;
         }
-
     }
 
     protected void checkButtons() {
         if (page <= 0) {
-            buttonPrev.enabled = false;
+            buttonPrev.active = false;
         } else {
-            buttonPrev.enabled = true;
+            buttonPrev.active = true;
         }
 
         if (page >= pageList.getPages()) {
-            buttonNext.enabled = false;
+            buttonNext.active = false;
         } else {
-            buttonNext.enabled = true;
+            buttonNext.active = true;
         }
     }
 
@@ -89,8 +91,8 @@ public class GUIDeathItems extends GuiScreen {
         int left = (this.width - TEXTURE_X) / 2;
 
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.getTextureManager().bindTexture(GUI_TEXTURE);
-        drawTexturedModalRect(left, 20, 0, 0, TEXTURE_X, TEXTURE_Y);
+        minecraft.getTextureManager().bindTexture(GUI_TEXTURE);
+        blit(left, 20, 0, 0, TEXTURE_X, TEXTURE_Y);
 
         if (page == 0) {
             drawFirstPage(mouseX, mouseY);
@@ -107,15 +109,15 @@ public class GUIDeathItems extends GuiScreen {
     public void drawFirstPage(int mouseX, int mouseY) {
         // Title
 
-        String title = new TextComponentTranslation("gui.deathinfo.title").getFormattedText();
+        String title = new TranslationTextComponent("gui.deathinfo.title").getFormattedText();
 
-        int titleWidth = this.fontRenderer.getStringWidth(title);
+        int titleWidth = this.font.getStringWidth(title);
 
-        this.fontRenderer.drawString(TextFormatting.BLACK + "" + TextFormatting.UNDERLINE + title, (this.width - titleWidth) / 2, 30, 0);
+        this.font.drawString(TextFormatting.BLACK + "" + TextFormatting.UNDERLINE + title, (this.width - titleWidth) / 2, 30, 0);
 
         // Name
 
-        String textName = new TextComponentTranslation("gui.deathinfo.name").getFormattedText() + ":";
+        String textName = new TranslationTextComponent("gui.deathinfo.name").getFormattedText() + ":";
         drawLeft(TextFormatting.BLACK + textName, 50);
 
         String name = info.getName();
@@ -123,7 +125,7 @@ public class GUIDeathItems extends GuiScreen {
 
         // Dimension
 
-        String textDimension = new TextComponentTranslation("gui.deathinfo.dimension").getFormattedText() + ":";
+        String textDimension = new TranslationTextComponent("gui.deathinfo.dimension").getFormattedText() + ":";
         drawLeft(TextFormatting.BLACK + textDimension, 63);
 
         String dimension = Tools.translateDimension(info.getDimension());
@@ -131,7 +133,7 @@ public class GUIDeathItems extends GuiScreen {
 
         // Time
 
-        String textTime = new TextComponentTranslation("gui.deathinfo.time").getFormattedText() + ":";
+        String textTime = new TranslationTextComponent("gui.deathinfo.time").getFormattedText() + ":";
         drawLeft(TextFormatting.BLACK + textTime, 76);
 
         String time = Tools.timeToString(info.getTime());
@@ -139,7 +141,7 @@ public class GUIDeathItems extends GuiScreen {
 
         // Location
 
-        String textLocation = new TextComponentTranslation("gui.deathinfo.location").getFormattedText() + ":";
+        String textLocation = new TranslationTextComponent("gui.deathinfo.location").getFormattedText() + ":";
         drawLeft(TextFormatting.BLACK + textLocation, 89);
 
         String locX = "X: " + info.getDeathLocation().getX();
@@ -154,8 +156,8 @@ public class GUIDeathItems extends GuiScreen {
 
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        EntityPlayer player = new EntityOtherPlayerMP(this.mc.world, new GameProfile(info.getUuid(), info.getName()));
-        GuiInventory.drawEntityOnScreen(width / 2, 175, 30, (width / 2) - mouseX, 100 - mouseY, player);
+        PlayerEntity player = new RemoteClientPlayerEntity(minecraft.world, new GameProfile(info.getUuid(), info.getName()));
+        InventoryScreen.drawEntityOnScreen(width / 2, 175, 30, (width / 2) - mouseX, 100 - mouseY, player);
 
     }
 
@@ -163,32 +165,32 @@ public class GUIDeathItems extends GuiScreen {
         int left = (this.width - TEXTURE_X) / 2;
         int offset = 40;
         int offsetLeft = left + offset;
-        this.fontRenderer.drawString(string, offsetLeft, height, 0);
+        this.font.drawString(string, offsetLeft, height, 0);
     }
 
     public void drawItemSize(String string, int height) {
         int left = (this.width - TEXTURE_X) / 2;
         int offset = 15;
         int offsetLeft = left + offset;
-        this.fontRenderer.drawString(string, offsetLeft, height, 0);
+        this.font.drawString(string, offsetLeft, height, 0);
     }
 
     public void drawLeft(String string, int height) {
         int left = (this.width - TEXTURE_X) / 2;
         int offset = 7;
         int offsetLeft = left + offset;
-        this.fontRenderer.drawString(string, offsetLeft, height, 0);
+        this.font.drawString(string, offsetLeft, height, 0);
     }
 
     public void drawRight(String string, int height) {
         int left = (this.width - TEXTURE_X) / 2;
         int offset = 14;
-        int strWidth = this.fontRenderer.getStringWidth(string);
-        this.fontRenderer.drawString(string, left + TEXTURE_X - strWidth - offset, height, 0);
+        int strWidth = this.font.getStringWidth(string);
+        this.font.drawString(string, left + TEXTURE_X - strWidth - offset, height, 0);
     }
 
     public FontRenderer getFontRenderer() {
-        return this.fontRenderer;
+        return this.font;
     }
 
 }
