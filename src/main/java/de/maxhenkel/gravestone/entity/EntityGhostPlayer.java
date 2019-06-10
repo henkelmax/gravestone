@@ -28,7 +28,7 @@ public class EntityGhostPlayer extends MonsterEntity {
     }
 
     public EntityGhostPlayer(World world, UUID playerUUID, String playerName) {
-        this(Main.ghost, world);
+        this(Main.GHOST, world);
 
         this.setPlayerUUID(playerUUID);
         this.setCustomName(new StringTextComponent(playerName));
@@ -83,7 +83,7 @@ public class EntityGhostPlayer extends MonsterEntity {
 
     @Nullable
     protected ResourceLocation getLootTable() {
-        return Main.ghostLootTable;
+        return Main.GHOST_LOOT_TABLE;
     }
 
     public void setPlayerUUID(UUID uuid) {

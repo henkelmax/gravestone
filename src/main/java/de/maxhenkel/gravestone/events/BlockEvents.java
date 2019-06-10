@@ -33,7 +33,7 @@ public class BlockEvents {
             return;
         }
 
-        if (!event.getState().getBlock().equals(Main.graveStone)) {
+        if (!event.getState().getBlock().equals(Main.GRAVESTONE)) {
             return;
         }
 
@@ -53,9 +53,9 @@ public class BlockEvents {
 
         ItemStack stack = player.getHeldItemMainhand();
 
-        if (stack == null || !stack.getItem().equals(Main.graveStoneItem)) {
+        if (stack == null || !stack.getItem().equals(Main.GRAVESTONE_ITEM)) {
             stack = player.getHeldItemOffhand();
-            if (stack == null || !stack.getItem().equals(Main.graveStoneItem)) {
+            if (stack == null || !stack.getItem().equals(Main.GRAVESTONE_ITEM)) {
                 return;
             }
         }
@@ -85,7 +85,7 @@ public class BlockEvents {
             return;
         }
 
-        if (!event.getState().getBlock().equals(Main.graveStone)) {
+        if (!event.getState().getBlock().equals(Main.GRAVESTONE)) {
             return;
         }
 
@@ -148,7 +148,7 @@ public class BlockEvents {
         String dim = player.dimension.toString();
 
         for (ItemStack stack : inv.mainInventory) {
-            if (stack != null && stack.getItem().equals(Main.deathInfo)) {
+            if (stack != null && stack.getItem().equals(Main.DEATHINFO)) {
                 if (stack.hasTag() && stack.getTag().contains(DeathInfo.KEY_INFO)) {
                     DeathInfo info = DeathInfo.fromNBT(stack.getTag().getCompound(DeathInfo.KEY_INFO));
                     if (info != null && dim.equals(info.getDimension()) && pos.equals(info.getDeathLocation())) {
@@ -159,13 +159,13 @@ public class BlockEvents {
         }
 
         for (ItemStack stack : inv.armorInventory) {
-            if (stack != null && stack.getItem().equals(Main.deathInfo)) {
+            if (stack != null && stack.getItem().equals(Main.DEATHINFO)) {
                 inv.deleteStack(stack);
             }
         }
 
         for (ItemStack stack : inv.offHandInventory) {
-            if (stack != null && stack.getItem().equals(Main.deathInfo)) {
+            if (stack != null && stack.getItem().equals(Main.DEATHINFO)) {
                 inv.deleteStack(stack);
             }
         }

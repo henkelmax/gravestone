@@ -127,7 +127,7 @@ public class DeathEvents {
          */
         try {
             DeathInfo info = new DeathInfo(player.getPosition(), DimensionType.getKey(player.dimension).toString(), new ArrayList<>(), player.getName().getUnformattedComponentText(), System.currentTimeMillis(), player.getUniqueID());
-            ItemStack stack = new ItemStack(Main.deathInfo);
+            ItemStack stack = new ItemStack(Main.DEATHINFO);
 
             info.addToItemStack(stack);
             player.inventory.addItemStackToInventory(stack);

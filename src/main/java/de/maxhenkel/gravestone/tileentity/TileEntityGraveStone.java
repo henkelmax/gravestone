@@ -28,7 +28,7 @@ public class TileEntityGraveStone extends TileEntity implements IInventory {
     private static final String RENDER_HEAD = "RenderHead";
 
     public TileEntityGraveStone() {
-        super(Main.graveTileEntity);
+        super(Main.GRAVESTONE_TILEENTITY);
         this.inventory = new Inventory(INVENTORY_SIZE);
         this.playerName = "";
         this.deathTime = 0L;

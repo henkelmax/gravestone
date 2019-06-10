@@ -52,7 +52,7 @@ public class GraveProcessor {
         }
 
         try {
-            world.setBlockState(gravePosition, Main.graveStone.getDefaultState().with(BlockGraveStone.FACING,
+            world.setBlockState(gravePosition, Main.GRAVESTONE.getDefaultState().with(BlockGraveStone.FACING,
                     entity.getHorizontalFacing().getOpposite()));
 
             if (isReplaceable(gravePosition.down())) {
@@ -152,7 +152,7 @@ public class GraveProcessor {
         PlayerEntity player = (PlayerEntity) entity;
 
         DeathInfo info = new DeathInfo(gravePosition, DimensionType.getKey(player.dimension).toString(), drops.stream().collect(Collectors.toList()), player.getName().getUnformattedComponentText(), time, player.getUniqueID());
-        ItemStack stack = new ItemStack(Main.deathInfo);
+        ItemStack stack = new ItemStack(Main.DEATHINFO);
 
         info.addToItemStack(stack);
         player.inventory.addItemStackToInventory(stack);

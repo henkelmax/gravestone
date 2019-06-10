@@ -158,7 +158,7 @@ public class DeathInfo {
         if (item == null) {
             return false;
         } else {
-            return Main.deathInfo.equals(item);
+            return Main.DEATHINFO.equals(item);
         }
     }
 
