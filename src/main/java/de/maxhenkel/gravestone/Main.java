@@ -2,7 +2,7 @@ package de.maxhenkel.gravestone;
 
 import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
 import de.maxhenkel.gravestone.entity.GhostPlayerEntity;
-import de.maxhenkel.gravestone.entity.GhostPlayerRenderFactory;
+import de.maxhenkel.gravestone.entity.PlayerGhostRenderer;
 import de.maxhenkel.gravestone.events.BlockEvents;
 import de.maxhenkel.gravestone.events.DeathEvents;
 import de.maxhenkel.gravestone.gui.DeathItemsContainer;
@@ -95,7 +95,7 @@ public class Main {
     @OnlyIn(Dist.CLIENT)
     public void clientSetup(FMLClientSetupEvent event) {
         ClientRegistry.bindTileEntitySpecialRenderer(GraveStoneTileEntity.class, new GravestoneRenderer());
-        RenderingRegistry.registerEntityRenderingHandler(GhostPlayerEntity.class, new GhostPlayerRenderFactory());
+        RenderingRegistry.registerEntityRenderingHandler(GhostPlayerEntity.class, manager -> new PlayerGhostRenderer(manager));
 
         ScreenManager.IScreenFactory factory = (ScreenManager.IScreenFactory<DeathItemsContainer, DeathItemsScreen>) (container, playerInventory, name) -> new DeathItemsScreen(playerInventory, container, name);
         ScreenManager.registerFactory(Main.DEATH_INFO_INVENTORY_CONTAINER, factory);

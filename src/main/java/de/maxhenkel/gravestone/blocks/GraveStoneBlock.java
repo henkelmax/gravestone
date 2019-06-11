@@ -144,23 +144,6 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
-    //TODO
-    /*
-    @Override
-    public boolean canSilkHarvest(BlockState p_canSilkHarvest_1_, IWorldReader p_canSilkHarvest_2_, BlockPos p_canSilkHarvest_3_, PlayerEntity p_canSilkHarvest_4_) {
-        return true;
-    }
-
-    @Override
-    protected ItemStack getSilkTouchDrop(IBlockState p_180643_1_) {
-        return new ItemStack(this);
-    }
-    */
-    /*
-    @Override
-    public int quantityDropped(BlockState p_196264_1_, Random p_196264_2_) {
-        return 0;
-    }*/
 
     @Override
     public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
@@ -223,7 +206,8 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     @Override
     public BlockFaceShape getBlockFaceShape(IBlockReader p_193383_1_, IBlockState p_193383_2_, BlockPos p_193383_3_, EnumFacing face) {
         return face == EnumFacing.DOWN ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
-    }*/
+    }
+    */
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
