@@ -14,7 +14,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -29,7 +28,6 @@ public class GhostPlayerEntity extends MonsterEntity {
 
     public GhostPlayerEntity(World world, UUID playerUUID, String playerName) {
         this(Main.GHOST, world);
-
         this.setPlayerUUID(playerUUID);
         this.setCustomName(new StringTextComponent(playerName));
     }
@@ -79,11 +77,6 @@ public class GhostPlayerEntity extends MonsterEntity {
     @Override
     public CreatureAttribute getCreatureAttribute() {
         return CreatureAttribute.UNDEAD;
-    }
-
-    @Nullable
-    protected ResourceLocation getLootTable() {
-        return Main.GHOST_LOOT_TABLE;
     }
 
     public void setPlayerUUID(UUID uuid) {
