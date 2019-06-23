@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 
 public class GhostPlayerEntity extends MonsterEntity {
 
-    private static final DataParameter<String> PLAYER_UUID = EntityDataManager.createKey(GhostPlayerEntity.class, DataSerializers.field_187194_d);
+    private static final DataParameter<String> PLAYER_UUID = EntityDataManager.createKey(GhostPlayerEntity.class, DataSerializers.STRING);
 
     public GhostPlayerEntity(EntityType type, World world) {
         super(type, world);
@@ -38,22 +38,21 @@ public class GhostPlayerEntity extends MonsterEntity {
     }
 
     @Override
-    protected void initEntityAI() {
-        this.field_70714_bg.addTask(0, new SwimGoal(this));
-        this.field_70714_bg.addTask(1, new MeleeAttackGoal(this, 1.0D, false));
-        this.field_70714_bg.addTask(5, new MoveTowardsRestrictionGoal(this, 1.0D));
-        this.field_70714_bg.addTask(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.field_70714_bg.addTask(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.field_70714_bg.addTask(9, new LookRandomlyGoal(this));
+    protected void registerGoals() {
+        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(5, new MoveTowardsRestrictionGoal(this, 1.0D));
+        this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.addGoal(9, new LookRandomlyGoal(this));
 
         if (Config.friendlyGhost) {
-            this.field_70715_bh.addTask(10, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, false, true, (entityLiving) -> {
+            this.targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, false, true, (entityLiving) -> {
                 return entityLiving != null && !entityLiving.isInvisible() && entityLiving instanceof MonsterEntity && !(entityLiving instanceof CreeperEntity) && !(entityLiving instanceof GhostPlayerEntity);
             }));
         } else {
-            this.field_70715_bh.addTask(10, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
+            this.targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
         }
-
     }
 
     @Override

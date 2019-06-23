@@ -71,6 +71,8 @@ public class Main {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_SPEC);
 
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
+            // Moved from clientsetup to fix entities not rendering
+            RenderingRegistry.registerEntityRenderingHandler(GhostPlayerEntity.class, manager -> new PlayerGhostRenderer(manager));
             FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup);
         });
     }
@@ -95,7 +97,6 @@ public class Main {
     @OnlyIn(Dist.CLIENT)
     public void clientSetup(FMLClientSetupEvent event) {
         ClientRegistry.bindTileEntitySpecialRenderer(GraveStoneTileEntity.class, new GravestoneRenderer());
-        RenderingRegistry.registerEntityRenderingHandler(GhostPlayerEntity.class, manager -> new PlayerGhostRenderer(manager));
 
         ScreenManager.IScreenFactory factory = (ScreenManager.IScreenFactory<DeathItemsContainer, DeathItemsScreen>) (container, playerInventory, name) -> new DeathItemsScreen(playerInventory, container, name);
         ScreenManager.registerFactory(Main.DEATH_INFO_INVENTORY_CONTAINER, factory);
@@ -118,7 +119,7 @@ public class Main {
 
     @SubscribeEvent
     public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-        GRAVESTONE_TILEENTITY = TileEntityType.Builder.func_223042_a(GraveStoneTileEntity::new, GRAVESTONE).build(null);
+        GRAVESTONE_TILEENTITY = TileEntityType.Builder.create(GraveStoneTileEntity::new, GRAVESTONE).build(null);
         GRAVESTONE_TILEENTITY.setRegistryName(new ResourceLocation(MODID, "gravestone"));
         event.getRegistry().register(GRAVESTONE_TILEENTITY);
     }

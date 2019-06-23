@@ -132,7 +132,7 @@ public class BlockEvents {
 
         GhostPlayerEntity ghost = new GhostPlayerEntity(world, uuid, tileentity.getPlayerName());
         ghost.setPosition(event.getPos().getX() + 0.5, event.getPos().getY() + 0.1, event.getPos().getZ() + 0.5);
-        world.func_217376_c(ghost);
+        world.addEntity(ghost);
     }
 
     private void removeDeathNote(BlockEvent.BreakEvent event) {

@@ -67,7 +67,7 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
             return;
         }
 
-        if (block.func_220081_d(state, target.getWorld(), target.getPos().down())) {//is opaque
+        if (block.isNormalCube(state, target.getWorld(), target.getPos().down())) {//is opaque
             render = true;
         }
 

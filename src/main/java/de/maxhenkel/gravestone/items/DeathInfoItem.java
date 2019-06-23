@@ -35,7 +35,7 @@ public class DeathInfoItem extends Item {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand) {
         DeathInfo info = DeathInfo.getDeathInfoFromPlayerHand(playerIn);
 
-        if (playerIn.isSneaking() && playerIn.playerAbilities.isCreativeMode) {
+        if (playerIn.isSneaking() && playerIn.abilities.isCreativeMode) {
             if (playerIn instanceof ServerPlayerEntity) {
                 NetworkHooks.openGui((ServerPlayerEntity) playerIn, new INamedContainerProvider() {
 

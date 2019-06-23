@@ -116,7 +116,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
 
 
     @Override
-    public boolean func_220060_c(BlockState p_220060_1_, IBlockReader p_220060_2_, BlockPos p_220060_3_) {
+    public boolean causesSuffocation(BlockState p_220060_1_, IBlockReader p_220060_2_, BlockPos p_220060_3_) {
         return false;
     }
 
@@ -126,7 +126,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public boolean func_220081_d(BlockState p_220081_1_, IBlockReader p_220081_2_, BlockPos p_220081_3_) {
+    public boolean isNormalCube(BlockState p_220081_1_, IBlockReader p_220081_2_, BlockPos p_220081_3_) {
         return false;
     }
 
