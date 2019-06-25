@@ -75,7 +75,7 @@ public class GhostPlayerEntity extends MonsterEntity {
 
     @Override
     public CreatureAttribute getCreatureAttribute() {
-        return CreatureAttribute.UNDEAD;
+        return CreatureAttribute.field_223223_b_;
     }
 
     public void setPlayerUUID(UUID uuid) {

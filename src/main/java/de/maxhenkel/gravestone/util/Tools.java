@@ -13,6 +13,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.GameRules;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -45,7 +46,7 @@ public class Tools {
 
     public static boolean keepInventory(PlayerEntity player) {
         try {
-            return player.getEntityWorld().getWorldInfo().getGameRulesInstance().getBoolean("keepInventory");
+            return player.getEntityWorld().getWorldInfo().getGameRulesInstance().func_223586_b(GameRules.field_223600_c);
         } catch (Exception e) {
             return false;
         }
