@@ -71,10 +71,15 @@ public class Main {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_SPEC);
 
         DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> {
-            // Moved from clientsetup to fix entities not rendering
-            RenderingRegistry.registerEntityRenderingHandler(GhostPlayerEntity.class, manager -> new PlayerGhostRenderer(manager));
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup);
+            clientStart();
         });
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void clientStart() {
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup);
+        // Moved from clientsetup to fix entities not rendering
+        RenderingRegistry.registerEntityRenderingHandler(GhostPlayerEntity.class, manager -> new PlayerGhostRenderer(manager));
     }
 
     @SubscribeEvent

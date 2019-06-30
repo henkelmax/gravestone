@@ -1,2 +1,1 @@
-- Updated forge mappings
-- Fixed Player Ghost not rendering in newer forge versions
+- Fixed crash on servers
