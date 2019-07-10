@@ -1,1 +1,1 @@
-- Fixed crash on servers
+- Fixed gravestone block can't explode

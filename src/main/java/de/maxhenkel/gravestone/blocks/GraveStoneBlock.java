@@ -103,6 +103,11 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
+    public void onBlockExploded(BlockState state, World world, BlockPos pos, Explosion explosion) {
+
+    }
+
+    @Override
     public boolean doesSideBlockRendering(BlockState state, IEnviromentBlockReader world, BlockPos pos, Direction face) {
         return false;
     }
@@ -113,7 +118,6 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
         IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
         return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(WATERLOGGED, ifluidstate.getFluid() == Fluids.WATER);
     }
-
 
     @Override
     public boolean causesSuffocation(BlockState p_220060_1_, IBlockReader p_220060_2_, BlockPos p_220060_3_) {
