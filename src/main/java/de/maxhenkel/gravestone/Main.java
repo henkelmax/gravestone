@@ -34,6 +34,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ObjectHolder;
 
+import java.lang.reflect.Field;
+
 @Mod.EventBusSubscriber(modid = Main.MODID)
 @Mod(Main.MODID)
 public class Main {
@@ -133,9 +135,23 @@ public class Main {
     public void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
         GHOST = EntityType.Builder.<GhostPlayerEntity>create(GhostPlayerEntity::new, EntityClassification.MONSTER)
                 .size(0.6F, 1.95F)
+                .disableSerialization()
                 .build(Main.MODID + ":player_ghost");
+        try {
+            Field field;
+            try {
+                field = GHOST.getClass().getDeclaredField("field_200710_b");
+            } catch (NoSuchFieldException ex) {
+                field = GHOST.getClass().getDeclaredField("serializable");
+            }
+            field.setAccessible(true);
+            field.set(GHOST, Boolean.TRUE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         GHOST.setRegistryName(new ResourceLocation(Main.MODID, "player_ghost"));
         event.getRegistry().register(GHOST);
+
     }
 
     @SubscribeEvent

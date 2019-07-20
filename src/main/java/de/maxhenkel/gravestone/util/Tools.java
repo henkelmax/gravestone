@@ -46,7 +46,7 @@ public class Tools {
 
     public static boolean keepInventory(PlayerEntity player) {
         try {
-            return player.getEntityWorld().getWorldInfo().getGameRulesInstance().func_223586_b(GameRules.field_223600_c);
+            return player.getEntityWorld().getWorldInfo().getGameRulesInstance().getBoolean(GameRules.KEEP_INVENTORY);
         } catch (Exception e) {
             return false;
         }
