@@ -1,1 +1,2 @@
-- Fixed gravestone block can't explode
+- Improved en_us language
+- Added pl_pl language
