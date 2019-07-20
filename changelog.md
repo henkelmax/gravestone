@@ -1,2 +1,3 @@
 - Updated to 1.14.4
 - Improved en_us language
+- Added pl_pl language
