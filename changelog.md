@@ -1,2 +1,2 @@
-- Fixed bug that gave the player a death note even if he had disabled them
-- Added zh_tw language
+- Improved en_us language
+- Added pl_pl language
