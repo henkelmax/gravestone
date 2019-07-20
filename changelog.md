@@ -1,1 +1,2 @@
-- Fixed crash on servers
+- Improved en_us language
+- Added pl_pl language
