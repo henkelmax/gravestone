@@ -1,0 +1,17 @@
+tile.gravestone.name=Grób
+item.death_location_finder.name=Poszukiwacz miejsca śmierci
+item.death_info.name=Nekrolog
+message.died=Gracz %s zmarł %s
+message.deathlocation=Lokalizacja miejsca śmierci
+message.no_deathlocation=Brak dostępnej lokalizacji miejsca śmierci
+message.create_grave_failed=Grób nie mógł zostać postawiony
+gui.deathinfo.name=Nazwa
+gui.deathinfo.title=Informacje o śmierci gracza
+gui.deathinfo.location=Lokalizacja
+gui.deathinfo.dimension=Wymiar
+button.next=Dalej
+button.prev=Wstecz
+gui.deathinfo.title.items=Rzeczy zmarłego
+gui.deathinfo.page=Strona
+gui.deathinfo.time=Data
+entity.player_ghost.name=Gracz duch
