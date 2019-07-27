@@ -7,12 +7,12 @@ import net.minecraft.util.text.ITextComponent;
 
 public class DeathItemsScreen extends ScreenBase<DeathItemsContainer> {
 
-    public static final ResourceLocation DEFAULT_IMAGE = new ResourceLocation(Main.MODID, "textures/gui/death_items.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/death_items.png");
 
     private PlayerInventory playerInventory;
 
     public DeathItemsScreen(PlayerInventory playerInventory, DeathItemsContainer container, ITextComponent name) {
-        super(DEFAULT_IMAGE, container, playerInventory, name);
+        super(TEXTURE, container, playerInventory, name);
 
         this.playerInventory = playerInventory;
         xSize = 176;

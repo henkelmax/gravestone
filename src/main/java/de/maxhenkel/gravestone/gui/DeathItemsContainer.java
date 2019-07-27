@@ -7,11 +7,11 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Slot;
 
 public class DeathItemsContainer extends ContainerBase {
-    private IInventory albumInventory;
+    private IInventory inventory;
 
     public DeathItemsContainer(int id, IInventory playerInventory, IInventory inventory) {
         super(Main.DEATH_INFO_INVENTORY_CONTAINER, id, playerInventory, inventory);
-        this.albumInventory = inventory;
+        this.inventory = inventory;
 
         for (int x = 0; x < 6; x++) {
             for (int y = 0; y < 9; y++) {
@@ -39,6 +39,6 @@ public class DeathItemsContainer extends ContainerBase {
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return albumInventory.isUsableByPlayer(playerIn);
+        return inventory.isUsableByPlayer(playerIn);
     }
 }
