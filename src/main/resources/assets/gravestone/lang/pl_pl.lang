@@ -14,4 +14,4 @@ button.prev=Wstecz
 gui.deathinfo.title.items=Rzeczy zmarłego
 gui.deathinfo.page=Strona
 gui.deathinfo.time=Data
-entity.player_ghost.name=Gracz duch
+entity.player_ghost.name=Duch gracza

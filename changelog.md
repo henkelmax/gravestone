@@ -1,2 +1,1 @@
-- Improved en_us language
-- Added pl_pl language
+- Improved pl_pl language
