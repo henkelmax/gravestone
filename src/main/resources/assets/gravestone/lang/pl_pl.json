@@ -1,7 +1,7 @@
 {
   "block.gravestone.gravestone": "Grób",
   "item.gravestone.death_info": "Nekrolog",
-  "entity.gravestone.player_ghost": "Gracz duch",
+  "entity.gravestone.player_ghost": "Duch gracza",
   "message.died": "Gracz %s zmarł %s",
   "message.deathlocation": "Lokalizacja miejsca śmierci",
   "message.no_deathlocation": "Brak dostępnej lokalizacji miejsca śmierci",
