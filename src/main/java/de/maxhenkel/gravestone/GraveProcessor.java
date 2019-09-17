@@ -47,7 +47,7 @@ public class GraveProcessor {
             this.gravePosition = getGraveStoneLocation();
         } catch (NoSpaceException e) {
             this.gravePosition = deathPosition;
-            Log.i("Grave of '" + entity.getName().getUnformattedComponentText() + "' cant be created (No space)");
+            Main.LOGGER.info("Grave of '{}' cant be created (No space)", entity.getName().getUnformattedComponentText());
             return false;
         }
 
@@ -82,7 +82,7 @@ public class GraveProcessor {
             addItems(graveTileEntity, drops);
 
         } catch (Exception e) {
-            Log.w("Failed to fill gravestone with data");
+            Main.LOGGER.warn("Failed to fill gravestone with data");
         }
 
         return true;
@@ -101,12 +101,12 @@ public class GraveProcessor {
                     }
 
                 } catch (Exception e) {
-                    Log.w("Failed to add Item '" + item.getItem().getItem().getTranslationKey() + "' to gravestone");
+                    Main.LOGGER.warn("Failed to add Item '{}' to gravestone", item.getItem().getItem().getTranslationKey());
                 }
                 i++;
             }
         } catch (Exception e) {
-            Log.w("Failed to add Ites to gravestone");
+            Main.LOGGER.warn("Failed to add Ites to gravestone");
         }
     }
 

@@ -40,13 +40,13 @@ public class DeathEvents {
             return;
         }
 
-        if (Tools.keepInventory(event.getEntityPlayer())) {
+        if (Tools.keepInventory(event.getPlayer())) {
             return;
         }
 
         for (ItemStack stack : event.getOriginal().inventory.mainInventory) {
             if (DeathInfo.isDeathInfoItem(stack)) {
-                event.getEntityPlayer().inventory.addItemStackToInventory(stack);
+                event.getPlayer().inventory.addItemStackToInventory(stack);
             }
         }
 
@@ -92,7 +92,7 @@ public class DeathEvents {
                 graveProcessor.givePlayerNote();
             }
         } catch (Exception e) {
-            Log.w("Failed to process death of '" + event.getEntity().getName().getUnformattedComponentText() + "'");
+            Main.LOGGER.warn("Failed to process death of '{}'", event.getEntity().getName().getUnformattedComponentText());
             e.printStackTrace();
         }
 
@@ -132,7 +132,7 @@ public class DeathEvents {
             info.addToItemStack(stack);
             player.inventory.addItemStackToInventory(stack);
         } catch (Exception e) {
-            Log.w("Failed to give player '" + player.getName().getUnformattedComponentText() + "' death note");
+            Main.LOGGER.warn("Failed to give player '{}' death note", player.getName().getUnformattedComponentText());
         }
 
     }

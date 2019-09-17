@@ -32,9 +32,8 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ObjectHolder;
-
-import java.lang.reflect.Field;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod.EventBusSubscriber(modid = Main.MODID)
 @Mod(Main.MODID)
@@ -42,22 +41,18 @@ public class Main {
 
     public static final String MODID = "gravestone";
 
-    @ObjectHolder(MODID + ":gravestone")
+    public static final Logger LOGGER = LogManager.getLogger(Main.MODID);
+
     public static GraveStoneBlock GRAVESTONE;
 
-    @ObjectHolder(MODID + ":gravestone")
     public static Item GRAVESTONE_ITEM;
 
-    @ObjectHolder(MODID + ":gravestone")
     public static TileEntityType<GraveStoneTileEntity> GRAVESTONE_TILEENTITY;
 
-    @ObjectHolder(MODID + ":death_info")
     public static DeathInfoItem DEATHINFO;
 
-    @ObjectHolder(MODID + ":player_ghost")
     public static EntityType<GhostPlayerEntity> GHOST;
 
-    @ObjectHolder(MODID + ":death_items")
     public static ContainerType DEATH_INFO_INVENTORY_CONTAINER;
 
     public Main() {
@@ -80,7 +75,6 @@ public class Main {
     @OnlyIn(Dist.CLIENT)
     public void clientStart() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup);
-        // Moved from clientsetup to fix entities not rendering
         RenderingRegistry.registerEntityRenderingHandler(GhostPlayerEntity.class, manager -> new PlayerGhostRenderer(manager));
     }
 
