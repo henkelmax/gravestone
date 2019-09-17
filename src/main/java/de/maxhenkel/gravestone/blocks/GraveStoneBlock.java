@@ -9,6 +9,7 @@ import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -39,8 +40,10 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     public static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.Plane.HORIZONTAL);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
+    public static final Material GRAVESTONE_MATERIAL = new Material(MaterialColor.DIRT, false, true, true, false, true, false, false, PushReaction.BLOCK);
+
     public GraveStoneBlock() {
-        super(Properties.create(Material.CACTUS, MaterialColor.DIRT).hardnessAndResistance(0.3F, Float.MAX_VALUE));
+        super(Properties.create(GRAVESTONE_MATERIAL, MaterialColor.DIRT).hardnessAndResistance(0.3F, Float.MAX_VALUE));
         this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
         this.setRegistryName(Main.MODID, "gravestone");
     }
@@ -205,14 +208,6 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
         return false;
     }
 
-    //TODO
-    /*
-    @Override
-    public BlockFaceShape getBlockFaceShape(IBlockReader p_193383_1_, IBlockState p_193383_2_, BlockPos p_193383_3_, EnumFacing face) {
-        return face == EnumFacing.DOWN ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
-    }
-    */
-
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
         return SHAPES.get(state.get(FACING));
@@ -273,11 +268,6 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
 
     @Override
     public TileEntity createNewTileEntity(IBlockReader iBlockReader) {
-        return createTileEntity(getDefaultState(), iBlockReader);
-    }
-
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new GraveStoneTileEntity();
     }
 

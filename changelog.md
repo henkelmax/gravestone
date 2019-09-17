@@ -1,1 +1,3 @@
 - Updated to latest Forge version
+- Fixed gravestone recipe
+- Fixed gravestone block material
