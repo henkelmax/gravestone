@@ -1,1 +1,2 @@
 - Fixed duplicate config name
+- Fixed crash caused by dying multiple times with the death note in your inventory

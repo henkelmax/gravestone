@@ -34,14 +34,12 @@ public class GraveProcessor {
         this.world = entity.getEntityWorld();
         this.deathPosition = entity.getPosition();
         this.gravePosition = deathPosition;
-        this.drops = new ArrayList<ItemStack>();
+        this.drops = new ArrayList<>();
         this.time = System.currentTimeMillis();
     }
 
     public boolean placeGraveStone(Collection<ItemEntity> drops) {
-        for (ItemEntity ei : drops) {
-            this.drops.add(ei.getItem());
-        }
+        this.drops = drops.stream().map(itemEntity -> itemEntity.getItem()).collect(Collectors.toList());
 
         try {
             this.gravePosition = getGraveStoneLocation();
@@ -58,8 +56,6 @@ public class GraveProcessor {
             if (isReplaceable(gravePosition.down())) {
                 world.setBlockState(gravePosition.down(), Blocks.DIRT.getDefaultState());
             }
-
-
         } catch (Exception e) {
             return false;
         }
@@ -144,14 +140,22 @@ public class GraveProcessor {
     }
 
     public void givePlayerNote() {
-
         if (!(entity instanceof PlayerEntity)) {
             return;
         }
 
         PlayerEntity player = (PlayerEntity) entity;
 
-        DeathInfo info = new DeathInfo(gravePosition, DimensionType.getKey(player.dimension).toString(), drops.stream().collect(Collectors.toList()), player.getName().getUnformattedComponentText(), time, player.getUniqueID());
+        List<ItemStack> deathNoteItems = drops.stream().map(itemStack -> {
+            if (itemStack.equals(Main.DEATHINFO)) {
+                ItemStack stack = itemStack.copy();
+                stack.setTag(null);
+                return stack;
+            }
+            return itemStack;
+        }).collect(Collectors.toList());
+
+        DeathInfo info = new DeathInfo(gravePosition, DimensionType.getKey(player.dimension).toString(), deathNoteItems, player.getName().getUnformattedComponentText(), time, player.getUniqueID());
         ItemStack stack = new ItemStack(Main.DEATHINFO);
 
         info.addToItemStack(stack);
