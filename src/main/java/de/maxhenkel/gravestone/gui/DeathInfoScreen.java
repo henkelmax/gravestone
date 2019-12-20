@@ -1,19 +1,19 @@
 package de.maxhenkel.gravestone.gui;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import de.maxhenkel.gravestone.DeathInfo;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.client.entity.player.RemoteClientPlayerEntity;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 
 public class DeathInfoScreen extends Screen {
 
@@ -90,7 +90,7 @@ public class DeathInfoScreen extends Screen {
 
         int left = (this.width - TEXTURE_X) / 2;
 
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         minecraft.getTextureManager().bindTexture(GUI_TEXTURE);
         blit(left, 20, 0, 0, TEXTURE_X, TEXTURE_Y);
 
@@ -154,10 +154,10 @@ public class DeathInfoScreen extends Screen {
 
         // Player
 
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         PlayerEntity player = new RemoteClientPlayerEntity(minecraft.world, new GameProfile(info.getUuid(), info.getName()));
-        InventoryScreen.drawEntityOnScreen(width / 2, 175, 30, (width / 2) - mouseX, 100 - mouseY, player);
+        InventoryScreen.func_228187_a_(width / 2, 175, 30, (width / 2) - mouseX, 100 - mouseY, player);
 
     }
 

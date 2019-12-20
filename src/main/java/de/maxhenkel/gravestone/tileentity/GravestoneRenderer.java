@@ -1,28 +1,34 @@
 package de.maxhenkel.gravestone.tileentity;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import de.maxhenkel.gravestone.Config;
 import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
 import de.maxhenkel.gravestone.util.PlayerSkins;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.model.HumanoidHeadModel;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import de.maxhenkel.gravestone.Config;
-import net.minecraft.block.Block;
-import net.minecraft.client.gui.FontRenderer;
 
 import java.util.UUID;
 
 public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity> {
 
-    public GravestoneRenderer() {
 
+    public GravestoneRenderer(TileEntityRendererDispatcher rendererDispatcher) {
+        super(rendererDispatcher);
     }
 
     @Override
-    public void render(GraveStoneTileEntity target, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void func_225616_a_(GraveStoneTileEntity target, float f1, MatrixStack matrixStack, IRenderTypeBuffer buffer, int i1, int i2) {
         String name = target.getPlayerName();
 
         if (name == null || name.isEmpty()) {
@@ -31,31 +37,29 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
 
         Direction direction = target.getBlockState().get(GraveStoneBlock.FACING);
 
-        GlStateManager.pushMatrix();
-        GlStateManager.translated(x + 0.5D, y + 1.0D, z + 0.5D);
-        GlStateManager.rotatef(180.0F, 1.0F, 0.0F, 0.0F);
+        matrixStack.func_227860_a_();
 
-        GlStateManager.rotatef(-getDirection(direction), 0.0F, 1.0F, 0.0F);
+        matrixStack.func_227861_a_(0.5D, 1D, 0.5D);
 
-        FontRenderer renderer = getFontRenderer();
+        matrixStack.func_227863_a_(Vector3f.field_229179_b_.func_229187_a_(180F));
 
-        if (renderer != null) {
-            int textWidth = renderer.getStringWidth(name);
-            float textScale = 0.8F / textWidth;
-            textScale = Math.min(textScale, 0.02F);
+        matrixStack.func_227863_a_(Vector3f.field_229181_d_.func_229187_a_(180F + direction.getHorizontalAngle()));
 
-            GlStateManager.translatef(-(textScale * textWidth) / 2.0F, 0.3F, 0.37F);
+        FontRenderer renderer = field_228858_b_.getFontRenderer();
 
-            GlStateManager.scalef(textScale, textScale, textScale);
+        int textWidth = renderer.getStringWidth(name);
+        double textScale = Math.min(0.8D / textWidth, 0.02D);
 
-            GlStateManager.depthMask(false);
-            renderer.drawString(name, 0, 0, 0);
-            GlStateManager.depthMask(true);
-        }
+        matrixStack.func_227861_a_(0D, 0.3D, 0.37D);
 
-        GlStateManager.popMatrix();
+        matrixStack.func_227862_a_((float) textScale, (float) textScale, (float) textScale);
 
-        boolean render = false;
+        renderer.drawString(name, 0, 0, 0);
+
+        float left = (float) (-renderer.getStringWidth(name) / 2);
+        renderer.func_228079_a_(name, left, 0F, 0x000000, false, matrixStack.func_227866_c_().func_227870_a_(), buffer, false, 0, i1);
+
+        matrixStack.func_227865_b_();
 
         BlockState state = target.getWorld().getBlockState(target.getPos().down());
         if (state == null) {
@@ -67,19 +71,17 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
             return;
         }
 
-        if (block.isNormalCube(state, target.getWorld(), target.getPos().down())) {//is opaque
-            render = true;
-        }
+        boolean render = block.isNormalCube(state, target.getWorld(), target.getPos().down());//is opaque
 
         if (target.renderHead() && target.getPlayerUUID() != null && !target.getPlayerUUID().isEmpty() && Config.renderSkull && render) {
             try {
-                renderSkull(x, y, z, target.getPlayerUUID(), target.getPlayerName(), direction);
+                renderSkull(target.getPlayerUUID(), target.getPlayerName(), direction, matrixStack, buffer);
             } catch (Exception e) {
             }
         }
     }
 
-    public void renderSkull(double x, double y, double z, String uuid, String name, Direction rotation) {
+    public void renderSkull(String uuid, String name, Direction rotation, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
         HumanoidHeadModel model = new HumanoidHeadModel();
         ResourceLocation resourcelocation = DefaultPlayerSkin.getDefaultSkinLegacy();
 
@@ -90,46 +92,20 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
             }
         }
 
-        this.bindTexture(resourcelocation);
+        matrixStack.func_227860_a_();
 
-        GlStateManager.pushMatrix();
-        GlStateManager.disableCull();
+        matrixStack.func_227861_a_(0.5D, 0D, 0.5D);
 
-        GlStateManager.translated(x + 0.5D, y, z + 0.5D);
+        matrixStack.func_227863_a_(Vector3f.field_229181_d_.func_229187_a_(180F - rotation.getHorizontalAngle()));
+        matrixStack.func_227863_a_(Vector3f.field_229181_d_.func_229187_a_(-26F));
+        matrixStack.func_227861_a_(0D, -0.14D, 0.18D);
+        matrixStack.func_227863_a_(Vector3f.field_229179_b_.func_229187_a_(180F));
 
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.scalef(-1.0F, -1.0F, 1.0F);
-        GlStateManager.enableAlphaTest();//enableAlpha
+        matrixStack.func_227863_a_(Vector3f.field_229179_b_.func_229187_a_(-61F));
 
-        GlStateManager.setProfile(GlStateManager.Profile.PLAYER_SKIN);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        model.func_225598_a_(matrixStack, buffer.getBuffer(model.func_228282_a_(resourcelocation)), 15728880, OverlayTexture.field_229196_a_, 1.0F, 1.0F, 1.0F, 1.0F);
 
-        float yaw = 26F;
-        float pitch = -61.0F;
-        float scale = 0.0625F;
-
-        GlStateManager.rotatef(180 - getDirection(rotation), 0.0F, 1.0F, 0.0F);
-
-        GlStateManager.translatef(0.0F, 0.14F, -0.18F);
-
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-        model.func_217104_a(0.0F, 0.0F, 0.0F, yaw, pitch, scale);
-
-        GlStateManager.popMatrix();
+        matrixStack.func_227865_b_();
     }
-
-    private int getDirection(Direction facing) {
-        switch (facing) {
-            case EAST:
-                return 270;
-            case SOUTH:
-                return 180;
-            case WEST:
-                return 90;
-            case NORTH:
-            default:
-                return 0;
-        }
-    }
-
 }

@@ -110,21 +110,11 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
 
     }
 
-    @Override
-    public boolean doesSideBlockRendering(BlockState state, IEnviromentBlockReader world, BlockPos pos, Direction face) {
-        return false;
-    }
-
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
         return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(WATERLOGGED, ifluidstate.getFluid() == Fluids.WATER);
-    }
-
-    @Override
-    public boolean causesSuffocation(BlockState p_220060_1_, IBlockReader p_220060_2_, BlockPos p_220060_3_) {
-        return false;
     }
 
     @Override
@@ -148,25 +138,21 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
+    public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult result) {
         if (world.isRemote) {
-            return true;
+            return ActionResultType.SUCCESS;
         }
 
         TileEntity tileentity = world.getTileEntity(pos);
 
         if (!(tileentity instanceof GraveStoneTileEntity)) {
-            return true;
+            return ActionResultType.SUCCESS;
         }
 
         GraveStoneTileEntity grave = (GraveStoneTileEntity) tileentity;
 
-        return displayGraveInfo(grave, player);
+        displayGraveInfo(grave, playerEntity);
+        return ActionResultType.SUCCESS;
     }
 
     @Override
@@ -181,12 +167,12 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
         }
     }
 
-    private boolean displayGraveInfo(GraveStoneTileEntity grave, PlayerEntity player) {
+    private void displayGraveInfo(GraveStoneTileEntity grave, PlayerEntity player) {
         String name = grave.getPlayerName();
         String time = grave.getTimeString();
 
         if (name == null || name.isEmpty()) {
-            return true;
+            return;
         }
 
         if (time == null || time.isEmpty()) {
@@ -194,8 +180,6 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
         } else {
             player.sendMessage(new TranslationTextComponent("message.died", name, time));
         }
-
-        return true;
     }
 
     @Override

@@ -1,8 +1,8 @@
 package de.maxhenkel.gravestone.items;
 
 import de.maxhenkel.gravestone.DeathInfo;
-import de.maxhenkel.gravestone.gui.DeathItemsContainer;
 import de.maxhenkel.gravestone.gui.DeathInfoScreen;
+import de.maxhenkel.gravestone.gui.DeathItemsContainer;
 import de.maxhenkel.gravestone.gui.DeathItemsInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,7 +13,6 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -35,7 +34,7 @@ public class DeathInfoItem extends Item {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand) {
         DeathInfo info = DeathInfo.getDeathInfoFromPlayerHand(playerIn);
 
-        if (playerIn.isSneaking() && playerIn.abilities.isCreativeMode) {
+        if (playerIn.isCrouching() && playerIn.abilities.isCreativeMode) {
             if (playerIn instanceof ServerPlayerEntity) {
                 NetworkHooks.openGui((ServerPlayerEntity) playerIn, new INamedContainerProvider() {
 
@@ -54,7 +53,7 @@ public class DeathInfoItem extends Item {
         } else if (worldIn.isRemote) {
             openClientGui(info);
         }
-        return ActionResult.newResult(ActionResultType.SUCCESS, playerIn.getHeldItem(hand));
+        return ActionResult.func_226248_a_(playerIn.getHeldItem(hand));
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -12,6 +12,7 @@ import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import de.maxhenkel.gravestone.tileentity.GravestoneRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
@@ -75,7 +76,6 @@ public class Main {
     @OnlyIn(Dist.CLIENT)
     public void clientStart() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup);
-        RenderingRegistry.registerEntityRenderingHandler(GhostPlayerEntity.class, manager -> new PlayerGhostRenderer(manager));
     }
 
     @SubscribeEvent
@@ -97,10 +97,12 @@ public class Main {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void clientSetup(FMLClientSetupEvent event) {
-        ClientRegistry.bindTileEntitySpecialRenderer(GraveStoneTileEntity.class, new GravestoneRenderer());
+        ClientRegistry.bindTileEntityRenderer(GRAVESTONE_TILEENTITY, new GravestoneRenderer(TileEntityRendererDispatcher.instance));
 
         ScreenManager.IScreenFactory factory = (ScreenManager.IScreenFactory<DeathItemsContainer, DeathItemsScreen>) (container, playerInventory, name) -> new DeathItemsScreen(playerInventory, container, name);
         ScreenManager.registerFactory(Main.DEATH_INFO_INVENTORY_CONTAINER, factory);
+
+        RenderingRegistry.registerEntityRenderingHandler(GHOST, manager -> new PlayerGhostRenderer(manager));
     }
 
     @SubscribeEvent
