@@ -36,6 +36,7 @@ public class Config {
     public static boolean onlyOwnersCanBreak = false;
     public static boolean spawnGhost = false;
     public static boolean friendlyGhost = true;
+    public static int graveTextColor = 0xFFFFFF;
 
     public static void loadServer() {
         livingGraves = SERVER.livingGraves.get();
@@ -51,6 +52,7 @@ public class Config {
         dimensionNames = CLIENT.dimensionNames.get().stream().collect(Collectors.toMap(s -> s.split("=")[0], s -> s.split("=")[1]));
         dateFormat = CLIENT.dateFormat.get();
         renderSkull = CLIENT.renderSkull.get();
+        graveTextColor = Integer.parseInt(CLIENT.graveTextColor.get(), 16);
     }
 
     public static class ServerConfig {
@@ -133,6 +135,7 @@ public class Config {
         public ForgeConfigSpec.ConfigValue<List<String>> dimensionNames;
         public ForgeConfigSpec.ConfigValue<String> dateFormat;
         public ForgeConfigSpec.BooleanValue renderSkull;
+        public ForgeConfigSpec.ConfigValue<String> graveTextColor;
 
         public ClientConfig(ForgeConfigSpec.Builder builder) {
             dimensionNames = builder
@@ -147,6 +150,10 @@ public class Config {
                     .comment("If this is set to true the players head will be rendered on the gravestone when there is a full block under it")
                     .translation("render_skull")
                     .define("render_skull", true);
+            graveTextColor = builder
+                    .comment("The color of the text at the gravestone (Hex RGB)")
+                    .translation("grave_text_color")
+                    .define("grave_text_color", "FFFFFF");
         }
     }
 

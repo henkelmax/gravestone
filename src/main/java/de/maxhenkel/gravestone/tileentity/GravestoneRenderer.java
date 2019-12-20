@@ -57,7 +57,7 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
         renderer.drawString(name, 0, 0, 0);
 
         float left = (float) (-renderer.getStringWidth(name) / 2);
-        renderer.func_228079_a_(name, left, 0F, 0x000000, false, matrixStack.func_227866_c_().func_227870_a_(), buffer, false, 0, i1);
+        renderer.func_228079_a_(name, left, 0F, Config.graveTextColor, false, matrixStack.func_227866_c_().func_227870_a_(), buffer, false, 0, i1);
 
         matrixStack.func_227865_b_();
 

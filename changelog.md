@@ -1,1 +1,2 @@
 - Updated to 1.15.1
+- Added configurable color for the gravestone
