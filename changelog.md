@@ -1,1 +1,1 @@
-- Fixed crouching issue with death info
+- Fixed crash with forge 30.0.17+

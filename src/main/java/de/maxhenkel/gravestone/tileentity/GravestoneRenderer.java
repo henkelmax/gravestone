@@ -28,7 +28,7 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
     }
 
     @Override
-    public void func_225616_a_(GraveStoneTileEntity target, float f1, MatrixStack matrixStack, IRenderTypeBuffer buffer, int i1, int i2) {
+    public void func_225616_a_(GraveStoneTileEntity target, float f1, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int i2) {
         String name = target.getPlayerName();
 
         if (name == null || name.isEmpty()) {
@@ -54,10 +54,8 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
 
         matrixStack.func_227862_a_((float) textScale, (float) textScale, (float) textScale);
 
-        renderer.drawString(name, 0, 0, 0);
-
         float left = (float) (-renderer.getStringWidth(name) / 2);
-        renderer.func_228079_a_(name, left, 0F, Config.graveTextColor, false, matrixStack.func_227866_c_().func_227870_a_(), buffer, false, 0, i1);
+        renderer.func_228079_a_(name, left, 0F, Config.graveTextColor, false, matrixStack.func_227866_c_().func_227870_a_(), buffer, false, 0, light);
 
         matrixStack.func_227865_b_();
 

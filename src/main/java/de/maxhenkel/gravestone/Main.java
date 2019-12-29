@@ -12,7 +12,6 @@ import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import de.maxhenkel.gravestone.tileentity.GravestoneRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
@@ -97,7 +96,7 @@ public class Main {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void clientSetup(FMLClientSetupEvent event) {
-        ClientRegistry.bindTileEntityRenderer(GRAVESTONE_TILEENTITY, new GravestoneRenderer(TileEntityRendererDispatcher.instance));
+        ClientRegistry.bindTileEntityRenderer(GRAVESTONE_TILEENTITY, GravestoneRenderer::new);
 
         ScreenManager.IScreenFactory factory = (ScreenManager.IScreenFactory<DeathItemsContainer, DeathItemsScreen>) (container, playerInventory, name) -> new DeathItemsScreen(playerInventory, container, name);
         ScreenManager.registerFactory(Main.DEATH_INFO_INVENTORY_CONTAINER, factory);
