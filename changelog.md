@@ -1,1 +1,1 @@
-- Fixed crash with forge 30.0.17+
+- Updated to 1.15.2
