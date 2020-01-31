@@ -47,6 +47,7 @@ The gravestone can be named by simply renaming it in an anvil and then placing i
 | -------- | ---------------------------------------------------------------------------- |
 | `zh_tw`  | [地瓜豬豬 (yampig_413)](https://minecraft.curseforge.com/members/yampig_413) |
 | `pl_pl`  | [Grreg21](https://www.curseforge.com/members/grreg21)                        |
+| `es_es`  | [renkor92](https://www.curseforge.com/members/renkor92)                        |
 
 
 __If you want to add this mod into a modpack, feel free to do that.__

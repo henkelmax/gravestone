@@ -1,1 +1,1 @@
-- Updated to 1.15.2
+- Added spanish language
