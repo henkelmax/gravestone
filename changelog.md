@@ -1,1 +1,1 @@
-- Added spanish language
+- Updated forge and mcp mappings

@@ -22,9 +22,9 @@ public class PlayerGhostRenderer extends LivingRenderer<GhostPlayerEntity, Playe
     }
 
     @Override
-    public void func_225623_a_(GhostPlayerEntity entity, float f1, float f2, MatrixStack matrixStack, IRenderTypeBuffer buffer, int i) {
+    public void render(GhostPlayerEntity entity, float f1, float f2, MatrixStack matrixStack, IRenderTypeBuffer buffer, int i) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 0.25F);
-        super.func_225623_a_(entity, f1, f2, matrixStack, buffer, 0xFFFFFF);
+        super.render(entity, f1, f2, matrixStack, buffer, 0xFFFFFF);
     }
 
     @Nullable

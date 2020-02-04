@@ -28,7 +28,7 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
     }
 
     @Override
-    public void func_225616_a_(GraveStoneTileEntity target, float f1, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int i2) {
+    public void render(GraveStoneTileEntity target, float f1, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int i2) {
         String name = target.getPlayerName();
 
         if (name == null || name.isEmpty()) {
@@ -37,27 +37,27 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
 
         Direction direction = target.getBlockState().get(GraveStoneBlock.FACING);
 
-        matrixStack.func_227860_a_();
+        matrixStack.push();
 
-        matrixStack.func_227861_a_(0.5D, 1D, 0.5D);
+        matrixStack.translate(0.5D, 1D, 0.5D);
 
-        matrixStack.func_227863_a_(Vector3f.field_229179_b_.func_229187_a_(180F));
+        matrixStack.rotate(Vector3f.XP.rotationDegrees(180F));
 
-        matrixStack.func_227863_a_(Vector3f.field_229181_d_.func_229187_a_(180F + direction.getHorizontalAngle()));
+        matrixStack.rotate(Vector3f.YP.rotationDegrees(180F + direction.getHorizontalAngle()));
 
-        FontRenderer renderer = field_228858_b_.getFontRenderer();
+        FontRenderer renderer = renderDispatcher.getFontRenderer();
 
         int textWidth = renderer.getStringWidth(name);
         double textScale = Math.min(0.8D / textWidth, 0.02D);
 
-        matrixStack.func_227861_a_(0D, 0.3D, 0.37D);
+        matrixStack.translate(0D, 0.3D, 0.37D);
 
-        matrixStack.func_227862_a_((float) textScale, (float) textScale, (float) textScale);
+        matrixStack.scale((float) textScale, (float) textScale, (float) textScale);
 
         float left = (float) (-renderer.getStringWidth(name) / 2);
-        renderer.func_228079_a_(name, left, 0F, Config.graveTextColor, false, matrixStack.func_227866_c_().func_227870_a_(), buffer, false, 0, light);
+        renderer.renderString(name, left, 0F, Config.graveTextColor, false, matrixStack.getLast().getPositionMatrix(), buffer, false, 0, light);
 
-        matrixStack.func_227865_b_();
+        matrixStack.pop();
 
         BlockState state = target.getWorld().getBlockState(target.getPos().down());
         if (state == null) {
@@ -90,20 +90,20 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
             }
         }
 
-        matrixStack.func_227860_a_();
+        matrixStack.push();
 
-        matrixStack.func_227861_a_(0.5D, 0D, 0.5D);
+        matrixStack.translate(0.5D, 0D, 0.5D);
 
-        matrixStack.func_227863_a_(Vector3f.field_229181_d_.func_229187_a_(180F - rotation.getHorizontalAngle()));
-        matrixStack.func_227863_a_(Vector3f.field_229181_d_.func_229187_a_(-26F));
-        matrixStack.func_227861_a_(0D, -0.14D, 0.18D);
-        matrixStack.func_227863_a_(Vector3f.field_229179_b_.func_229187_a_(180F));
+        matrixStack.rotate(Vector3f.YP.rotationDegrees(180F - rotation.getHorizontalAngle()));
+        matrixStack.rotate(Vector3f.YP.rotationDegrees(-26F));
+        matrixStack.translate(0D, -0.14D, 0.18D);
+        matrixStack.rotate(Vector3f.XP.rotationDegrees(180F));
 
-        matrixStack.func_227863_a_(Vector3f.field_229179_b_.func_229187_a_(-61F));
+        matrixStack.rotate(Vector3f.XP.rotationDegrees(-61F));
 
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        model.func_225598_a_(matrixStack, buffer.getBuffer(model.func_228282_a_(resourcelocation)), 15728880, OverlayTexture.field_229196_a_, 1.0F, 1.0F, 1.0F, 1.0F);
+        model.render(matrixStack, buffer.getBuffer(model.getRenderType(resourcelocation)), 15728880, OverlayTexture.DEFAULT_LIGHT, 1.0F, 1.0F, 1.0F, 1.0F);
 
-        matrixStack.func_227865_b_();
+        matrixStack.pop();
     }
 }

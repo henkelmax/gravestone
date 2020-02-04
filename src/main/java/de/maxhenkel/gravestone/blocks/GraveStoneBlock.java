@@ -118,12 +118,12 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public boolean func_220074_n(BlockState p_220074_1_) {
+    public boolean isTransparent(BlockState state) {
         return false;
     }
 
     @Override
-    public boolean isNormalCube(BlockState p_220081_1_, IBlockReader p_220081_2_, BlockPos p_220081_3_) {
+    public boolean isNormalCube(BlockState state, IBlockReader reader, BlockPos pos) {
         return false;
     }
 
@@ -138,7 +138,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public ActionResultType func_225533_a_(BlockState state, World world, BlockPos pos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult result) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult result) {
         if (world.isRemote) {
             return ActionResultType.SUCCESS;
         }
