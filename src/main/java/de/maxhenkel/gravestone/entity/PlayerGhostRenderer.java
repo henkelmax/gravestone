@@ -1,7 +1,6 @@
 package de.maxhenkel.gravestone.entity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.maxhenkel.gravestone.util.PlayerSkins;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -23,7 +22,6 @@ public class PlayerGhostRenderer extends LivingRenderer<GhostPlayerEntity, Playe
 
     @Override
     public void render(GhostPlayerEntity entity, float f1, float f2, MatrixStack matrixStack, IRenderTypeBuffer buffer, int i) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 0.25F);
         super.render(entity, f1, f2, matrixStack, buffer, 0xFFFFFF);
     }
 
