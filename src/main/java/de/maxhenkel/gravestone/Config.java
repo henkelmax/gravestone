@@ -56,7 +56,7 @@ public class Config {
     public static class ServerConfig {
         public ForgeConfigSpec.BooleanValue livingGraves;
         public ForgeConfigSpec.BooleanValue giveDeathNotes;
-        public ForgeConfigSpec.ConfigValue<List<String>> replaceableBlocks;
+        public ForgeConfigSpec.ConfigValue<List<? extends String>> replaceableBlocks;
         public ForgeConfigSpec.BooleanValue removeDeathNote;
         public ForgeConfigSpec.BooleanValue onlyOwnersCanBreak;
         public ForgeConfigSpec.BooleanValue spawnGhost;
@@ -74,7 +74,7 @@ public class Config {
             replaceableBlocks = builder
                     .comment("The blocks that can be replaced with a grave when someone dies there")
                     .translation("replaceable_blocks")
-                    .define("replaceable_blocks",
+                    .defineList("replaceable_blocks",
                             Arrays.asList(
                                     "minecraft:tall_grass",
                                     "minecraft:grass",
@@ -107,7 +107,8 @@ public class Config {
                                     "minecraft:snow",
                                     "minecraft:vine",
                                     "minecraft:dead_bush",
-                                    "minecraft:fire")
+                                    "minecraft:fire"),
+                            Objects::nonNull
                     );
 
             removeDeathNote = builder
