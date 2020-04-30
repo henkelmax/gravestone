@@ -34,7 +34,7 @@ public class DeathInfoItem extends Item {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand hand) {
         DeathInfo info = DeathInfo.getDeathInfoFromPlayerHand(playerIn);
 
-        if (playerIn.isShiftKeyDown() && playerIn.abilities.isCreativeMode) {
+        if (playerIn.isSneaking() && playerIn.abilities.isCreativeMode) {
             if (playerIn instanceof ServerPlayerEntity) {
                 NetworkHooks.openGui((ServerPlayerEntity) playerIn, new INamedContainerProvider() {
 
@@ -53,7 +53,7 @@ public class DeathInfoItem extends Item {
         } else if (worldIn.isRemote) {
             openClientGui(info);
         }
-        return ActionResult.func_226248_a_(playerIn.getHeldItem(hand));
+        return ActionResult.resultSuccess(playerIn.getHeldItem(hand));
     }
 
     @OnlyIn(Dist.CLIENT)

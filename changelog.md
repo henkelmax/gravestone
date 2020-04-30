@@ -1,1 +1,2 @@
-- Fixed config reset issue
+- Updated Forge version
+- Updated MCP mapping version

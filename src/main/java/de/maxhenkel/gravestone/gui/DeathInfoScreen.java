@@ -157,7 +157,7 @@ public class DeathInfoScreen extends Screen {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         PlayerEntity player = new RemoteClientPlayerEntity(minecraft.world, new GameProfile(info.getUuid(), info.getName()));
-        InventoryScreen.func_228187_a_(width / 2, 175, 30, (width / 2) - mouseX, 100 - mouseY, player);
+        InventoryScreen.drawEntityOnScreen(width / 2, 175, 30, (width / 2) - mouseX, 100 - mouseY, player);
 
     }
 

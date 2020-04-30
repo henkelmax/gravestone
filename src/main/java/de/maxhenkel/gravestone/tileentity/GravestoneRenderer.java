@@ -55,7 +55,7 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
         matrixStack.scale((float) textScale, (float) textScale, (float) textScale);
 
         float left = (float) (-renderer.getStringWidth(name) / 2);
-        renderer.renderString(name, left, 0F, Config.graveTextColor, false, matrixStack.getLast().getPositionMatrix(), buffer, false, 0, light);
+        renderer.renderString(name, left, 0F, Config.graveTextColor, false, matrixStack.getLast().getMatrix(), buffer, false, 0, light);
 
         matrixStack.pop();
 
@@ -102,7 +102,7 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
         matrixStack.rotate(Vector3f.XP.rotationDegrees(-61F));
 
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        model.render(matrixStack, buffer.getBuffer(model.getRenderType(resourcelocation)), 15728880, OverlayTexture.DEFAULT_LIGHT, 1.0F, 1.0F, 1.0F, 1.0F);
+        model.render(matrixStack, buffer.getBuffer(model.getRenderType(resourcelocation)), 15728880, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 
         matrixStack.pop();
     }
