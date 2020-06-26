@@ -127,7 +127,7 @@ forgeUpdate {
     tags = recommended == 'true' ? ['recommended'] : []
 }
 
-/*javadoc {
+javadoc {
     failOnError = false
 }
 
@@ -159,5 +159,6 @@ artifacts {
     archives deobfJar
     archives sourcesJar
     archives javadocJar
-}*/
+}
+
 jar.finalizedBy('reobfJar') 
