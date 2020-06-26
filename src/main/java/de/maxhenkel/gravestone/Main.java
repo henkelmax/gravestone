@@ -1,20 +1,13 @@
 package de.maxhenkel.gravestone;
 
 import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
-import de.maxhenkel.gravestone.entity.GhostPlayerEntity;
-import de.maxhenkel.gravestone.entity.PlayerGhostRenderer;
 import de.maxhenkel.gravestone.events.BlockEvents;
 import de.maxhenkel.gravestone.events.DeathEvents;
-import de.maxhenkel.gravestone.gui.DeathItemsContainer;
-import de.maxhenkel.gravestone.gui.DeathItemsScreen;
 import de.maxhenkel.gravestone.items.DeathInfoItem;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import de.maxhenkel.gravestone.tileentity.GravestoneRenderer;
 import net.minecraft.block.Block;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
@@ -26,7 +19,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -51,16 +43,13 @@ public class Main {
 
     public static DeathInfoItem DEATHINFO;
 
-    public static EntityType<GhostPlayerEntity> GHOST;
-
-    public static ContainerType DEATH_INFO_INVENTORY_CONTAINER;
+    //public static EntityType<GhostPlayerEntity> GHOST;
 
     public Main() {
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::registerBlocks);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::registerItems);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(TileEntityType.class, this::registerTileEntities);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(EntityType.class, this::registerEntities);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(ContainerType.class, this::registerContainers);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::configEvent);
 
@@ -98,10 +87,7 @@ public class Main {
     public void clientSetup(FMLClientSetupEvent event) {
         ClientRegistry.bindTileEntityRenderer(GRAVESTONE_TILEENTITY, GravestoneRenderer::new);
 
-        ScreenManager.IScreenFactory factory = (ScreenManager.IScreenFactory<DeathItemsContainer, DeathItemsScreen>) (container, playerInventory, name) -> new DeathItemsScreen(playerInventory, container, name);
-        ScreenManager.registerFactory(Main.DEATH_INFO_INVENTORY_CONTAINER, factory);
-
-        RenderingRegistry.registerEntityRenderingHandler(GHOST, manager -> new PlayerGhostRenderer(manager));
+        //RenderingRegistry.registerEntityRenderingHandler(GHOST, manager -> new PlayerGhostRenderer(manager));
     }
 
     @SubscribeEvent
@@ -128,17 +114,10 @@ public class Main {
 
     @SubscribeEvent
     public void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
-        GHOST = EntityType.Builder.<GhostPlayerEntity>create(GhostPlayerEntity::new, EntityClassification.MONSTER)
+        /*GHOST = EntityType.Builder.<GhostPlayerEntity>create(GhostPlayerEntity::new, EntityClassification.MONSTER)
                 .size(0.6F, 1.95F)
                 .build(Main.MODID + ":player_ghost");
         GHOST.setRegistryName(new ResourceLocation(Main.MODID, "player_ghost"));
-        event.getRegistry().register(GHOST);
-    }
-
-    @SubscribeEvent
-    public void registerContainers(RegistryEvent.Register<ContainerType<?>> event) {
-        DEATH_INFO_INVENTORY_CONTAINER = new ContainerType<>(DeathItemsContainer::new);
-        DEATH_INFO_INVENTORY_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "death_items"));
-        event.getRegistry().register(DEATH_INFO_INVENTORY_CONTAINER);
+        event.getRegistry().register(GHOST);*/
     }
 }

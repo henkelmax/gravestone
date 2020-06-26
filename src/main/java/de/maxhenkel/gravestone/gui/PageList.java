@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.item.ItemStack;
 
@@ -37,13 +38,13 @@ public class PageList {
         return list.size();
     }
 
-    public void drawPage(int p) {
+    public void drawPage(MatrixStack matrixStack, int p) {
         if (p >= list.size()) {
             p = list.size() - 1;
         }
 
         Page page = list.get(p);
-        page.drawPage(p + 1);
+        page.drawPage(matrixStack, p + 1);
     }
 
     @Override

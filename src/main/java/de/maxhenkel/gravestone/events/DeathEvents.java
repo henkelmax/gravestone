@@ -1,9 +1,9 @@
 package de.maxhenkel.gravestone.events;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import de.maxhenkel.gravestone.*;
+import de.maxhenkel.gravestone.Config;
+import de.maxhenkel.gravestone.DeathInfo;
+import de.maxhenkel.gravestone.GraveProcessor;
+import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -12,13 +12,15 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Mod.EventBusSubscriber
 public class DeathEvents {
@@ -54,10 +56,6 @@ public class DeathEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void playerDeath(LivingDropsEvent event) {
-        if (event.isCanceled()) {
-            return;
-        }
-
         if (!(event.getEntity() instanceof LivingEntity)) {
             return;
         }
@@ -80,19 +78,19 @@ public class DeathEvents {
                 drops.clear();
             } else {
                 if (entity instanceof ServerPlayerEntity) {
-                    String modname = new TranslationTextComponent("message.name").getFormattedText();
-                    String message = new TranslationTextComponent("message.create_grave_failed").getFormattedText();
+                    String modname = new TranslationTextComponent("message.gravestone.name").getString();
+                    String message = new TranslationTextComponent("message.gravestone.create_grave_failed").getString();
 
                     ServerPlayerEntity player = (ServerPlayerEntity) entity;
 
-                    player.sendMessage(new StringTextComponent("[" + modname + "] " + message));
+                    player.sendMessage(new StringTextComponent("[" + modname + "] " + message), player.getUniqueID());
                 }
             }
             if (Config.giveDeathNotes) {
                 graveProcessor.givePlayerNote();
             }
         } catch (Exception e) {
-            Main.LOGGER.warn("Failed to process death of '{}'", event.getEntity().getName().getUnformattedComponentText());
+            Main.LOGGER.warn("Failed to process death of '{}'", event.getEntity().getName().getString());
             e.printStackTrace();
         }
 
@@ -126,13 +124,13 @@ public class DeathEvents {
          * Give the player a note without items when he dies with keepInventory true
          */
         try {
-            DeathInfo info = new DeathInfo(player.getPosition(), DimensionType.getKey(player.dimension).toString(), new ArrayList<>(), player.getName().getUnformattedComponentText(), System.currentTimeMillis(), player.getUniqueID());
+            DeathInfo info = new DeathInfo(player.func_233580_cy_(), player.world.func_234923_W_().func_240901_a_().toString(), new ArrayList<>(), player.getName().getString(), System.currentTimeMillis(), player.getUniqueID());
             ItemStack stack = new ItemStack(Main.DEATHINFO);
 
             info.addToItemStack(stack);
             player.inventory.addItemStackToInventory(stack);
         } catch (Exception e) {
-            Main.LOGGER.warn("Failed to give player '{}' death note", player.getName().getUnformattedComponentText());
+            Main.LOGGER.warn("Failed to give player '{}' death note", player.getName().getString());
         }
 
     }

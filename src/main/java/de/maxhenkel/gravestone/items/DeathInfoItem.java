@@ -2,12 +2,12 @@ package de.maxhenkel.gravestone.items;
 
 import de.maxhenkel.gravestone.DeathInfo;
 import de.maxhenkel.gravestone.gui.DeathInfoScreen;
-import de.maxhenkel.gravestone.gui.DeathItemsContainer;
 import de.maxhenkel.gravestone.gui.DeathItemsInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.Item;
@@ -41,7 +41,7 @@ public class DeathInfoItem extends Item {
                     @Nullable
                     @Override
                     public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                        return new DeathItemsContainer(id, playerInventory, new DeathItemsInventory(info));
+                        return ChestContainer.createGeneric9X6(id, playerInventory, new DeathItemsInventory(info));
                     }
 
                     @Override

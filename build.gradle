@@ -34,12 +34,33 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
             args = ['--username', 'henkelmax']
             source sourceSets.main
+            mods {
+                mod_id {
+                    source sourceSets.main
+                }
+            }
         }
 
         server {
             workingDirectory project.file('run/server')
             property 'forge.logging.console.level', 'debug'
             source sourceSets.main
+            mods {
+                mod_id {
+                    source sourceSets.main
+                }
+            }
+        }
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/')
+
+            mods {
+                mod_id {
+                    source sourceSets.main
+                }
+            }
         }
     }
 }
@@ -106,7 +127,7 @@ forgeUpdate {
     tags = recommended == 'true' ? ['recommended'] : []
 }
 
-javadoc {
+/*javadoc {
     failOnError = false
 }
 
@@ -138,4 +159,5 @@ artifacts {
     archives deobfJar
     archives sourcesJar
     archives javadocJar
-}
+}*/
+jar.finalizedBy('reobfJar') 

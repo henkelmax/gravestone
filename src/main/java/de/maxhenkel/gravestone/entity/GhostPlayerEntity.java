@@ -1,11 +1,11 @@
 package de.maxhenkel.gravestone.entity;
 
-import java.util.UUID;
-import javax.annotation.Nullable;
-
 import de.maxhenkel.gravestone.Config;
-import de.maxhenkel.gravestone.Main;
-import net.minecraft.entity.*;
+import net.minecraft.entity.CreatureAttribute;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.attributes.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.MonsterEntity;
@@ -18,18 +18,62 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 public class GhostPlayerEntity extends MonsterEntity {
 
     private static final DataParameter<String> PLAYER_UUID = EntityDataManager.createKey(GhostPlayerEntity.class, DataSerializers.STRING);
 
+    private AttributeModifierManager attributes;
+
     public GhostPlayerEntity(EntityType type, World world) {
         super(type, world);
+
+        getAttribute(Attributes.field_233823_f_).setBaseValue(3.0D);
+        getAttribute(Attributes.field_233826_i_).setBaseValue(2.0D);
+        getAttribute(Attributes.field_233821_d_).setBaseValue(0.23000000417232513D);
+        getAttribute(Attributes.field_233819_b_).setBaseValue(35.0D);
     }
 
     public GhostPlayerEntity(World world, UUID playerUUID, String playerName) {
-        this(Main.GHOST, world);
-        this.setPlayerUUID(playerUUID);
-        this.setCustomName(new StringTextComponent(playerName));
+        this(/*Main.GHOST*/null, world);
+        setPlayerUUID(playerUUID);
+        setCustomName(new StringTextComponent(playerName));
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
+        getDataManager().register(PLAYER_UUID, new UUID(0, 0).toString());
+    }
+
+    @Override
+    public AttributeModifierManager func_233645_dx_() {
+        if (attributes == null) {
+            //attributes = new AttributeModifierManager(GlobalEntityTypeAttributes.func_233835_a_((EntityType<? extends LivingEntity>) getType()));
+            attributes = new AttributeModifierManager(getAttributes());
+
+        }
+        return attributes;
+    }
+
+    private static AttributeModifierMap getAttributes() {
+        Map<Attribute, ModifiableAttributeInstance> atts = new HashMap<>();
+        atts.put(Attributes.field_233818_a_, new ModifiableAttributeInstance(Attributes.field_233818_a_, modifiableAttributeInstance -> modifiableAttributeInstance.setBaseValue(20D)));
+        atts.put(Attributes.field_233823_f_, new ModifiableAttributeInstance(Attributes.field_233823_f_, modifiableAttributeInstance -> modifiableAttributeInstance.setBaseValue(3D)));
+        atts.put(Attributes.field_233826_i_, new ModifiableAttributeInstance(Attributes.field_233826_i_, modifiableAttributeInstance -> modifiableAttributeInstance.setBaseValue(2D)));
+        atts.put(Attributes.field_233821_d_, new ModifiableAttributeInstance(Attributes.field_233821_d_, modifiableAttributeInstance -> modifiableAttributeInstance.setBaseValue(0.23000000417232513D)));
+        atts.put(Attributes.field_233819_b_, new ModifiableAttributeInstance(Attributes.field_233819_b_, modifiableAttributeInstance -> modifiableAttributeInstance.setBaseValue(35D)));
+        return new AttributeModifierMap(atts);
+       /*
+        MonsterEntity.func_234295_eP_()
+                .func_233815_a_(Attributes.field_233823_f_, 3D)
+                .func_233815_a_(Attributes.field_233826_i_, 2D)
+                .func_233815_a_(Attributes.field_233821_d_, 0.23000000417232513D)
+                .func_233815_a_(Attributes.field_233819_b_, 35D);*/
     }
 
     @Override
@@ -56,19 +100,6 @@ public class GhostPlayerEntity extends MonsterEntity {
     }
 
     @Override
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(3.0D);
-
-        this.getAttribute(SharedMonsterAttributes.ARMOR).setBaseValue(2.0D);
-
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.23000000417232513D);
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
-
-        this.getDataManager().register(PLAYER_UUID, new UUID(0, 0).toString());
-    }
-
-    @Override
     public boolean isEntityUndead() {
         return true;
     }
@@ -86,15 +117,15 @@ public class GhostPlayerEntity extends MonsterEntity {
     }
 
     private void setOverpowered() {
-        this.getAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(35.0D);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.4D);
-        this.getAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(20.0D);
+        getAttribute(Attributes.field_233819_b_).setBaseValue(35.0D);
+        getAttribute(Attributes.field_233821_d_).setBaseValue(0.4D);
+        getAttribute(Attributes.field_233823_f_).setBaseValue(20.0D);
     }
 
     @Override
     public void setCustomName(@Nullable ITextComponent name) {
         super.setCustomName(name);
-        if (name.getUnformattedComponentText().equals("henkelmax")) {
+        if (name.getString().equals("henkelmax")) {
             setOverpowered();
         }
     }

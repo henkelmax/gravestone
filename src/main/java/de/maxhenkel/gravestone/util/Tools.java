@@ -32,7 +32,7 @@ public class Tools {
     }
 
     public static String translateItem(ItemStack stack) {
-        return new TranslationTextComponent(stack.getTranslationKey()).getUnformattedComponentText();
+        return new TranslationTextComponent(stack.getTranslationKey()).getString();
     }
 
     public static boolean isArrayEmpty(Object[] obj) {

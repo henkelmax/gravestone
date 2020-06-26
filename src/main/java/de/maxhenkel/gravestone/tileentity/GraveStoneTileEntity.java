@@ -2,6 +2,7 @@ package de.maxhenkel.gravestone.tileentity;
 
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.util.Tools;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
@@ -21,7 +22,6 @@ public class GraveStoneTileEntity extends TileEntity implements IInventory {
     private long deathTime;
     private boolean renderHead;
     private static final String TAG_NAME = "ItemStacks";
-    private static final String INV_NAME = "GraveInventory";
     private static final String PLAYER_NAME = "PlayerName";
     private static final String PLAYER_UUID = "PlayerUUID";
     private static final String DEATH_TIME = "DeathTime";
@@ -59,8 +59,9 @@ public class GraveStoneTileEntity extends TileEntity implements IInventory {
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void func_230337_a_(BlockState state, CompoundNBT compound) {
+        super.func_230337_a_(state, compound);
+
         ListNBT list = compound.getList(TAG_NAME, 10);
         this.inventory = new Inventory(list.size());
 
@@ -83,7 +84,7 @@ public class GraveStoneTileEntity extends TileEntity implements IInventory {
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(pkt.getNbtCompound());
+        this.func_230337_a_(null, pkt.getNbtCompound());
     }
 
     @Override

@@ -28,7 +28,7 @@ public class PlayerGhostRenderer extends LivingRenderer<GhostPlayerEntity, Playe
     @Nullable
     @Override
     public ResourceLocation getEntityTexture(GhostPlayerEntity entityGhostPlayer) {
-        return PlayerSkins.getSkin(entityGhostPlayer.getUniqueID(), entityGhostPlayer.getName().getUnformattedComponentText());
+        return PlayerSkins.getSkin(entityGhostPlayer.getUniqueID(), entityGhostPlayer.getName().getString());
     }
 
 }

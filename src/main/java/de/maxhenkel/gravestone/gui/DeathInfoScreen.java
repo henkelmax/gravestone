@@ -1,6 +1,7 @@
 package de.maxhenkel.gravestone.gui;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.maxhenkel.gravestone.DeathInfo;
 import de.maxhenkel.gravestone.Main;
@@ -38,159 +39,153 @@ public class DeathInfoScreen extends Screen {
     }
 
     @Override
-    protected void init() {
-        super.init();
+    protected void func_231160_c_() { //INIT
+        super.func_231160_c_();
 
-        buttons.clear();
-        int left = (this.width - TEXTURE_X) / 2;
-        buttonPrev = addButton(new Button(left, 190, 75, 20, new TranslationTextComponent("button.prev").getFormattedText(), new Button.IPressable() {
-            @Override
-            public void onPress(Button button) {
-                page--;
-                if (page < 0) {
-                    page = 0;
-                }
-                checkButtons();
+        field_230710_m_.clear();
+
+        int left = (field_230708_k_ - TEXTURE_X) / 2;
+        buttonPrev = func_230480_a_(new Button(left, 190, 75, 20, new TranslationTextComponent("button.gravestone.prev"), button -> {
+            page--;
+            if (page < 0) {
+                page = 0;
             }
+            checkButtons();
         }));
 
-        buttonNext = addButton(new Button(left + TEXTURE_X - 75, 190, 75, 20, new TranslationTextComponent("button.next").getFormattedText(), new Button.IPressable() {
-            @Override
-            public void onPress(Button button) {
-                page++;
-                if (page > pageList.getPages()) {
-                    page = pageList.getPages();
-                }
-                checkButtons();
+        buttonNext = func_230480_a_(new Button(left + TEXTURE_X - 75, 190, 75, 20, new TranslationTextComponent("button.gravestone.next"), button -> {
+            page++;
+            if (page > pageList.getPages()) {
+                page = pageList.getPages();
             }
+            checkButtons();
         }));
-        buttonPrev.active = false;
+        buttonPrev.field_230693_o_ = false;
         if (pageList.getPages() <= 0) {
-            this.buttonNext.active = false;
+            this.buttonNext.field_230693_o_ = false;
         }
     }
 
     protected void checkButtons() {
         if (page <= 0) {
-            buttonPrev.active = false;
+            buttonPrev.field_230693_o_ = false;
         } else {
-            buttonPrev.active = true;
+            buttonPrev.field_230693_o_ = true;
         }
 
         if (page >= pageList.getPages()) {
-            buttonNext.active = false;
+            buttonNext.field_230693_o_ = false;
         } else {
-            buttonNext.active = true;
+            buttonNext.field_230693_o_ = true;
         }
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
+    public void func_230430_a_(MatrixStack matrixStack, int mouseX, int mouseY, float p_230430_4_) {
+        super.func_230430_a_(matrixStack, mouseX, mouseY, p_230430_4_);
+        int left = (field_230708_k_ - TEXTURE_X) / 2;
 
-        int left = (this.width - TEXTURE_X) / 2;
-
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        minecraft.getTextureManager().bindTexture(GUI_TEXTURE);
-        blit(left, 20, 0, 0, TEXTURE_X, TEXTURE_Y);
+        RenderSystem.color4f(1F, 1F, 1F, 1F);
+        field_230706_i_.getTextureManager().bindTexture(GUI_TEXTURE);
+        func_238474_b_(matrixStack, left, 20, 0, 0, TEXTURE_X, TEXTURE_Y);
 
         if (page == 0) {
-            drawFirstPage(mouseX, mouseY);
+            drawFirstPage(matrixStack, mouseX, mouseY);
         } else if (page > 0) {
             if (pageList.getPages() < page - 1) {
 
             } else {
-                pageList.drawPage(page - 1);
+                pageList.drawPage(matrixStack, page - 1);
             }
 
         }
     }
 
-    public void drawFirstPage(int mouseX, int mouseY) {
+    public void drawFirstPage(MatrixStack matrixStack, int mouseX, int mouseY) {
         // Title
 
-        String title = new TranslationTextComponent("gui.deathinfo.title").getFormattedText();
+        String title = new TranslationTextComponent("gui.deathinfo.title").getString();
 
-        int titleWidth = this.font.getStringWidth(title);
+        int titleWidth = field_230712_o_.getStringWidth(title);
 
-        this.font.drawString(TextFormatting.BLACK + "" + TextFormatting.UNDERLINE + title, (this.width - titleWidth) / 2, 30, 0);
+        field_230712_o_.func_238421_b_(matrixStack, TextFormatting.BLACK + "" + TextFormatting.UNDERLINE + title, (field_230708_k_ - titleWidth) / 2, 30, 0);
 
         // Name
 
-        String textName = new TranslationTextComponent("gui.deathinfo.name").getFormattedText() + ":";
-        drawLeft(TextFormatting.BLACK + textName, 50);
+        String textName = new TranslationTextComponent("gui.deathinfo.name").getString() + ":";
+        drawLeft(matrixStack, TextFormatting.BLACK + textName, 50);
 
         String name = info.getName();
-        drawRight(TextFormatting.DARK_GRAY + name, 50);
+        drawRight(matrixStack, TextFormatting.DARK_GRAY + name, 50);
 
         // Dimension
 
-        String textDimension = new TranslationTextComponent("gui.deathinfo.dimension").getFormattedText() + ":";
-        drawLeft(TextFormatting.BLACK + textDimension, 63);
+        String textDimension = new TranslationTextComponent("gui.deathinfo.dimension").getString() + ":";
+        drawLeft(matrixStack, TextFormatting.BLACK + textDimension, 63);
 
         String dimension = Tools.translateDimension(info.getDimension());
-        drawRight(TextFormatting.DARK_GRAY + dimension, 63);
+        drawRight(matrixStack, TextFormatting.DARK_GRAY + dimension, 63);
 
         // Time
 
-        String textTime = new TranslationTextComponent("gui.deathinfo.time").getFormattedText() + ":";
-        drawLeft(TextFormatting.BLACK + textTime, 76);
+        String textTime = new TranslationTextComponent("gui.deathinfo.time").getString() + ":";
+        drawLeft(matrixStack, TextFormatting.BLACK + textTime, 76);
 
         String time = Tools.timeToString(info.getTime());
-        drawRight(TextFormatting.DARK_GRAY + time, 76);
+        drawRight(matrixStack, TextFormatting.DARK_GRAY + time, 76);
 
         // Location
 
-        String textLocation = new TranslationTextComponent("gui.deathinfo.location").getFormattedText() + ":";
-        drawLeft(TextFormatting.BLACK + textLocation, 89);
+        String textLocation = new TranslationTextComponent("gui.deathinfo.location").getString() + ":";
+        drawLeft(matrixStack, TextFormatting.BLACK + textLocation, 89);
 
         String locX = "X: " + info.getDeathLocation().getX();
         String locY = "Y: " + info.getDeathLocation().getY();
         String locZ = "Z: " + info.getDeathLocation().getZ();
 
-        drawRight(TextFormatting.DARK_GRAY + locX, 89);
-        drawRight(TextFormatting.DARK_GRAY + locY, 102);
-        drawRight(TextFormatting.DARK_GRAY + locZ, 115);
+        drawRight(matrixStack, TextFormatting.DARK_GRAY + locX, 89);
+        drawRight(matrixStack, TextFormatting.DARK_GRAY + locY, 102);
+        drawRight(matrixStack, TextFormatting.DARK_GRAY + locZ, 115);
 
         // Player
 
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1F, 1F, 1F, 1F);
 
-        PlayerEntity player = new RemoteClientPlayerEntity(minecraft.world, new GameProfile(info.getUuid(), info.getName()));
-        InventoryScreen.drawEntityOnScreen(width / 2, 175, 30, (width / 2) - mouseX, 100 - mouseY, player);
+        PlayerEntity player = new RemoteClientPlayerEntity(field_230706_i_.world, new GameProfile(info.getUuid(), info.getName()));
+        InventoryScreen.drawEntityOnScreen(field_230708_k_ / 2, 175, 30, (field_230708_k_ / 2) - mouseX, 100 - mouseY, player);
 
     }
 
-    public void drawItem(String string, int height) {
-        int left = (this.width - TEXTURE_X) / 2;
+    public void drawItem(MatrixStack matrixStack, String string, int height) {
+        int left = (field_230708_k_ - TEXTURE_X) / 2;
         int offset = 40;
         int offsetLeft = left + offset;
-        this.font.drawString(string, offsetLeft, height, 0);
+        field_230712_o_.func_238421_b_(matrixStack, string, offsetLeft, height, 0);
     }
 
-    public void drawItemSize(String string, int height) {
-        int left = (this.width - TEXTURE_X) / 2;
+    public void drawItemSize(MatrixStack matrixStack, String string, int height) {
+        int left = (field_230708_k_ - TEXTURE_X) / 2;
         int offset = 15;
         int offsetLeft = left + offset;
-        this.font.drawString(string, offsetLeft, height, 0);
+        field_230712_o_.func_238421_b_(matrixStack, string, offsetLeft, height, 0);
     }
 
-    public void drawLeft(String string, int height) {
-        int left = (this.width - TEXTURE_X) / 2;
+    public void drawLeft(MatrixStack matrixStack, String string, int height) {
+        int left = (field_230708_k_ - TEXTURE_X) / 2;
         int offset = 7;
         int offsetLeft = left + offset;
-        this.font.drawString(string, offsetLeft, height, 0);
+        field_230712_o_.func_238421_b_(matrixStack, string, offsetLeft, height, 0);
     }
 
-    public void drawRight(String string, int height) {
-        int left = (this.width - TEXTURE_X) / 2;
+    public void drawRight(MatrixStack matrixStack, String string, int height) {
+        int left = (field_230708_k_ - TEXTURE_X) / 2;
         int offset = 14;
-        int strWidth = this.font.getStringWidth(string);
-        this.font.drawString(string, left + TEXTURE_X - strWidth - offset, height, 0);
+        int strWidth = field_230712_o_.getStringWidth(string);
+        field_230712_o_.func_238421_b_(matrixStack, string, left + TEXTURE_X - strWidth - offset, height, 0);
     }
 
     public FontRenderer getFontRenderer() {
-        return this.font;
+        return field_230712_o_;
     }
 
 }

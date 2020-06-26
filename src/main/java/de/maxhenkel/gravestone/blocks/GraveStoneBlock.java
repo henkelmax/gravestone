@@ -13,8 +13,8 @@ import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.fluid.IFluidState;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.*;
@@ -40,7 +40,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     public static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.Plane.HORIZONTAL);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    public static final Material GRAVESTONE_MATERIAL = new Material(MaterialColor.DIRT, false, true, true, false, true, false, false, PushReaction.BLOCK);
+    public static final Material GRAVESTONE_MATERIAL = new Material(MaterialColor.DIRT, false, false, true, false, false, false, PushReaction.BLOCK);
 
     public GraveStoneBlock() {
         super(Properties.create(GRAVESTONE_MATERIAL, MaterialColor.DIRT).hardnessAndResistance(0.3F, Float.MAX_VALUE));
@@ -69,7 +69,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public IFluidState getFluidState(BlockState state) {
+    public FluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
@@ -79,7 +79,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, IFluidState fluidStateIn) {
+    public boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn) {
         if (!state.get(WATERLOGGED) && fluidStateIn.getFluid() == Fluids.WATER) {
             if (!worldIn.isRemote()) {
                 worldIn.setBlockState(pos, state.with(WATERLOGGED, true), 3);
@@ -113,17 +113,12 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        IFluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
+        FluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
         return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(WATERLOGGED, ifluidstate.getFluid() == Fluids.WATER);
     }
 
     @Override
     public boolean isTransparent(BlockState state) {
-        return false;
-    }
-
-    @Override
-    public boolean isNormalCube(BlockState state, IBlockReader reader, BlockPos pos) {
         return false;
     }
 
@@ -176,9 +171,9 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
         }
 
         if (time == null || time.isEmpty()) {
-            player.sendMessage(new StringTextComponent(name));
+            player.sendMessage(new StringTextComponent(name), player.getUniqueID());
         } else {
-            player.sendMessage(new TranslationTextComponent("message.died", name, time));
+            player.sendMessage(new TranslationTextComponent("message.gravestone.died", name, time), player.getUniqueID());
         }
     }
 

@@ -2,6 +2,7 @@ package de.maxhenkel.gravestone.gui;
 
 import java.util.Arrays;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
@@ -24,19 +25,19 @@ public class Page {
         }
     }
 
-    public void drawPage(int num) {
-        String title = new TranslationTextComponent("gui.deathinfo.title.items").getFormattedText();
+    public void drawPage(MatrixStack matrixStack, int num) {
+        String title = new TranslationTextComponent("gui.deathinfo.title.items").getString();
 
         int titleWidth = gui.getFontRenderer().getStringWidth(title);
 
-        gui.getFontRenderer().drawString(TextFormatting.BLACK + "" + TextFormatting.UNDERLINE + title, (gui.width - titleWidth) / 2, 30, 0);
+        gui.getFontRenderer().func_238421_b_(matrixStack, TextFormatting.BLACK + "" + TextFormatting.UNDERLINE + title, (gui.field_230708_k_ - titleWidth) / 2, 30, 0);
 
 
-        String page = new TranslationTextComponent("gui.deathinfo.page").getFormattedText();
-        page = TextFormatting.DARK_GRAY + page + " " + TextFormatting.DARK_GRAY + String.valueOf(num);
+        String page = new TranslationTextComponent("gui.deathinfo.page").getString();
+        page = TextFormatting.DARK_GRAY + page + " " + TextFormatting.DARK_GRAY + num;
         int pageWidth = gui.getFontRenderer().getStringWidth(page);
 
-        gui.getFontRenderer().drawString(page, (gui.width - pageWidth) / 2, 43, 0);
+        gui.getFontRenderer().func_238421_b_(matrixStack, page, (gui.field_230708_k_ - pageWidth) / 2, 43, 0);
 
         int y = 60;
         final int space = 12;
@@ -54,8 +55,8 @@ public class Page {
                 continue;
             }
 
-            gui.drawItem(TextFormatting.ITALIC + name, y);
-            gui.drawItemSize(String.valueOf(s.getCount()), y);
+            gui.drawItem(matrixStack, TextFormatting.ITALIC + name, y);
+            gui.drawItemSize(matrixStack, String.valueOf(s.getCount()), y);
 
             y = y + space;
         }

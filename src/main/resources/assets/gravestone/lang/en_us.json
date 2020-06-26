@@ -2,10 +2,11 @@
   "block.gravestone.gravestone": "Grave",
   "item.gravestone.death_info": "Obituary",
   "entity.gravestone.player_ghost": "Ghost Player",
-  "message.died": "%s died on %s",
-  "message.deathlocation": "Death location",
-  "message.no_deathlocation": "No death location available",
-  "message.create_grave_failed": "Grave could not be placed",
+  "message.gravestone.name": "GraveStone",
+  "message.gravestone.died": "%s died on %s",
+  "message.gravestone.deathlocation": "Death location",
+  "message.gravestone.no_deathlocation": "No death location available",
+  "message.gravestone.create_grave_failed": "Grave could not be placed",
   "gui.deathinfo.name": "Name",
   "gui.deathinfo.title": "Player Death Info",
   "gui.deathinfo.location": "Location",
@@ -14,6 +15,6 @@
   "gui.deathinfo.page": "Page",
   "gui.deathinfo.time": "Date",
   "gui.deathitems": "Death Items",
-  "button.next": "Next",
-  "button.prev": "Back"
+  "button.gravestone.next": "Next",
+  "button.gravestone.prev": "Back"
 }

@@ -9,7 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.model.HumanoidHeadModel;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
@@ -17,6 +16,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Vector3f;
 
 import java.util.UUID;
 
@@ -69,7 +69,7 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
             return;
         }
 
-        boolean render = block.isNormalCube(state, target.getWorld(), target.getPos().down());//is opaque
+        boolean render = Block.isOpaque(state.getRenderShape(target.getWorld(), target.getPos()));
 
         if (target.renderHead() && target.getPlayerUUID() != null && !target.getPlayerUUID().isEmpty() && Config.renderSkull && render) {
             try {
@@ -101,7 +101,7 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
 
         matrixStack.rotate(Vector3f.XP.rotationDegrees(-61F));
 
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1F, 1F, 1F, 1F);
         model.render(matrixStack, buffer.getBuffer(model.getRenderType(resourcelocation)), 15728880, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 
         matrixStack.pop();

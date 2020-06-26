@@ -1,10 +1,5 @@
 package de.maxhenkel.gravestone;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import de.maxhenkel.gravestone.util.NoSpaceException;
@@ -18,7 +13,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class GraveProcessor {
 
@@ -32,7 +31,7 @@ public class GraveProcessor {
     public GraveProcessor(LivingEntity entity) {
         this.entity = entity;
         this.world = entity.getEntityWorld();
-        this.deathPosition = entity.getPosition();
+        this.deathPosition = entity.func_233580_cy_();
         this.gravePosition = deathPosition;
         this.drops = new ArrayList<>();
         this.time = System.currentTimeMillis();
@@ -45,7 +44,7 @@ public class GraveProcessor {
             this.gravePosition = getGraveStoneLocation();
         } catch (NoSpaceException e) {
             this.gravePosition = deathPosition;
-            Main.LOGGER.info("Grave of '{}' cant be created (No space)", entity.getName().getUnformattedComponentText());
+            Main.LOGGER.info("Grave of '{}' cant be created (No space)", entity.getName().getString());
             return false;
         }
 
@@ -69,7 +68,7 @@ public class GraveProcessor {
         try {
             GraveStoneTileEntity graveTileEntity = (GraveStoneTileEntity) tileentity;
 
-            graveTileEntity.setPlayerName(entity.getName().getFormattedText());
+            graveTileEntity.setPlayerName(entity.getName().getString());
             graveTileEntity.setPlayerUUID(entity.getUniqueID().toString());
             graveTileEntity.setDeathTime(time);
 
@@ -109,11 +108,11 @@ public class GraveProcessor {
     public BlockPos getGraveStoneLocation() throws NoSpaceException {
         BlockPos location = new BlockPos(deathPosition.getX(), deathPosition.getY(), deathPosition.getZ());
 
-        if (world.isOutsideBuildHeight(location) && location.getY() < world.getMaxHeight()) {
+        if (World.isOutsideBuildHeight(location) && location.getY() <= 0) {
             location = new BlockPos(location.getX(), 1, location.getZ());
         }
 
-        while (location.getY() < world.getMaxHeight()) {
+        while (!World.isOutsideBuildHeight(location)) {
             if (isReplaceable(location)) {
                 return location;
             }
@@ -155,7 +154,7 @@ public class GraveProcessor {
             return itemStack;
         }).collect(Collectors.toList());
 
-        DeathInfo info = new DeathInfo(gravePosition, DimensionType.getKey(player.dimension).toString(), deathNoteItems, player.getName().getUnformattedComponentText(), time, player.getUniqueID());
+        DeathInfo info = new DeathInfo(gravePosition, player.world.func_234923_W_().func_240901_a_().toString(), deathNoteItems, player.getName().getString(), time, player.getUniqueID());
         ItemStack stack = new ItemStack(Main.DEATHINFO);
 
         info.addToItemStack(stack);

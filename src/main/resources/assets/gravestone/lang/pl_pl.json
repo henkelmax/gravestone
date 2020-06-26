@@ -2,10 +2,11 @@
   "block.gravestone.gravestone": "Grób",
   "item.gravestone.death_info": "Nekrolog",
   "entity.gravestone.player_ghost": "Duch gracza",
-  "message.died": "Gracz %s zmarł %s",
-  "message.deathlocation": "Lokalizacja miejsca śmierci",
-  "message.no_deathlocation": "Brak dostępnej lokalizacji miejsca śmierci",
-  "message.create_grave_failed": "Grób nie mógł zostać postawiony",
+  "message.gravestone.name": "GraveStone",
+  "message.gravestone.died": "Gracz %s zmarł %s",
+  "message.gravestone.deathlocation": "Lokalizacja miejsca śmierci",
+  "message.gravestone.no_deathlocation": "Brak dostępnej lokalizacji miejsca śmierci",
+  "message.gravestone.create_grave_failed": "Grób nie mógł zostać postawiony",
   "gui.deathinfo.name": "Nazwa",
   "gui.deathinfo.title": "Informacje o śmierci gracza",
   "gui.deathinfo.location": "Lokalizacja",
@@ -14,6 +15,6 @@
   "gui.deathinfo.page": "Strona",
   "gui.deathinfo.time": "Data",
   "gui.deathitems": "Rzeczy zmarłego",
-  "button.next": "Dalej",
-  "button.prev": "Wstecz"
+  "button.gravestone.next": "Dalej",
+  "button.gravestone.prev": "Wstecz"
 }

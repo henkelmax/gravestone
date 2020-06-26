@@ -64,7 +64,7 @@ public class BlockEvents {
             return;
         }
 
-        String name = stack.getDisplayName().getUnformattedComponentText();
+        String name = stack.getDisplayName().getString();
 
         if (name == null) {
             return;
@@ -145,7 +145,7 @@ public class BlockEvents {
         PlayerInventory inv = player.inventory;
 
         BlockPos pos = event.getPos();
-        String dim = player.dimension.toString();
+        String dim = player.world.func_230315_m_().toString();
 
         for (ItemStack stack : inv.mainInventory) {
             if (stack != null && stack.getItem().equals(Main.DEATHINFO)) {
