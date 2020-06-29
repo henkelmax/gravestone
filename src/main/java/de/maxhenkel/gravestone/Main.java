@@ -1,13 +1,17 @@
 package de.maxhenkel.gravestone;
 
 import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
+import de.maxhenkel.gravestone.entity.GhostPlayerEntity;
+import de.maxhenkel.gravestone.entity.PlayerGhostRenderer;
 import de.maxhenkel.gravestone.events.BlockEvents;
 import de.maxhenkel.gravestone.events.DeathEvents;
 import de.maxhenkel.gravestone.items.DeathInfoItem;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import de.maxhenkel.gravestone.tileentity.GravestoneRenderer;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
@@ -19,6 +23,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -43,7 +48,7 @@ public class Main {
 
     public static DeathInfoItem DEATHINFO;
 
-    //public static EntityType<GhostPlayerEntity> GHOST;
+    public static EntityType<GhostPlayerEntity> GHOST;
 
     public Main() {
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::registerBlocks);
@@ -87,7 +92,7 @@ public class Main {
     public void clientSetup(FMLClientSetupEvent event) {
         ClientRegistry.bindTileEntityRenderer(GRAVESTONE_TILEENTITY, GravestoneRenderer::new);
 
-        //RenderingRegistry.registerEntityRenderingHandler(GHOST, manager -> new PlayerGhostRenderer(manager));
+        RenderingRegistry.registerEntityRenderingHandler(GHOST, manager -> new PlayerGhostRenderer(manager));
     }
 
     @SubscribeEvent
@@ -114,10 +119,12 @@ public class Main {
 
     @SubscribeEvent
     public void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
-        /*GHOST = EntityType.Builder.<GhostPlayerEntity>create(GhostPlayerEntity::new, EntityClassification.MONSTER)
+        GHOST = EntityType.Builder.<GhostPlayerEntity>create(GhostPlayerEntity::new, EntityClassification.MONSTER)
                 .size(0.6F, 1.95F)
                 .build(Main.MODID + ":player_ghost");
         GHOST.setRegistryName(new ResourceLocation(Main.MODID, "player_ghost"));
-        event.getRegistry().register(GHOST);*/
+        event.getRegistry().register(GHOST);
+
+        GlobalEntityTypeAttributes.put(GHOST, GhostPlayerEntity.getAttributes().func_233813_a_());
     }
 }

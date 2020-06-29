@@ -1,1 +1,1 @@
-- Fixed death info GUI text
+- Re added player ghost

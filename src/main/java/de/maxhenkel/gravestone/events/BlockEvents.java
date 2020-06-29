@@ -113,7 +113,7 @@ public class BlockEvents {
 
         TileEntity te = world.getTileEntity(event.getPos());
 
-        if (te == null || !(te instanceof GraveStoneTileEntity)) {
+        if (!(te instanceof GraveStoneTileEntity)) {
             return;
         }
 
