@@ -1,12 +1,12 @@
 package de.maxhenkel.gravestone.gui;
 
-import java.util.Arrays;
-
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+
+import java.util.Arrays;
 
 public class Page {
 
@@ -26,38 +26,19 @@ public class Page {
     }
 
     public void drawPage(MatrixStack matrixStack, int num) {
-        String title = new TranslationTextComponent("gui.deathinfo.title.items").getString();
-
-        int titleWidth = gui.getFontRenderer().getStringWidth(title);
-
-        gui.getFontRenderer().func_238421_b_(matrixStack, TextFormatting.BLACK + "" + TextFormatting.UNDERLINE + title, (gui.field_230708_k_ - titleWidth) / 2, 30, 0);
-
-
-        String page = new TranslationTextComponent("gui.deathinfo.page").getString();
-        page = TextFormatting.DARK_GRAY + page + " " + TextFormatting.DARK_GRAY + num;
-        int pageWidth = gui.getFontRenderer().getStringWidth(page);
-
-        gui.getFontRenderer().func_238421_b_(matrixStack, page, (gui.field_230708_k_ - pageWidth) / 2, 43, 0);
+        gui.drawCentered(matrixStack, gui.getFontRenderer(), new TranslationTextComponent("gui.deathinfo.title.items").func_240699_a_(TextFormatting.UNDERLINE), gui.field_230708_k_ / 2, 30, TextFormatting.BLACK.getColor());
+        gui.drawCentered(matrixStack, gui.getFontRenderer(), new TranslationTextComponent("gui.deathinfo.page", num), gui.field_230708_k_ / 2, 43, TextFormatting.DARK_GRAY.getColor());
 
         int y = 60;
         final int space = 12;
 
         for (int i = 0; i < items.length; i++) {
             ItemStack s = items[i];
-
-            if (s == null) {
+            if (s == null || s.isEmpty()) {
                 continue;
             }
-
-            String name = Tools.translateItem(s);
-
-            if (name == null) {
-                continue;
-            }
-
-            gui.drawItem(matrixStack, TextFormatting.ITALIC + name, y);
-            gui.drawItemSize(matrixStack, String.valueOf(s.getCount()), y);
-
+            gui.drawItem(matrixStack, new TranslationTextComponent(s.getTranslationKey()).func_240699_a_(TextFormatting.ITALIC), y);
+            gui.drawItemSize(matrixStack, new StringTextComponent(String.valueOf(s.getCount())), y);
             y = y + space;
         }
     }

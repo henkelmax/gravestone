@@ -10,7 +10,7 @@
   "gui.deathinfo.location": "Расположение",
   "gui.deathinfo.dimension": "Измерение",
   "gui.deathinfo.title.items": "Предметы при смерти",
-  "gui.deathinfo.page": "Стр.",
+  "gui.deathinfo.page": "Стр. %s",
   "gui.deathinfo.time": "Время",
   "button.gravestone.next": "След.",
   "button.gravestone.prev": "Пред."

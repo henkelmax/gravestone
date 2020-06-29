@@ -12,7 +12,7 @@
   "gui.deathinfo.location": "Lokalizacja",
   "gui.deathinfo.dimension": "Wymiar",
   "gui.deathinfo.title.items": "Rzeczy zmarłego",
-  "gui.deathinfo.page": "Strona",
+  "gui.deathinfo.page": "Strona %s",
   "gui.deathinfo.time": "Data",
   "gui.deathitems": "Rzeczy zmarłego",
   "button.gravestone.next": "Dalej",

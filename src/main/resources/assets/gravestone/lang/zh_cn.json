@@ -12,7 +12,7 @@
   "gui.deathinfo.location": "位置",
   "gui.deathinfo.dimension": "维度",
   "gui.deathinfo.title.items": "生前物品",
-  "gui.deathinfo.page": "页",
+  "gui.deathinfo.page": "页 %s",
   "gui.deathinfo.time": "时间",
   "gui.deathitems": "生前物品",
   "button.gravestone.next": "下一页",

@@ -13,8 +13,7 @@ import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 
 public class DeathInfoScreen extends Screen {
 
@@ -39,7 +38,7 @@ public class DeathInfoScreen extends Screen {
     }
 
     @Override
-    protected void func_231160_c_() { //INIT
+    protected void func_231160_c_() {
         super.func_231160_c_();
 
         field_230710_m_.clear();
@@ -97,91 +96,61 @@ public class DeathInfoScreen extends Screen {
             } else {
                 pageList.drawPage(matrixStack, page - 1);
             }
-
         }
     }
 
     public void drawFirstPage(MatrixStack matrixStack, int mouseX, int mouseY) {
-        // Title
+        drawCentered(matrixStack, field_230712_o_, new TranslationTextComponent("gui.deathinfo.title").func_240699_a_(TextFormatting.UNDERLINE), field_230708_k_ / 2, 30, TextFormatting.BLACK.getColor());
 
-        String title = new TranslationTextComponent("gui.deathinfo.title").getString();
+        drawLeft(matrixStack, new TranslationTextComponent("gui.deathinfo.name").func_240699_a_(TextFormatting.BLACK), 50);
+        drawRight(matrixStack, new StringTextComponent(info.getName()).func_240699_a_(TextFormatting.DARK_GRAY), 50);
 
-        int titleWidth = field_230712_o_.getStringWidth(title);
+        drawLeft(matrixStack, new TranslationTextComponent("gui.deathinfo.dimension").func_240699_a_(TextFormatting.BLACK), 63);
+        drawRight(matrixStack, new StringTextComponent(Tools.translateDimension(info.getDimension())).func_240699_a_(TextFormatting.DARK_GRAY), 63);
 
-        field_230712_o_.func_238421_b_(matrixStack, TextFormatting.BLACK + "" + TextFormatting.UNDERLINE + title, (field_230708_k_ - titleWidth) / 2, 30, 0);
+        drawLeft(matrixStack, new TranslationTextComponent("gui.deathinfo.time").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), 76);
+        drawRight(matrixStack, new StringTextComponent(Tools.timeToString(info.getTime())).func_240699_a_(TextFormatting.DARK_GRAY), 76);
 
-        // Name
-
-        String textName = new TranslationTextComponent("gui.deathinfo.name").getString() + ":";
-        drawLeft(matrixStack, TextFormatting.BLACK + textName, 50);
-
-        String name = info.getName();
-        drawRight(matrixStack, TextFormatting.DARK_GRAY + name, 50);
-
-        // Dimension
-
-        String textDimension = new TranslationTextComponent("gui.deathinfo.dimension").getString() + ":";
-        drawLeft(matrixStack, TextFormatting.BLACK + textDimension, 63);
-
-        String dimension = Tools.translateDimension(info.getDimension());
-        drawRight(matrixStack, TextFormatting.DARK_GRAY + dimension, 63);
-
-        // Time
-
-        String textTime = new TranslationTextComponent("gui.deathinfo.time").getString() + ":";
-        drawLeft(matrixStack, TextFormatting.BLACK + textTime, 76);
-
-        String time = Tools.timeToString(info.getTime());
-        drawRight(matrixStack, TextFormatting.DARK_GRAY + time, 76);
-
-        // Location
-
-        String textLocation = new TranslationTextComponent("gui.deathinfo.location").getString() + ":";
-        drawLeft(matrixStack, TextFormatting.BLACK + textLocation, 89);
-
-        String locX = "X: " + info.getDeathLocation().getX();
-        String locY = "Y: " + info.getDeathLocation().getY();
-        String locZ = "Z: " + info.getDeathLocation().getZ();
-
-        drawRight(matrixStack, TextFormatting.DARK_GRAY + locX, 89);
-        drawRight(matrixStack, TextFormatting.DARK_GRAY + locY, 102);
-        drawRight(matrixStack, TextFormatting.DARK_GRAY + locZ, 115);
-
-        // Player
+        drawLeft(matrixStack, new TranslationTextComponent("gui.deathinfo.location").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), 89);
+        drawRight(matrixStack, new StringTextComponent("X: " + info.getDeathLocation().getX()).func_240699_a_(TextFormatting.DARK_GRAY), 89);
+        drawRight(matrixStack, new StringTextComponent("Y: " + info.getDeathLocation().getY()).func_240699_a_(TextFormatting.DARK_GRAY), 102);
+        drawRight(matrixStack, new StringTextComponent("Z: " + info.getDeathLocation().getZ()).func_240699_a_(TextFormatting.DARK_GRAY), 115);
 
         RenderSystem.color4f(1F, 1F, 1F, 1F);
-
         PlayerEntity player = new RemoteClientPlayerEntity(field_230706_i_.world, new GameProfile(info.getUuid(), info.getName()));
         InventoryScreen.drawEntityOnScreen(field_230708_k_ / 2, 175, 30, (field_230708_k_ / 2) - mouseX, 100 - mouseY, player);
-
     }
 
-    public void drawItem(MatrixStack matrixStack, String string, int height) {
+    public void drawCentered(MatrixStack matrixStack, FontRenderer fontRenderer, ITextProperties text, int x, int y, int color) {
+        fontRenderer.func_238422_b_(matrixStack, text, (float) (x - fontRenderer.func_238414_a_(text) / 2), (float) y, color);
+    }
+
+    public void drawItem(MatrixStack matrixStack, IFormattableTextComponent string, int height) {
         int left = (field_230708_k_ - TEXTURE_X) / 2;
         int offset = 40;
         int offsetLeft = left + offset;
-        field_230712_o_.func_238421_b_(matrixStack, string, offsetLeft, height, 0);
+        field_230712_o_.func_238422_b_(matrixStack, string, offsetLeft, height, TextFormatting.BLACK.getColor());
     }
 
-    public void drawItemSize(MatrixStack matrixStack, String string, int height) {
+    public void drawItemSize(MatrixStack matrixStack, IFormattableTextComponent string, int height) {
         int left = (field_230708_k_ - TEXTURE_X) / 2;
         int offset = 15;
         int offsetLeft = left + offset;
-        field_230712_o_.func_238421_b_(matrixStack, string, offsetLeft, height, 0);
+        field_230712_o_.func_238422_b_(matrixStack, string, offsetLeft, height, TextFormatting.BLACK.getColor());
     }
 
-    public void drawLeft(MatrixStack matrixStack, String string, int height) {
+    public void drawLeft(MatrixStack matrixStack, IFormattableTextComponent string, int height) {
         int left = (field_230708_k_ - TEXTURE_X) / 2;
         int offset = 7;
         int offsetLeft = left + offset;
-        field_230712_o_.func_238421_b_(matrixStack, string, offsetLeft, height, 0);
+        field_230712_o_.func_238422_b_(matrixStack, string, offsetLeft, height, TextFormatting.BLACK.getColor());
     }
 
-    public void drawRight(MatrixStack matrixStack, String string, int height) {
+    public void drawRight(MatrixStack matrixStack, IFormattableTextComponent string, int height) {
         int left = (field_230708_k_ - TEXTURE_X) / 2;
         int offset = 14;
-        int strWidth = field_230712_o_.getStringWidth(string);
-        field_230712_o_.func_238421_b_(matrixStack, string, left + TEXTURE_X - strWidth - offset, height, 0);
+        int strWidth = field_230712_o_.func_238414_a_(string);
+        field_230712_o_.func_238422_b_(matrixStack, string, left + TEXTURE_X - strWidth - offset, height, TextFormatting.BLACK.getColor());
     }
 
     public FontRenderer getFontRenderer() {

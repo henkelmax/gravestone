@@ -12,7 +12,7 @@
   "gui.deathinfo.location": "Location",
   "gui.deathinfo.dimension": "Dimension",
   "gui.deathinfo.title.items": "Death Items",
-  "gui.deathinfo.page": "Page",
+  "gui.deathinfo.page": "Page %s",
   "gui.deathinfo.time": "Date",
   "gui.deathitems": "Death Items",
   "button.gravestone.next": "Next",

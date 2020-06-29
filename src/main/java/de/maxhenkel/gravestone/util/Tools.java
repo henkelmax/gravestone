@@ -1,22 +1,19 @@
 package de.maxhenkel.gravestone.util;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Map;
-
 import de.maxhenkel.gravestone.Config;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.GameRules;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Map;
 
 public class Tools {
 
@@ -29,10 +26,6 @@ public class Tools {
         }
 
         return name;
-    }
-
-    public static String translateItem(ItemStack stack) {
-        return new TranslationTextComponent(stack.getTranslationKey()).getString();
     }
 
     public static boolean isArrayEmpty(Object[] obj) {
