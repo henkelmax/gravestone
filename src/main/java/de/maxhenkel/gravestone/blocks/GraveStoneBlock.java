@@ -44,13 +44,13 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
 
     public GraveStoneBlock() {
         super(Properties.create(GRAVESTONE_MATERIAL, MaterialColor.DIRT).hardnessAndResistance(0.3F, Float.MAX_VALUE));
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
-        this.setRegistryName(Main.MODID, "gravestone");
+        setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
+        setRegistryName(Main.MODID, "gravestone");
     }
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(this.getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(getRegistryName());
     }
 
     @Override
@@ -133,20 +133,30 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity playerEntity, Hand hand, BlockRayTraceResult result) {
-        if (world.isRemote) {
-            return ActionResultType.SUCCESS;
-        }
-
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
         TileEntity tileentity = world.getTileEntity(pos);
 
         if (!(tileentity instanceof GraveStoneTileEntity)) {
-            return ActionResultType.SUCCESS;
+            return ActionResultType.FAIL;
         }
 
         GraveStoneTileEntity grave = (GraveStoneTileEntity) tileentity;
 
-        displayGraveInfo(grave, playerEntity);
+        String name = grave.getPlayerName();
+        String time = grave.getTimeString();
+
+        if (name == null || name.isEmpty()) {
+            return ActionResultType.FAIL;
+        }
+
+        if (!world.isRemote) {
+            if (time == null || time.isEmpty()) {
+                player.sendMessage(new StringTextComponent(name), Util.field_240973_b_);
+            } else {
+                player.sendMessage(new TranslationTextComponent("message.gravestone.died", name, time), player.getUniqueID());
+            }
+        }
+
         return ActionResultType.SUCCESS;
     }
 
@@ -159,21 +169,6 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
                 worldIn.updateComparatorOutputLevel(pos, this);
             }
             super.onReplaced(state, worldIn, pos, newState, isMoving);
-        }
-    }
-
-    private void displayGraveInfo(GraveStoneTileEntity grave, PlayerEntity player) {
-        String name = grave.getPlayerName();
-        String time = grave.getTimeString();
-
-        if (name == null || name.isEmpty()) {
-            return;
-        }
-
-        if (time == null || time.isEmpty()) {
-            player.sendMessage(new StringTextComponent(name), player.getUniqueID());
-        } else {
-            player.sendMessage(new TranslationTextComponent("message.gravestone.died", name, time), player.getUniqueID());
         }
     }
 

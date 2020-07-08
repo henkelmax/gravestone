@@ -1,1 +1,1 @@
-- Re added player ghost
+- Fixed hand animation with placed gravestone
