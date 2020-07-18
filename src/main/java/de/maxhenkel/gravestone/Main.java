@@ -1,5 +1,6 @@
 package de.maxhenkel.gravestone;
 
+import de.maxhenkel.corelib.CommonRegistry;
 import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
 import de.maxhenkel.gravestone.entity.GhostPlayerEntity;
 import de.maxhenkel.gravestone.entity.PlayerGhostRenderer;
@@ -21,7 +22,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -41,14 +41,12 @@ public class Main {
     public static final Logger LOGGER = LogManager.getLogger(Main.MODID);
 
     public static GraveStoneBlock GRAVESTONE;
-
     public static Item GRAVESTONE_ITEM;
-
     public static TileEntityType<GraveStoneTileEntity> GRAVESTONE_TILEENTITY;
-
     public static DeathInfoItem DEATHINFO;
-
     public static EntityType<GhostPlayerEntity> GHOST;
+    public static ServerConfig SERVER_CONFIG;
+    public static ClientConfig CLIENT_CONFIG;
 
     public Main() {
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::registerBlocks);
@@ -56,21 +54,11 @@ public class Main {
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(TileEntityType.class, this::registerTileEntities);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(EntityType.class, this::registerEntities);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::configEvent);
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_SPEC);
+        SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class, true);
+        CLIENT_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.CLIENT, ClientConfig.class, true);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup));
-    }
-
-    @SubscribeEvent
-    public void configEvent(ModConfig.ModConfigEvent event) {
-        if (event.getConfig().getType() == ModConfig.Type.SERVER) {
-            Config.loadServer();
-        } else if (event.getConfig().getType() == ModConfig.Type.CLIENT) {
-            Config.loadClient();
-        }
     }
 
     @SubscribeEvent
@@ -85,7 +73,7 @@ public class Main {
     public void clientSetup(FMLClientSetupEvent event) {
         ClientRegistry.bindTileEntityRenderer(GRAVESTONE_TILEENTITY, GravestoneRenderer::new);
 
-        RenderingRegistry.registerEntityRenderingHandler(GHOST, manager -> new PlayerGhostRenderer(manager));
+        RenderingRegistry.registerEntityRenderingHandler(GHOST, PlayerGhostRenderer::new);
     }
 
     @SubscribeEvent
@@ -112,12 +100,8 @@ public class Main {
 
     @SubscribeEvent
     public void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
-        GHOST = EntityType.Builder.<GhostPlayerEntity>create(GhostPlayerEntity::new, EntityClassification.MONSTER)
-                .size(0.6F, 1.95F)
-                .build(Main.MODID + ":player_ghost");
-        GHOST.setRegistryName(new ResourceLocation(Main.MODID, "player_ghost"));
+        GHOST = CommonRegistry.registerEntity(Main.MODID, "player_ghost", EntityClassification.MONSTER, GhostPlayerEntity.class, builder -> builder.size(0.6F, 1.95F));
         event.getRegistry().register(GHOST);
-
         GlobalEntityTypeAttributes.put(GHOST, GhostPlayerEntity.getAttributes().func_233813_a_());
     }
 }

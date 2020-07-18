@@ -2,9 +2,9 @@ package de.maxhenkel.gravestone.tileentity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.maxhenkel.gravestone.Config;
+import de.maxhenkel.corelib.client.PlayerSkins;
+import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
-import de.maxhenkel.gravestone.util.PlayerSkins;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.FontRenderer;
@@ -55,23 +55,15 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
         matrixStack.scale((float) textScale, (float) textScale, (float) textScale);
 
         float left = (float) (-renderer.getStringWidth(name) / 2);
-        renderer.renderString(name, left, 0F, Config.graveTextColor, false, matrixStack.getLast().getMatrix(), buffer, false, 0, light);
+        renderer.renderString(name, left, 0F, Main.CLIENT_CONFIG.graveTextColor, false, matrixStack.getLast().getMatrix(), buffer, false, 0, light);
 
         matrixStack.pop();
 
         BlockState state = target.getWorld().getBlockState(target.getPos().down());
-        if (state == null) {
-            return;
-        }
-
-        Block block = state.getBlock();
-        if (block == null) {
-            return;
-        }
 
         boolean render = Block.isOpaque(state.getRenderShape(target.getWorld(), target.getPos()));
 
-        if (target.renderHead() && target.getPlayerUUID() != null && !target.getPlayerUUID().isEmpty() && Config.renderSkull && render) {
+        if (target.renderHead() && target.getPlayerUUID() != null && !target.getPlayerUUID().isEmpty() && Main.CLIENT_CONFIG.renderSkull.get() && render) {
             try {
                 renderSkull(target.getPlayerUUID(), target.getPlayerName(), direction, matrixStack, buffer);
             } catch (Exception e) {

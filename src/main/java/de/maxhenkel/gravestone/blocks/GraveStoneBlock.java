@@ -1,11 +1,9 @@
 package de.maxhenkel.gravestone.blocks;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
+import de.maxhenkel.corelib.block.DirectionalVoxelShape;
+import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
-import de.maxhenkel.gravestone.util.IItemBlock;
-import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
@@ -17,13 +15,19 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -33,7 +37,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.*;
 
 import javax.annotation.Nullable;
-import java.util.Map;
 
 public class GraveStoneBlock extends Block implements ITileEntityProvider, IItemBlock, IBucketPickupHandler, ILiquidContainer {
 
@@ -184,64 +187,56 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
-        return SHAPES.get(state.get(FACING));
+        return SHAPE.get(state.get(FACING));
     }
 
     @Override
     public VoxelShape getRenderShape(BlockState state, IBlockReader reader, BlockPos pos) {
-        return SHAPES.get(state.get(FACING));
+        return SHAPE.get(state.get(FACING));
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
-        return SHAPES.get(state.get(FACING));
+        return SHAPE.get(state.get(FACING));
     }
 
     @Override
     public VoxelShape getRaytraceShape(BlockState state, IBlockReader reader, BlockPos pos) {
-        return SHAPES.get(state.get(FACING));
+        return SHAPE.get(state.get(FACING));
     }
 
     private static final VoxelShape BASE1 = Block.makeCuboidShape(0D, 0D, 0D, 16D, 1D, 16D);
     private static final VoxelShape BASE2 = Block.makeCuboidShape(1D, 1D, 1D, 15D, 2D, 15D);
 
-    private static final Map<Direction, VoxelShape> SHAPES = Maps.newEnumMap(ImmutableMap.of(
-            Direction.NORTH,
-            Tools.combine(
+    private static final DirectionalVoxelShape SHAPE = new DirectionalVoxelShape.Builder()
+            .direction(Direction.NORTH,
                     BASE1,
                     BASE2,
                     Block.makeCuboidShape(1D, 2D, 1D, 15D, 12D, 2D),
                     Block.makeCuboidShape(2D, 12D, 1D, 14D, 14D, 2D),
-                    Block.makeCuboidShape(3D, 14D, 1D, 13D, 15D, 2D)
-            ),
-            Direction.SOUTH,
-            Tools.combine(
+                    Block.makeCuboidShape(3D, 14D, 1D, 13D, 15D, 2D))
+            .direction(Direction.SOUTH,
                     BASE1,
                     BASE2,
                     Block.makeCuboidShape(1D, 2D, 15D, 15D, 12D, 14D),
                     Block.makeCuboidShape(2D, 12D, 15D, 14D, 14D, 14D),
                     Block.makeCuboidShape(3D, 14D, 15D, 13D, 15D, 14D)
-            ),
-            Direction.EAST,
-            Tools.combine(
+            ).direction(Direction.EAST,
                     BASE1,
                     BASE2,
                     Block.makeCuboidShape(15D, 2D, 1D, 14D, 12D, 15D),
                     Block.makeCuboidShape(15D, 12D, 2D, 14D, 14D, 14D),
                     Block.makeCuboidShape(15D, 14D, 3D, 14D, 15D, 13D)
-            ),
-            Direction.WEST,
-            Tools.combine(
+            ).direction(Direction.WEST,
                     BASE1,
                     BASE2,
                     Block.makeCuboidShape(1D, 2D, 1D, 2D, 12D, 15D),
                     Block.makeCuboidShape(1D, 12D, 2D, 2D, 14D, 14D),
                     Block.makeCuboidShape(1D, 14D, 3D, 2D, 15D, 13D)
-            )
-    ));
+            ).build();
 
     @Override
-    public TileEntity createNewTileEntity(IBlockReader iBlockReader) {
+    public TileEntity createNewTileEntity(IBlockReader reader) {
         return new GraveStoneTileEntity();
     }
 

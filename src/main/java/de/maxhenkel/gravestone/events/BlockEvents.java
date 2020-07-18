@@ -1,8 +1,7 @@
 package de.maxhenkel.gravestone.events;
 
-import java.util.UUID;
-
-import de.maxhenkel.gravestone.*;
+import de.maxhenkel.gravestone.DeathInfo;
+import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.entity.GhostPlayerEntity;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,9 +15,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = Main.MODID)
+import java.util.UUID;
+
 public class BlockEvents {
 
     @SubscribeEvent
@@ -53,9 +52,9 @@ public class BlockEvents {
 
         ItemStack stack = player.getHeldItemMainhand();
 
-        if (stack == null || !stack.getItem().equals(Main.GRAVESTONE_ITEM)) {
+        if (!stack.getItem().equals(Main.GRAVESTONE_ITEM)) {
             stack = player.getHeldItemOffhand();
-            if (stack == null || !stack.getItem().equals(Main.GRAVESTONE_ITEM)) {
+            if (!stack.getItem().equals(Main.GRAVESTONE_ITEM)) {
                 return;
             }
         }
@@ -64,13 +63,7 @@ public class BlockEvents {
             return;
         }
 
-        String name = stack.getDisplayName().getString();
-
-        if (name == null) {
-            return;
-        }
-
-        graveTileEntity.setPlayerName(name);
+        graveTileEntity.setPlayerName(stack.getDisplayName().getString());
     }
 
     @SubscribeEvent
@@ -98,7 +91,7 @@ public class BlockEvents {
     }
 
     private void spawnGhost(BreakEvent event) {
-        if (!Config.spawnGhost) {
+        if (!Main.SERVER_CONFIG.spawnGhost.get()) {
             return;
         }
         IWorld iWorld = event.getWorld();
@@ -136,7 +129,7 @@ public class BlockEvents {
     }
 
     private void removeDeathNote(BlockEvent.BreakEvent event) {
-        if (!Config.removeDeathNote) {
+        if (!Main.SERVER_CONFIG.removeDeathNote.get()) {
             return;
         }
 
@@ -172,7 +165,7 @@ public class BlockEvents {
     }
 
     public boolean checkBreak(BlockEvent.BreakEvent event) {
-        if (!Config.onlyOwnersCanBreak) {
+        if (!Main.SERVER_CONFIG.onlyOwnersCanBreak.get()) {
             return true;
         }
 
@@ -182,7 +175,7 @@ public class BlockEvents {
 
         TileEntity te = world.getTileEntity(event.getPos());
 
-        if (te == null || !(te instanceof GraveStoneTileEntity)) {
+        if (!(te instanceof GraveStoneTileEntity)) {
             return true;
         }
 

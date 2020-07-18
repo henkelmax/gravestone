@@ -1,6 +1,5 @@
 package de.maxhenkel.gravestone.events;
 
-import de.maxhenkel.gravestone.Config;
 import de.maxhenkel.gravestone.DeathInfo;
 import de.maxhenkel.gravestone.GraveProcessor;
 import de.maxhenkel.gravestone.Main;
@@ -17,12 +16,10 @@ import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-@Mod.EventBusSubscriber
 public class DeathEvents {
 
     public DeathEvents() {
@@ -30,7 +27,7 @@ public class DeathEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPlayerCloneLast(PlayerEvent.Clone event) {
-        if (!Config.giveDeathNotes) {
+        if (!Main.SERVER_CONFIG.giveDeathNotes.get()) {
             return;
         }
 
@@ -60,7 +57,7 @@ public class DeathEvents {
             return;
         }
 
-        if (!(event.getEntity() instanceof PlayerEntity) && !Config.livingGraves) {
+        if (!(event.getEntity() instanceof PlayerEntity) && !Main.SERVER_CONFIG.livingGraves.get()) {
             return;
         }
 
@@ -86,7 +83,7 @@ public class DeathEvents {
                     player.sendMessage(new StringTextComponent("[" + modname + "] " + message), player.getUniqueID());
                 }
             }
-            if (Config.giveDeathNotes) {
+            if (Main.SERVER_CONFIG.giveDeathNotes.get()) {
                 graveProcessor.givePlayerNote();
             }
         } catch (Exception e) {
@@ -102,7 +99,7 @@ public class DeathEvents {
             return;
         }
 
-        if (!Config.giveDeathNotes) {
+        if (!Main.SERVER_CONFIG.giveDeathNotes.get()) {
             return;
         }
 

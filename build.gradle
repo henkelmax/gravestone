@@ -8,6 +8,7 @@ buildscript {
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
         classpath group: 'de.maxhenkel.forge-update', name: 'forge-update', version: '1.0.2'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.4'
     }
 }
 
@@ -18,6 +19,15 @@ plugins {
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'forge-update'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'idea'
+
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
 
 version = mod_version
 group = mod_packagename
@@ -65,8 +75,20 @@ minecraft {
     }
 }
 
+repositories {
+    maven {
+        name = "henkelmax.public"
+        url = 'https://maven.maxhenkel.de/repository/public'
+    }
+    mavenLocal()
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${mod_minecraft_version}-${forge_version}"
+
+    shadow fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:api")
+    runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
+    runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:javadoc")
 }
 
 jar {
@@ -161,4 +183,19 @@ artifacts {
     archives javadocJar
 }
 
-jar.finalizedBy('reobfJar') 
+jar.finalizedBy('reobfJar')
+
+artifacts {
+    archives shadowJar
+}
+
+shadowJar {
+    project.configurations.shadow.setTransitive(true);
+    configurations = [project.configurations.shadow]
+    classifier = ""
+    relocate 'de.maxhenkel.corelib', "de.maxhenkel.${mod_id}.corelib"
+}
+
+reobf {
+    shadowJar {}
+}

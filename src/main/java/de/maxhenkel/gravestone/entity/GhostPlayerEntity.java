@@ -1,6 +1,5 @@
 package de.maxhenkel.gravestone.entity;
 
-import de.maxhenkel.gravestone.Config;
 import de.maxhenkel.gravestone.Main;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
@@ -65,12 +64,10 @@ public class GhostPlayerEntity extends MonsterEntity {
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(9, new LookRandomlyGoal(this));
 
-        if (Config.friendlyGhost) {
-            this.targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, false, true, (entityLiving) -> {
-                return entityLiving != null && !entityLiving.isInvisible() && entityLiving instanceof MonsterEntity && !(entityLiving instanceof CreeperEntity) && !(entityLiving instanceof GhostPlayerEntity);
-            }));
+        if (Main.SERVER_CONFIG.friendlyGhost.get()) {
+            targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, false, true, (entityLiving) -> entityLiving != null && !entityLiving.isInvisible() && entityLiving instanceof MonsterEntity && !(entityLiving instanceof CreeperEntity) && !(entityLiving instanceof GhostPlayerEntity)));
         } else {
-            this.targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
+            targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
         }
     }
 

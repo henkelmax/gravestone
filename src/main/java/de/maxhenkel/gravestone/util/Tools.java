@@ -1,31 +1,15 @@
 package de.maxhenkel.gravestone.util;
 
-import de.maxhenkel.gravestone.Config;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import de.maxhenkel.gravestone.Main;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.GameRules;
-import net.minecraftforge.registries.ForgeRegistries;
 
-import javax.annotation.Nullable;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Map;
 
 public class Tools {
 
     public static String translateDimension(String dim) {
-        Map<String, String> dims = Config.dimensionNames;
-
-        String name = dims.get(dim);
-        if (name == null || name.isEmpty()) {
-            return dim;
-        }
-
-        return name;
+        return Main.CLIENT_CONFIG.dimensionNames.getOrDefault(dim, dim);
     }
 
     public static boolean isArrayEmpty(Object[] obj) {
@@ -52,44 +36,7 @@ public class Tools {
 
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(time);
-        SimpleDateFormat sdf = new SimpleDateFormat(Config.dateFormat);
-        return sdf.format(c.getTime());
-    }
-
-    public static boolean isAirBlock(Block block) {
-        return block.equals(Blocks.AIR) || block.equals(Blocks.CAVE_AIR) || block.equals(Blocks.VOID_AIR);
-    }
-
-    @Nullable
-    public static Block getBlock(String name) {
-        try {
-            String[] split = name.split(":");
-            if (split.length == 2) {
-                Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(split[0], split[1]));
-                if (isAirBlock(b)) {
-                    return null;
-                } else {
-                    return b;
-                }
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public static VoxelShape combine(VoxelShape... shapes) {
-        if (shapes.length <= 0) {
-            return VoxelShapes.empty();
-        }
-        VoxelShape combined = shapes[0];
-
-        for (int i = 1; i < shapes.length; i++) {
-            combined = VoxelShapes.or(combined, shapes[i]);
-        }
-
-        return combined;
+        return Main.CLIENT_CONFIG.dateFormat.format(c.getTime());
     }
 
 }

@@ -61,7 +61,7 @@ public class GraveProcessor {
 
         TileEntity tileentity = world.getTileEntity(gravePosition);
 
-        if (tileentity == null || !(tileentity instanceof GraveStoneTileEntity)) {
+        if (!(tileentity instanceof GraveStoneTileEntity)) {
             return false;
         }
 
@@ -130,12 +130,7 @@ public class GraveProcessor {
             return true;
         }
 
-        for (Block replaceableBlock : Config.replaceableBlocks) {
-            if (b.getRegistryName().toString().equals(replaceableBlock.getRegistryName().toString())) {
-                return true;
-            }
-        }
-        return false;
+        return Main.SERVER_CONFIG.replaceableBlocks.stream().anyMatch(replaceableBlock -> b.getRegistryName().equals(replaceableBlock.getRegistryName()));
     }
 
     public void givePlayerNote() {
