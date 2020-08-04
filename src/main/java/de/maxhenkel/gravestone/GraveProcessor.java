@@ -89,8 +89,8 @@ public class GraveProcessor {
             for (ItemEntity item : items) {
                 try {
                     ItemStack stack = item.getItem();
-                    if (graveStone.getSizeInventory() > i) {
-                        graveStone.setInventorySlotContents(i, stack);
+                    if (graveStone.getInventory().getSizeInventory() > i) {
+                        graveStone.getInventory().setInventorySlotContents(i, stack);
                     } else {
                         InventoryHelper.spawnItemStack(world, graveStone.getPos().getX(), graveStone.getPos().getY(), graveStone.getPos().getZ(), stack);
                     }

@@ -167,8 +167,8 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof IInventory) {
-                InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tileentity);
+            if (tileentity instanceof GraveStoneTileEntity) {
+                InventoryHelper.dropInventoryItems(worldIn, pos, ((GraveStoneTileEntity) tileentity).getInventory());
                 worldIn.updateComparatorOutputLevel(pos, this);
             }
             super.onReplaced(state, worldIn, pos, newState, isMoving);
