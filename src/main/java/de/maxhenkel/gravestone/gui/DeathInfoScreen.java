@@ -121,36 +121,36 @@ public class DeathInfoScreen extends Screen {
         InventoryScreen.drawEntityOnScreen(field_230708_k_ / 2, 175, 30, (field_230708_k_ / 2) - mouseX, 100 - mouseY, player);
     }
 
-    public void drawCentered(MatrixStack matrixStack, FontRenderer fontRenderer, ITextProperties text, int x, int y, int color) {
-        fontRenderer.func_238422_b_(matrixStack, text, (float) (x - fontRenderer.func_238414_a_(text) / 2), (float) y, color);
+    public void drawCentered(MatrixStack matrixStack, FontRenderer fontRenderer, IFormattableTextComponent text, int x, int y, int color) {
+        fontRenderer.func_238422_b_(matrixStack, text.func_241878_f(), (float) (x - fontRenderer.func_238414_a_(text) / 2), (float) y, color);
     }
 
     public void drawItem(MatrixStack matrixStack, IFormattableTextComponent string, int height) {
         int left = (field_230708_k_ - TEXTURE_X) / 2;
         int offset = 40;
         int offsetLeft = left + offset;
-        field_230712_o_.func_238422_b_(matrixStack, string, offsetLeft, height, TextFormatting.BLACK.getColor());
+        field_230712_o_.func_238422_b_(matrixStack, string.func_241878_f(), offsetLeft, height, TextFormatting.BLACK.getColor());
     }
 
     public void drawItemSize(MatrixStack matrixStack, IFormattableTextComponent string, int height) {
         int left = (field_230708_k_ - TEXTURE_X) / 2;
         int offset = 15;
         int offsetLeft = left + offset;
-        field_230712_o_.func_238422_b_(matrixStack, string, offsetLeft, height, TextFormatting.BLACK.getColor());
+        field_230712_o_.func_238422_b_(matrixStack, string.func_241878_f(), offsetLeft, height, TextFormatting.BLACK.getColor());
     }
 
     public void drawLeft(MatrixStack matrixStack, IFormattableTextComponent string, int height) {
         int left = (field_230708_k_ - TEXTURE_X) / 2;
         int offset = 7;
         int offsetLeft = left + offset;
-        field_230712_o_.func_238422_b_(matrixStack, string, offsetLeft, height, TextFormatting.BLACK.getColor());
+        field_230712_o_.func_238422_b_(matrixStack, string.func_241878_f(), offsetLeft, height, TextFormatting.BLACK.getColor());
     }
 
     public void drawRight(MatrixStack matrixStack, IFormattableTextComponent string, int height) {
         int left = (field_230708_k_ - TEXTURE_X) / 2;
         int offset = 14;
         int strWidth = field_230712_o_.func_238414_a_(string);
-        field_230712_o_.func_238422_b_(matrixStack, string, left + TEXTURE_X - strWidth - offset, height, TextFormatting.BLACK.getColor());
+        field_230712_o_.func_238422_b_(matrixStack, string.func_241878_f(), left + TEXTURE_X - strWidth - offset, height, TextFormatting.BLACK.getColor());
     }
 
     public FontRenderer getFontRenderer() {

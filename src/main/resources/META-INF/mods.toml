@@ -1,5 +1,6 @@
 modLoader="javafml"
 loaderVersion="${mod_forge_version}"
+license="All rights reserved"
 issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/gravestone-mod/issues"
 [[mods]]
 modId="${mod_id}"
