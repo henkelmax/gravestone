@@ -93,7 +93,12 @@ public class GraveStoneTileEntity extends TileEntity {
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return write(new CompoundNBT());
+        CompoundNBT compound = new CompoundNBT();
+        compound.putString(PLAYER_NAME, playerName);
+        compound.putLong(DEATH_TIME, deathTime);
+        compound.putString(PLAYER_UUID, playerUUID);
+        compound.putBoolean(RENDER_HEAD, renderHead);
+        return super.write(compound);
     }
 
     public String getPlayerName() {
