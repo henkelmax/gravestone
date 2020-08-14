@@ -3,8 +3,6 @@ package de.maxhenkel.gravestone.tileentity;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
