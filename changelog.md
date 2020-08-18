@@ -1,1 +1,1 @@
-- Removed syncing the gravestone inventory to the client to avoid packets being too big
+- Fixed dimension names resetting
