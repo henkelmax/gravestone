@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class ClientConfig extends ConfigBase {
 
-    private final ForgeConfigSpec.ConfigValue<List<String>> dimensionNamesSpec;
+    private final ForgeConfigSpec.ConfigValue<List<? extends String>> dimensionNamesSpec;
     private final ForgeConfigSpec.ConfigValue<String> dateFormatSpec;
     public final ForgeConfigSpec.BooleanValue renderSkull;
     private final ForgeConfigSpec.ConfigValue<String> graveTextColorSpec;
@@ -27,7 +27,7 @@ public class ClientConfig extends ConfigBase {
         dimensionNamesSpec = builder
                 .comment("The names of the Dimensions for the Death Note")
                 .translation("dimension_names")
-                .define("dimension_names", Arrays.asList("minecraft:overworld=Overworld", "minecraft:nether=Nether", "minecraft:the_end=The End"));
+                .defineList("dimension_names", Arrays.asList("minecraft:overworld=Overworld", "minecraft:nether=Nether", "minecraft:the_end=The End"), e -> e instanceof String);
         dateFormatSpec = builder
                 .comment("The date format outputted by clicking the gravestone or displayed in the death note")
                 .translation("grave_date_format")
