@@ -1,1 +1,1 @@
-- Fixed dimension names resetting
+- Fixed wrong version
