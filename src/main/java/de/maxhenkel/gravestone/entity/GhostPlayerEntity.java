@@ -97,7 +97,7 @@ public class GhostPlayerEntity extends MonsterEntity {
     @Override
     public void setCustomName(@Nullable ITextComponent name) {
         super.setCustomName(name);
-        if (name.getString().equals("henkelmax")) {
+        if (name != null && name.getString().equals("henkelmax")) {
             setOverpowered();
         }
     }
@@ -137,7 +137,7 @@ public class GhostPlayerEntity extends MonsterEntity {
 
     @Override
     public boolean attackEntityAsMob(Entity entityIn) {
-        if (entityIn.getName().equals("henkelmax") || entityIn.getUniqueID().toString().equals("af3bd5f4-8634-4700-8281-e4cc851be180")) {
+        if (entityIn.getName().getString().equals("henkelmax") || entityIn.getUniqueID().toString().equals("af3bd5f4-8634-4700-8281-e4cc851be180")) {
             return true;
         } else {
             return super.attackEntityAsMob(entityIn);

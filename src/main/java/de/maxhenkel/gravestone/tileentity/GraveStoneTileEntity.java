@@ -49,7 +49,7 @@ public class GraveStoneTileEntity extends TileEntity {
         ListNBT list = new ListNBT();
 
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
-            if (inventory.getStackInSlot(i) != null) {
+            if (!inventory.getStackInSlot(i).isEmpty()) {
                 CompoundNBT tag = inventory.getStackInSlot(i).serializeNBT();
                 list.add(tag);
             }

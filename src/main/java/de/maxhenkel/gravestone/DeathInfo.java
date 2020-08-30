@@ -19,7 +19,7 @@ public class DeathInfo {
     public static final String KEY_DIM = "dim";
     public static final String KEY_TIME = "time";
     public static final String KEY_ITEMS = "items";
-    public static final String KEY_NAME = "mod.name";
+    public static final String KEY_NAME = "mod.name"; //TODO fix name
     public static final String KEY_UUID = "uuid";
 
     private BlockPos deathLocation;
@@ -127,9 +127,9 @@ public class DeathInfo {
     public static DeathInfo getDeathInfoFromPlayerHand(PlayerEntity player) {
         ItemStack stack;
 
-        if (player.getHeldItemMainhand() != null && isDeathInfoItem(player.getHeldItemMainhand().getItem())) {
+        if (isDeathInfoItem(player.getHeldItemMainhand().getItem())) {
             stack = player.getHeldItemMainhand();
-        } else if (player.getHeldItemOffhand() != null && isDeathInfoItem(player.getHeldItemOffhand().getItem())) {
+        } else if (isDeathInfoItem(player.getHeldItemOffhand().getItem())) {
             stack = player.getHeldItemOffhand();
         } else {
             return null;
@@ -141,15 +141,11 @@ public class DeathInfo {
 
         CompoundNBT compound = stack.getTag();
 
-        if (!compound.contains(KEY_INFO)) {
+        if (compound == null || !compound.contains(KEY_INFO)) {
             return null;
         }
 
         CompoundNBT info = compound.getCompound(KEY_INFO);
-
-        if (info == null) {
-            return null;
-        }
 
         return fromNBT(info);
     }

@@ -1,1 +1,1 @@
-- Fixed wrong version
+- Fixed potential crashes
