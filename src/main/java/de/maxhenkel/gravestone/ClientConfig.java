@@ -27,7 +27,7 @@ public class ClientConfig extends ConfigBase {
         dimensionNamesSpec = builder
                 .comment("The names of the Dimensions for the Death Note")
                 .translation("dimension_names")
-                .defineList("dimension_names", Arrays.asList("minecraft:overworld=Overworld", "minecraft:nether=Nether", "minecraft:the_end=The End"), e -> e instanceof String);
+                .defineList("dimension_names", Arrays.asList("minecraft:overworld=Overworld", "minecraft:the_nether=Nether", "minecraft:the_end=The End"), e -> e instanceof String);
         dateFormatSpec = builder
                 .comment("The date format outputted by clicking the gravestone or displayed in the death note")
                 .translation("grave_date_format")
