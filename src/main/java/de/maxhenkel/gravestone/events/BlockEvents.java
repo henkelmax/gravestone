@@ -138,7 +138,7 @@ public class BlockEvents {
         PlayerInventory inv = player.inventory;
 
         BlockPos pos = event.getPos();
-        String dim = player.world.func_230315_m_().toString();
+        String dim = player.world.func_234923_W_().func_240901_a_().toString();
 
         for (ItemStack stack : inv.mainInventory) {
             if (stack != null && stack.getItem().equals(Main.DEATHINFO)) {
