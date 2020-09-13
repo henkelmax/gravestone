@@ -1,3 +1,1 @@
-- Fixed nether dimension name
-- Updated russian translation
-- Fixed remove death note option
+- Updated to 1.16.3
