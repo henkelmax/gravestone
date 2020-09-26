@@ -145,13 +145,13 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
         GraveStoneTileEntity grave = (GraveStoneTileEntity) tileentity;
 
         String name = grave.getPlayerName();
-        String time = grave.getTimeString();
 
         if (name == null || name.isEmpty()) {
             return ActionResultType.FAIL;
         }
 
-        if (!world.isRemote) {
+        if (world.isRemote) {
+            String time = grave.getTimeString();
             if (time == null || time.isEmpty()) {
                 player.sendMessage(new StringTextComponent(name), Util.field_240973_b_);
             } else {

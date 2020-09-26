@@ -3,6 +3,8 @@ package de.maxhenkel.gravestone.util;
 import de.maxhenkel.gravestone.Main;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.GameRules;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.Calendar;
 
@@ -29,6 +31,7 @@ public class Tools {
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static String timeToString(long time) {
         if (time == 0L) {
             return "";

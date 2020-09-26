@@ -10,6 +10,8 @@ import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class GraveStoneTileEntity extends TileEntity {
 
@@ -135,6 +137,7 @@ public class GraveStoneTileEntity extends TileEntity {
         markDirty();
     }
 
+    @OnlyIn(Dist.CLIENT)
     public String getTimeString() {
         return Tools.timeToString(deathTime);
     }
