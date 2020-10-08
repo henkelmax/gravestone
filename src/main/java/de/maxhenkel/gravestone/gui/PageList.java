@@ -3,6 +3,8 @@ package de.maxhenkel.gravestone.gui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.maxhenkel.gravestone.util.Tools;
@@ -28,7 +30,7 @@ public class PageList {
             }
         }
 
-        if (!Tools.isArrayEmpty(temp)) {
+        if (Stream.of(temp).noneMatch(Objects::nonNull)) {
             list.add(new Page(temp, gui));
         }
 

@@ -42,11 +42,41 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     public static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.Plane.HORIZONTAL);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
+    private static final VoxelShape BASE1 = Block.makeCuboidShape(0D, 0D, 0D, 16D, 1D, 16D);
+    private static final VoxelShape BASE2 = Block.makeCuboidShape(1D, 1D, 1D, 15D, 2D, 15D);
+
+    private static final DirectionalVoxelShape SHAPE = new DirectionalVoxelShape.Builder()
+            .direction(Direction.NORTH,
+                    BASE1,
+                    BASE2,
+                    Block.makeCuboidShape(1D, 2D, 1D, 15D, 12D, 2D),
+                    Block.makeCuboidShape(2D, 12D, 1D, 14D, 14D, 2D),
+                    Block.makeCuboidShape(3D, 14D, 1D, 13D, 15D, 2D))
+            .direction(Direction.SOUTH,
+                    BASE1,
+                    BASE2,
+                    Block.makeCuboidShape(1D, 2D, 15D, 15D, 12D, 14D),
+                    Block.makeCuboidShape(2D, 12D, 15D, 14D, 14D, 14D),
+                    Block.makeCuboidShape(3D, 14D, 15D, 13D, 15D, 14D)
+            ).direction(Direction.EAST,
+                    BASE1,
+                    BASE2,
+                    Block.makeCuboidShape(15D, 2D, 1D, 14D, 12D, 15D),
+                    Block.makeCuboidShape(15D, 12D, 2D, 14D, 14D, 14D),
+                    Block.makeCuboidShape(15D, 14D, 3D, 14D, 15D, 13D)
+            ).direction(Direction.WEST,
+                    BASE1,
+                    BASE2,
+                    Block.makeCuboidShape(1D, 2D, 1D, 2D, 12D, 15D),
+                    Block.makeCuboidShape(1D, 12D, 2D, 2D, 14D, 14D),
+                    Block.makeCuboidShape(1D, 14D, 3D, 2D, 15D, 13D)
+            ).build();
+
     public static final Material GRAVESTONE_MATERIAL = new Material(MaterialColor.DIRT, false, false, true, false, false, false, PushReaction.BLOCK);
 
     public GraveStoneBlock() {
         super(Properties.create(GRAVESTONE_MATERIAL, MaterialColor.DIRT).hardnessAndResistance(0.3F, Float.MAX_VALUE));
-        setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
+        setDefaultState(stateContainer.getBaseState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
         setRegistryName(Main.MODID, "gravestone");
     }
 
@@ -103,7 +133,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public void onExplosionDestroy(World p_180652_1_, BlockPos p_180652_2_, Explosion p_180652_3_) {
+    public void onExplosionDestroy(World world, BlockPos pos, Explosion explosion) {
 
     }
 
@@ -130,7 +160,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+    public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
@@ -175,7 +205,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public boolean isReplaceable(BlockState p_196253_1_, BlockItemUseContext p_196253_2_) {
+    public boolean isReplaceable(BlockState state, BlockItemUseContext context) {
         return false;
     }
 
@@ -203,36 +233,6 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     public VoxelShape getRaytraceShape(BlockState state, IBlockReader reader, BlockPos pos) {
         return SHAPE.get(state.get(FACING));
     }
-
-    private static final VoxelShape BASE1 = Block.makeCuboidShape(0D, 0D, 0D, 16D, 1D, 16D);
-    private static final VoxelShape BASE2 = Block.makeCuboidShape(1D, 1D, 1D, 15D, 2D, 15D);
-
-    private static final DirectionalVoxelShape SHAPE = new DirectionalVoxelShape.Builder()
-            .direction(Direction.NORTH,
-                    BASE1,
-                    BASE2,
-                    Block.makeCuboidShape(1D, 2D, 1D, 15D, 12D, 2D),
-                    Block.makeCuboidShape(2D, 12D, 1D, 14D, 14D, 2D),
-                    Block.makeCuboidShape(3D, 14D, 1D, 13D, 15D, 2D))
-            .direction(Direction.SOUTH,
-                    BASE1,
-                    BASE2,
-                    Block.makeCuboidShape(1D, 2D, 15D, 15D, 12D, 14D),
-                    Block.makeCuboidShape(2D, 12D, 15D, 14D, 14D, 14D),
-                    Block.makeCuboidShape(3D, 14D, 15D, 13D, 15D, 14D)
-            ).direction(Direction.EAST,
-                    BASE1,
-                    BASE2,
-                    Block.makeCuboidShape(15D, 2D, 1D, 14D, 12D, 15D),
-                    Block.makeCuboidShape(15D, 12D, 2D, 14D, 14D, 14D),
-                    Block.makeCuboidShape(15D, 14D, 3D, 14D, 15D, 13D)
-            ).direction(Direction.WEST,
-                    BASE1,
-                    BASE2,
-                    Block.makeCuboidShape(1D, 2D, 1D, 2D, 12D, 15D),
-                    Block.makeCuboidShape(1D, 12D, 2D, 2D, 14D, 14D),
-                    Block.makeCuboidShape(1D, 14D, 3D, 2D, 15D, 13D)
-            ).build();
 
     @Override
     public TileEntity createNewTileEntity(IBlockReader reader) {

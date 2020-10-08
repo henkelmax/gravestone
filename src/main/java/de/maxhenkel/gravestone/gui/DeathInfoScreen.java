@@ -5,6 +5,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.maxhenkel.gravestone.DeathInfo;
 import de.maxhenkel.gravestone.Main;
+import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.client.entity.player.RemoteClientPlayerEntity;
 import net.minecraft.client.gui.FontRenderer;
@@ -106,10 +107,10 @@ public class DeathInfoScreen extends Screen {
         drawRight(matrixStack, new StringTextComponent(info.getName()).func_240699_a_(TextFormatting.DARK_GRAY), 50);
 
         drawLeft(matrixStack, new TranslationTextComponent("gui.deathinfo.dimension").func_240699_a_(TextFormatting.BLACK), 63);
-        drawRight(matrixStack, new StringTextComponent(Tools.translateDimension(info.getDimension())).func_240699_a_(TextFormatting.DARK_GRAY), 63);
+        drawRight(matrixStack, new StringTextComponent(translateDimension(info.getDimension())).func_240699_a_(TextFormatting.DARK_GRAY), 63);
 
         drawLeft(matrixStack, new TranslationTextComponent("gui.deathinfo.time").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), 76);
-        drawRight(matrixStack, new StringTextComponent(Tools.timeToString(info.getTime())).func_240699_a_(TextFormatting.DARK_GRAY), 76);
+        drawRight(matrixStack, new StringTextComponent(GraveStoneTileEntity.timeToString(info.getTime())).func_240699_a_(TextFormatting.DARK_GRAY), 76);
 
         drawLeft(matrixStack, new TranslationTextComponent("gui.deathinfo.location").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), 89);
         drawRight(matrixStack, new StringTextComponent("X: " + info.getDeathLocation().getX()).func_240699_a_(TextFormatting.DARK_GRAY), 89);
@@ -155,6 +156,10 @@ public class DeathInfoScreen extends Screen {
 
     public FontRenderer getFontRenderer() {
         return field_230712_o_;
+    }
+
+    public static String translateDimension(String dim) {
+        return Main.CLIENT_CONFIG.dimensionNames.getOrDefault(dim, dim);
     }
 
 }

@@ -2,7 +2,6 @@ package de.maxhenkel.gravestone;
 
 import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
-import de.maxhenkel.gravestone.util.NoSpaceException;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
@@ -14,6 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -40,10 +40,9 @@ public class GraveProcessor {
     public boolean placeGraveStone(Collection<ItemEntity> drops) {
         this.drops = drops.stream().map(itemEntity -> itemEntity.getItem()).collect(Collectors.toList());
 
-        try {
-            this.gravePosition = getGraveStoneLocation();
-        } catch (NoSpaceException e) {
-            this.gravePosition = deathPosition;
+        gravePosition = getGraveStoneLocation();
+        if (gravePosition == null) {
+            gravePosition = deathPosition;
             Main.LOGGER.info("Grave of '{}' cant be created (No space)", entity.getName().getString());
             return false;
         }
@@ -105,7 +104,8 @@ public class GraveProcessor {
         }
     }
 
-    public BlockPos getGraveStoneLocation() throws NoSpaceException {
+    @Nullable
+    public BlockPos getGraveStoneLocation() {
         BlockPos location = new BlockPos(deathPosition.getX(), deathPosition.getY(), deathPosition.getZ());
 
         if (World.isOutsideBuildHeight(location) && location.getY() <= 0) {
@@ -120,7 +120,7 @@ public class GraveProcessor {
             location = location.add(0, 1, 0);
         }
 
-        throw new NoSpaceException("No free Block above death Location");
+        return null;
     }
 
     private boolean isReplaceable(BlockPos pos) {

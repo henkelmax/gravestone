@@ -11,6 +11,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.GameRules;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -39,7 +40,7 @@ public class DeathEvents {
             return;
         }
 
-        if (Tools.keepInventory(event.getPlayer())) {
+        if (keepInventory(event.getPlayer())) {
             return;
         }
 
@@ -113,7 +114,7 @@ public class DeathEvents {
 
         PlayerEntity player = (PlayerEntity) event.getEntity();
 
-        if (!Tools.keepInventory(player)) {
+        if (!keepInventory(player)) {
             return;
         }
 
@@ -129,6 +130,14 @@ public class DeathEvents {
         } catch (Exception e) {
             Main.LOGGER.warn("Failed to give player '{}' death note", player.getName().getString());
         }
-
     }
+
+    public static boolean keepInventory(PlayerEntity player) {
+        try {
+            return player.getEntityWorld().getWorldInfo().getGameRulesInstance().getBoolean(GameRules.KEEP_INVENTORY);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }
