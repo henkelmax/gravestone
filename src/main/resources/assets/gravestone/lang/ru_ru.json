@@ -1,6 +1,7 @@
 {
   "block.gravestone.gravestone": "Надгробие",
   "item.gravestone.death_info": "Некролог",
+  "entity.gravestone.player_ghost": "Ghost Player",
   "message.gravestone.name": "GraveStone",
   "message.gravestone.died": "%s умер %s",
   "message.gravestone.deathlocation": "Место смерти",
@@ -13,6 +14,7 @@
   "gui.deathinfo.title.items": "Оставшиеся предметы",
   "gui.deathinfo.page": "Стр. %s",
   "gui.deathinfo.time": "Время",
+  "gui.deathitems": "Death Items",
   "button.gravestone.next": "След.",
   "button.gravestone.prev": "Пред."
 }
