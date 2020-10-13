@@ -1,1 +1,3 @@
-- Updated mods.toml
+- Ghost players can now have equipment
+- Items can now be sorted back into their original slots
+- Items can now be picked up by sneaking on the grave (Config option)

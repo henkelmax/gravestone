@@ -15,29 +15,24 @@ import java.util.stream.Collectors;
 
 public class ServerConfig extends ConfigBase {
 
-    public final ForgeConfigSpec.BooleanValue livingGraves;
     public final ForgeConfigSpec.BooleanValue giveDeathNotes;
     public final ForgeConfigSpec.ConfigValue<List<? extends String>> replaceableBlocksSpec;
     public final ForgeConfigSpec.BooleanValue removeDeathNote;
     public final ForgeConfigSpec.BooleanValue onlyOwnersCanBreak;
     public final ForgeConfigSpec.BooleanValue spawnGhost;
     public final ForgeConfigSpec.BooleanValue friendlyGhost;
+    public final ForgeConfigSpec.BooleanValue sneakPickup;
+    public final ForgeConfigSpec.BooleanValue breakPickup;
 
     public List<Block> replaceableBlocks = new ArrayList<>();
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         super(builder);
-        livingGraves = builder
-                .comment("If this is set to true every living entity will generate a gravestone")
-                .translation("enable_living_entity_graves")
-                .define("enable_living_entity_graves", false);
         giveDeathNotes = builder
                 .comment("If this is set to true you get a death note after you died")
-                .translation("enable_death_note")
                 .define("enable_death_note", true);
         replaceableBlocksSpec = builder
                 .comment("The blocks that can be replaced with a grave when someone dies there")
-                .translation("replaceable_blocks")
                 .defineList("replaceable_blocks",
                         Arrays.asList(
                                 "minecraft:tall_grass",
@@ -77,20 +72,22 @@ public class ServerConfig extends ConfigBase {
 
         removeDeathNote = builder
                 .comment("If this is set to true the death note will be taken out of your inventory when you destroyed the gravestone")
-                .translation("remove_death_note")
                 .define("remove_death_note", false);
         onlyOwnersCanBreak = builder
                 .comment("If this is set to true only the player that owns the gravestone and the admins can break the gravestone")
-                .translation("only_owners_can_break")
                 .define("only_owners_can_break", false);
         spawnGhost = builder
                 .comment("If this is set to true a ghost of the dead player will be spawned when the gravestone is broken")
-                .translation("spawn_ghost")
                 .define("spawn_ghost", false);
         friendlyGhost = builder
                 .comment("If this is set to true the ghost of the dead player will defend him")
-                .translation("friendly_ghost")
                 .define("friendly_ghost", true);
+        sneakPickup = builder
+                .comment("If you get your items back into your inventory by sneaking on the gravestone")
+                .define("sneak_pickup", false);
+        breakPickup = builder
+                .comment("If you get your items back into your inventory by breaking it")
+                .define("break_pickup", true);
     }
 
     @Override

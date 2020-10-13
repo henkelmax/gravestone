@@ -1,6 +1,6 @@
 {
   "block.gravestone.gravestone": "Grób",
-  "item.gravestone.death_info": "Nekrolog",
+  "item.gravestone.obituary": "Nekrolog",
   "entity.gravestone.player_ghost": "Duch gracza",
   "message.gravestone.name": "GraveStone",
   "message.gravestone.died": "Gracz %s zmarł %s",

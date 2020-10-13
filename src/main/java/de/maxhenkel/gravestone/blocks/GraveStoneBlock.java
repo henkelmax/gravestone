@@ -1,41 +1,48 @@
 package de.maxhenkel.gravestone.blocks;
 
+import com.google.common.collect.ImmutableList;
 import de.maxhenkel.corelib.block.DirectionalVoxelShape;
 import de.maxhenkel.corelib.block.IItemBlock;
+import de.maxhenkel.corelib.death.Death;
+import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
+import de.maxhenkel.gravestone.entity.GhostPlayerEntity;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.item.*;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.*;
+import net.minecraft.world.Explosion;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.UUID;
 
 public class GraveStoneBlock extends Block implements ITileEntityProvider, IItemBlock, IBucketPickupHandler, ILiquidContainer {
 
@@ -133,6 +140,18 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
+    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        if (stack.hasDisplayName()) {
+            TileEntity tileentity = world.getTileEntity(pos);
+            if (tileentity instanceof GraveStoneTileEntity) {
+                GraveStoneTileEntity grave = (GraveStoneTileEntity) tileentity;
+                grave.setCustomName(stack.getDisplayName());
+            }
+        }
+        super.onBlockPlacedBy(world, pos, state, placer, stack);
+    }
+
+    @Override
     public void onExplosionDestroy(World world, BlockPos pos, Explosion explosion) {
 
     }
@@ -145,13 +164,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        FluidState ifluidstate = context.getWorld().getFluidState(context.getPos());
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(WATERLOGGED, ifluidstate.getFluid() == Fluids.WATER);
-    }
-
-    @Override
-    public boolean isTransparent(BlockState state) {
-        return false;
+        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(WATERLOGGED, context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER);
     }
 
     @Override
@@ -174,18 +187,18 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
 
         GraveStoneTileEntity grave = (GraveStoneTileEntity) tileentity;
 
-        String name = grave.getPlayerName();
+        ITextComponent name = grave.getGraveName();
 
-        if (name == null || name.isEmpty()) {
+        if (name == null) {
             return ActionResultType.FAIL;
         }
 
         if (world.isRemote) {
-            String time = grave.getTimeString();
-            if (time == null || time.isEmpty()) {
-                player.sendMessage(new StringTextComponent(name), Util.field_240973_b_);
+            ITextComponent time = GraveUtils.getDate(grave.getDeath().getTimestamp());
+            if (time == null) {
+                player.sendMessage(name, Util.field_240973_b_);
             } else {
-                player.sendMessage(new TranslationTextComponent("message.gravestone.died", name, time), player.getUniqueID());
+                player.sendMessage(new TranslationTextComponent("message.gravestone.died", name, time), Util.field_240973_b_);
             }
         }
 
@@ -193,44 +206,147 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+            TileEntity tileentity = world.getTileEntity(pos);
             if (tileentity instanceof GraveStoneTileEntity) {
-                InventoryHelper.dropInventoryItems(worldIn, pos, ((GraveStoneTileEntity) tileentity).getInventory());
-                worldIn.updateComparatorOutputLevel(pos, this);
+                dropItems(world, pos, ((GraveStoneTileEntity) tileentity).getDeath().getAllItems());
             }
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
+            super.onReplaced(state, world, pos, newState, isMoving);
+        }
+    }
+
+    public void dropItems(World world, BlockPos pos, NonNullList<ItemStack> items) {
+        for (ItemStack item : items) {
+            InventoryHelper.spawnItemStack(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, item);
         }
     }
 
     @Override
-    public boolean isReplaceable(BlockState state, BlockItemUseContext context) {
-        return false;
+    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
+        if (!GraveUtils.canBreakGrave(world, player, pos)) {
+            return false;
+        }
+        TileEntity te = world.getTileEntity(pos);
+        if (!world.isRemote && te instanceof GraveStoneTileEntity) {
+            GraveStoneTileEntity grave = (GraveStoneTileEntity) te;
+
+            removeObituary(player, grave);
+            spawnGhost(world, pos, grave);
+
+            if (!grave.getDeath().getId().equals(GraveUtils.EMPTY_UUID) && Main.SERVER_CONFIG.breakPickup.get()) {
+                sortItems(world, pos, player, grave);
+            }
+        }
+        return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
+    }
+
+    private void spawnGhost(World world, BlockPos pos, GraveStoneTileEntity grave) {
+        if (!Main.SERVER_CONFIG.spawnGhost.get()) {
+            return;
+        }
+        if (!world.isAirBlock(pos.up())) {
+            return;
+        }
+
+        UUID uuid = grave.getDeath().getPlayerUUID();
+
+        if (uuid.equals(GraveUtils.EMPTY_UUID)) {
+            return;
+        }
+
+        GhostPlayerEntity ghost = new GhostPlayerEntity(world, uuid, new StringTextComponent(grave.getDeath().getPlayerName()), grave.getDeath().getEquipment(), grave.getDeath().getModel());
+        ghost.setPosition(pos.getX() + 0.5D, pos.getY() + 0.1D, pos.getZ() + 0.5D);
+        world.addEntity(ghost);
+    }
+
+    private void removeObituary(PlayerEntity p, GraveStoneTileEntity grave) {
+        if (!Main.SERVER_CONFIG.removeDeathNote.get()) {
+            return;
+        }
+        if (!(p instanceof ServerPlayerEntity)) {
+            return;
+        }
+        ServerPlayerEntity player = (ServerPlayerEntity) p;
+
+        PlayerInventory inv = player.inventory;
+
+        List<NonNullList<ItemStack>> invs = ImmutableList.of(player.inventory.mainInventory, player.inventory.armorInventory, player.inventory.offHandInventory);
+
+        for (NonNullList<ItemStack> i : invs) {
+            for (ItemStack stack : i) {
+                if (stack.getItem().equals(Main.OBITUARY)) {
+                    Death death = Main.OBITUARY.fromStack(player, stack);
+                    if (death != null && !grave.getDeath().getId().equals(GraveUtils.EMPTY_UUID) && grave.getDeath().getId().equals(death.getId())) {
+                        inv.deleteStack(stack);
+                    }
+                }
+            }
+        }
     }
 
     @Override
-    public boolean canBeReplacedByLeaves(BlockState state, IWorldReader world, BlockPos pos) {
-        return false;
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        super.onEntityCollision(state, world, pos, entity);
+        if (!(entity instanceof ServerPlayerEntity) || !Main.SERVER_CONFIG.sneakPickup.get()) {
+            return;
+        }
+        ServerPlayerEntity player = (ServerPlayerEntity) entity;
+        if (!player.isSneaking() || player.abilities.isCreativeMode || !GraveUtils.canBreakGrave(world, player, pos)) {
+            return;
+        }
+        TileEntity te = world.getTileEntity(pos);
+        if (!(te instanceof GraveStoneTileEntity)) {
+            return;
+        }
+        GraveStoneTileEntity grave = (GraveStoneTileEntity) te;
+        if (grave.getDeath().getId().equals(GraveUtils.EMPTY_UUID)) {
+            return;
+        }
+
+        sortItems(world, pos, player, grave);
+        world.destroyBlock(pos, true);
     }
 
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
-        return SHAPE.get(state.get(FACING));
+    public void sortItems(World world, BlockPos pos, PlayerEntity player, GraveStoneTileEntity grave) {
+        Death death = grave.getDeath();
+
+        NonNullList<ItemStack> additionalItems = NonNullList.create();
+        fill(additionalItems, death.getMainInventory(), player.inventory.mainInventory);
+        fill(additionalItems, death.getArmorInventory(), player.inventory.armorInventory);
+        fill(additionalItems, death.getOffHandInventory(), player.inventory.offHandInventory);
+
+        additionalItems.addAll(death.getAdditionalItems());
+        NonNullList<ItemStack> restItems = NonNullList.create();
+        for (ItemStack stack : additionalItems) {
+            if (!player.inventory.addItemStackToInventory(stack)) {
+                restItems.add(stack);
+            }
+        }
+
+        death.getAdditionalItems().clear();
+        grave.markDirty();
+        dropItems(world, pos, restItems);
+        world.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_REMOVE_ITEM, SoundCategory.BLOCKS, 1F, 1F);
     }
 
-    @Override
-    public VoxelShape getRenderShape(BlockState state, IBlockReader reader, BlockPos pos) {
-        return SHAPE.get(state.get(FACING));
+    private void fill(List<ItemStack> additionalItems, NonNullList<ItemStack> inventory, NonNullList<ItemStack> playerInv) {
+        for (int i = 0; i < inventory.size(); i++) {
+            ItemStack stack = inventory.get(i);
+            if (stack.isEmpty()) {
+                continue;
+            }
+            ItemStack playerStack = playerInv.get(i);
+            if (!playerStack.isEmpty()) {
+                additionalItems.add(playerStack);
+            }
+            inventory.set(i, ItemStack.EMPTY);
+            playerInv.set(i, stack);
+        }
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
-        return SHAPE.get(state.get(FACING));
-    }
-
-    @Override
-    public VoxelShape getRaytraceShape(BlockState state, IBlockReader reader, BlockPos pos) {
         return SHAPE.get(state.get(FACING));
     }
 

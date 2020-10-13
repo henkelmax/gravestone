@@ -1,6 +1,6 @@
 {
   "block.gravestone.gravestone": "Надгробие",
-  "item.gravestone.death_info": "Некролог",
+  "item.gravestone.obituary": "Некролог",
   "message.gravestone.name": "GraveStone",
   "message.gravestone.died": "%s умер %s",
   "message.gravestone.deathlocation": "Место смерти",

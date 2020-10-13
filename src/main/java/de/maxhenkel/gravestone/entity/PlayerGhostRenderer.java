@@ -5,30 +5,66 @@ import de.maxhenkel.corelib.client.PlayerSkins;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
+import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
+import net.minecraft.client.renderer.entity.layers.ElytraLayer;
+import net.minecraft.client.renderer.entity.layers.HeadLayer;
+import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
+import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.client.renderer.entity.model.PlayerModel;
+import net.minecraft.entity.player.PlayerModelPart;
 import net.minecraft.util.ResourceLocation;
-
-import javax.annotation.Nullable;
 
 public class PlayerGhostRenderer extends LivingRenderer<GhostPlayerEntity, PlayerModel<GhostPlayerEntity>> {
 
+    private PlayerModel<GhostPlayerEntity> playerModel;
+    private PlayerModel<GhostPlayerEntity> playerModelSmallArms;
+
     public PlayerGhostRenderer(EntityRendererManager renderManager) {
-        this(renderManager, true);
-    }
+        super(renderManager, null, 0.5F);
+        playerModel = new PlayerModel<>(0F, false);
+        playerModelSmallArms = new PlayerModel<>(0F, true);
+        entityModel = playerModel;
 
-    public PlayerGhostRenderer(EntityRendererManager renderManager, boolean useSmallArms) {
-        super(renderManager, new PlayerModel<>(0.0F, useSmallArms), 0.5F);
+        addLayer(new BipedArmorLayer<>(this, new BipedModel<>(0.5F), new BipedModel<>(1F)));
+        addLayer(new HeldItemLayer<>(this));
+        addLayer(new HeadLayer<>(this));
+        addLayer(new ElytraLayer<>(this));
     }
 
     @Override
-    public void render(GhostPlayerEntity entity, float f1, float f2, MatrixStack matrixStack, IRenderTypeBuffer buffer, int i) {
-        super.render(entity, f1, f2, matrixStack, buffer, 0xFFFFFF);
+    protected void preRenderCallback(GhostPlayerEntity ghost, MatrixStack matrixStackIn, float partialTickTime) {
+        float scale = 0.9375F;
+        matrixStackIn.scale(scale, scale, scale);
     }
 
-    @Nullable
     @Override
-    public ResourceLocation getEntityTexture(GhostPlayerEntity entityGhostPlayer) {
-        return PlayerSkins.getSkin(entityGhostPlayer.getUniqueID(), entityGhostPlayer.getName().getString());
+    public ResourceLocation getEntityTexture(GhostPlayerEntity entity) {
+        return PlayerSkins.getSkin(entity.getPlayerUUID(), entity.getCustomName().getString());
+    }
+
+    @Override
+    public void render(GhostPlayerEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLightIn) {
+        packedLightIn = 0xFFFFFF;
+        matrixStack.push();
+
+        if (PlayerSkins.isSlim(entity.getPlayerUUID())) {
+            entityModel = playerModelSmallArms;
+        } else {
+            entityModel = playerModel;
+        }
+        setModelVisibilities(entity);
+        super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLightIn);
+
+        matrixStack.pop();
+    }
+
+    private void setModelVisibilities(GhostPlayerEntity playerEntity) {
+        entityModel.bipedHeadwear.showModel = playerEntity.isWearing(PlayerModelPart.HAT);
+        entityModel.bipedBodyWear.showModel = playerEntity.isWearing(PlayerModelPart.JACKET);
+        entityModel.bipedLeftLegwear.showModel = playerEntity.isWearing(PlayerModelPart.LEFT_PANTS_LEG);
+        entityModel.bipedRightLegwear.showModel = playerEntity.isWearing(PlayerModelPart.RIGHT_PANTS_LEG);
+        entityModel.bipedLeftArmwear.showModel = playerEntity.isWearing(PlayerModelPart.LEFT_SLEEVE);
+        entityModel.bipedRightArmwear.showModel = playerEntity.isWearing(PlayerModelPart.RIGHT_SLEEVE);
     }
 
 }

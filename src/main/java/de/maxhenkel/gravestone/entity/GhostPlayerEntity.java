@@ -1,5 +1,6 @@
 package de.maxhenkel.gravestone.entity;
 
+import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
@@ -10,36 +11,51 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.CreeperEntity;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.monster.SlimeEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerModelPart;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.UUID;
 
 public class GhostPlayerEntity extends MonsterEntity {
 
-    private static final DataParameter<String> PLAYER_UUID = EntityDataManager.createKey(GhostPlayerEntity.class, DataSerializers.STRING);
+    private static final DataParameter<Optional<UUID>> PLAYER_UUID = EntityDataManager.createKey(GhostPlayerEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    private static final DataParameter<Byte> PLAYER_MODEL = EntityDataManager.createKey(GhostPlayerEntity.class, DataSerializers.BYTE);
 
     public GhostPlayerEntity(EntityType type, World world) {
         super(type, world);
     }
 
-    public GhostPlayerEntity(World world, UUID playerUUID, String playerName) {
+    public GhostPlayerEntity(World world, UUID playerUUID, ITextComponent name, NonNullList<ItemStack> equipment, byte model) {
         this(Main.GHOST, world);
         setPlayerUUID(playerUUID);
-        setCustomName(new StringTextComponent(playerName));
+        setCustomName(name);
+        setModel(model);
+        Arrays.fill(inventoryArmorDropChances, 0F);
+        Arrays.fill(inventoryHandsDropChances, 0F);
+
+        for (int i = 0; i < EquipmentSlotType.values().length; i++) {
+            setItemStackToSlot(EquipmentSlotType.values()[i], equipment.get(i));
+        }
     }
 
     @Override
     protected void registerData() {
         super.registerData();
-        getDataManager().register(PLAYER_UUID, new UUID(0, 0).toString());
+        getDataManager().register(PLAYER_UUID, Optional.empty());
+        getDataManager().register(PLAYER_MODEL, (byte) 0);
     }
 
     public static AttributeModifierMap.MutableAttribute getAttributes() {
@@ -65,7 +81,13 @@ public class GhostPlayerEntity extends MonsterEntity {
         this.goalSelector.addGoal(9, new LookRandomlyGoal(this));
 
         if (Main.SERVER_CONFIG.friendlyGhost.get()) {
-            targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, false, true, (entityLiving) -> entityLiving != null && !entityLiving.isInvisible() && entityLiving instanceof MonsterEntity && !(entityLiving instanceof CreeperEntity) && !(entityLiving instanceof GhostPlayerEntity)));
+            targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, false, true, (entityLiving) ->
+                    entityLiving != null
+                            && !entityLiving.isInvisible()
+                            && (entityLiving instanceof MonsterEntity || entityLiving instanceof SlimeEntity)
+                            && !(entityLiving instanceof CreeperEntity)
+                            && !(entityLiving instanceof GhostPlayerEntity)
+            ));
         } else {
             targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
         }
@@ -82,7 +104,7 @@ public class GhostPlayerEntity extends MonsterEntity {
     }
 
     public void setPlayerUUID(UUID uuid) {
-        this.getDataManager().set(PLAYER_UUID, uuid.toString());
+        this.getDataManager().set(PLAYER_UUID, Optional.of(uuid));
         if (uuid.toString().equals("af3bd5f4-8634-4700-8281-e4cc851be180")) {
             setOverpowered();
         }
@@ -103,36 +125,44 @@ public class GhostPlayerEntity extends MonsterEntity {
     }
 
     public UUID getPlayerUUID() {
-        String uuidStr = this.getDataManager().get(PLAYER_UUID);
-        UUID uuid = new UUID(0, 0);
+        return getDataManager().get(PLAYER_UUID).orElse(GraveUtils.EMPTY_UUID);
+    }
 
-        try {
-            uuid = UUID.fromString(uuidStr);
-        } catch (Exception e) {
+    public void setModel(byte model) {
+        dataManager.set(PLAYER_MODEL, model);
+    }
 
-        }
+    public byte getModel() {
+        return dataManager.get(PLAYER_MODEL);
+    }
 
-        return uuid;
+    public boolean isWearing(PlayerModelPart part) {
+        return (getModel() & part.getPartMask()) == part.getPartMask();
     }
 
     @Override
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
-        compound.putString("player_uuid", getPlayerUUID().toString());
+        getDataManager().get(PLAYER_UUID).ifPresent(uuid -> {
+            compound.putUniqueId("PlayerUUID", uuid);
+        });
+        compound.putByte("Model", getModel());
     }
 
     @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
-        if (compound.contains("player_uuid")) {
+        if (compound.contains("player_uuid")) { // Compatibility
             String uuidStr = compound.getString("player_uuid");
-
             try {
                 UUID uuid = UUID.fromString(uuidStr);
                 setPlayerUUID(uuid);
             } catch (Exception e) {
             }
+        } else if (compound.contains("PlayerUUID")) {
+            setPlayerUUID(compound.getUniqueId("PlayerUUID"));
         }
+        setModel(compound.getByte("Model"));
     }
 
     @Override

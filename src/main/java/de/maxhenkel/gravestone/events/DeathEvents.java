@@ -1,29 +1,64 @@
 package de.maxhenkel.gravestone.events;
 
-import de.maxhenkel.gravestone.DeathInfo;
-import de.maxhenkel.gravestone.GraveProcessor;
+import de.maxhenkel.corelib.death.Death;
+import de.maxhenkel.corelib.death.PlayerDeathEvent;
+import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
-import de.maxhenkel.gravestone.util.Tools;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
+import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
+import de.maxhenkel.gravestone.items.ObituaryItem;
+import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.GameRules;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 public class DeathEvents {
 
     public DeathEvents() {
+        de.maxhenkel.corelib.death.DeathEvents.register();
+    }
+
+    @SubscribeEvent()
+    public void playerDeath(PlayerDeathEvent event) {
+        event.storeDeath();
+
+        Death death = event.getDeath();
+        PlayerEntity player = event.getPlayer();
+        World world = player.world;
+
+        BlockPos graveStoneLocation = GraveUtils.getGraveStoneLocation(world, death.getBlockPos());
+
+        if (graveStoneLocation == null) {
+            Main.LOGGER.info("Grave of '{}' can't be placed (No space)", death.getPlayerName());
+            return;
+        }
+
+        world.setBlockState(graveStoneLocation, Main.GRAVESTONE.getDefaultState().with(GraveStoneBlock.FACING, player.getHorizontalFacing().getOpposite()));
+
+        if (GraveUtils.isReplaceable(world, graveStoneLocation.down())) {
+            world.setBlockState(graveStoneLocation.down(), Blocks.DIRT.getDefaultState());
+        }
+
+        TileEntity tileentity = world.getTileEntity(graveStoneLocation);
+
+        if (!(tileentity instanceof GraveStoneTileEntity)) {
+            Main.LOGGER.info("Grave of '{}' can't be filled with loot (No tileentity found)", death.getPlayerName());
+            return;
+        }
+
+        GraveStoneTileEntity gravestone = (GraveStoneTileEntity) tileentity;
+
+        gravestone.setDeath(death);
+
+        player.inventory.addItemStackToInventory(Main.OBITUARY.toStack(death));
+
+        event.removeDrops();
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -45,90 +80,9 @@ public class DeathEvents {
         }
 
         for (ItemStack stack : event.getOriginal().inventory.mainInventory) {
-            if (DeathInfo.isDeathInfoItem(stack)) {
+            if (stack.getItem() instanceof ObituaryItem) {
                 event.getPlayer().inventory.addItemStackToInventory(stack);
             }
-        }
-
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void playerDeath(LivingDropsEvent event) {
-        if (!(event.getEntity() instanceof LivingEntity)) {
-            return;
-        }
-
-        if (!(event.getEntity() instanceof PlayerEntity) && !Main.SERVER_CONFIG.livingGraves.get()) {
-            return;
-        }
-
-        if (event.getEntity().getEntityWorld().isRemote) {
-            return;
-        }
-
-        try {
-            LivingEntity entity = (LivingEntity) event.getEntity();
-            GraveProcessor graveProcessor = new GraveProcessor(entity);
-
-            Collection<ItemEntity> drops = event.getDrops();
-
-            if (graveProcessor.placeGraveStone(drops)) {
-                drops.clear();
-            } else {
-                if (entity instanceof ServerPlayerEntity) {
-                    String modname = new TranslationTextComponent("message.gravestone.name").getString();
-                    String message = new TranslationTextComponent("message.gravestone.create_grave_failed").getString();
-
-                    ServerPlayerEntity player = (ServerPlayerEntity) entity;
-
-                    player.sendMessage(new StringTextComponent("[" + modname + "] " + message), player.getUniqueID());
-                }
-            }
-            if (Main.SERVER_CONFIG.giveDeathNotes.get()) {
-                graveProcessor.givePlayerNote();
-            }
-        } catch (Exception e) {
-            Main.LOGGER.warn("Failed to process death of '{}'", event.getEntity().getName().getString());
-            e.printStackTrace();
-        }
-
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void playerDeath(LivingDeathEvent event) {
-        if (event.isCanceled()) {
-            return;
-        }
-
-        if (!Main.SERVER_CONFIG.giveDeathNotes.get()) {
-            return;
-        }
-
-        if (!(event.getEntity() instanceof PlayerEntity)) {
-            return;
-        }
-
-        if (event.getEntity().getEntityWorld().isRemote) {
-            return;
-        }
-
-        PlayerEntity player = (PlayerEntity) event.getEntity();
-
-        if (!keepInventory(player)) {
-            return;
-        }
-
-        /*
-         * Give the player a note without items when he dies with keepInventory true
-         */
-        try {
-            DeathInfo info = new DeathInfo(player.func_233580_cy_(), player.world.func_234923_W_().func_240901_a_().toString(), new ArrayList<>(), player.getName().getString(), System.currentTimeMillis(), player.getUniqueID());
-            ItemStack stack = new ItemStack(Main.DEATHINFO);
-
-            info.addToItemStack(stack);
-            player.inventory.addItemStackToInventory(stack);
-        } catch (Exception e) {
-            Main.LOGGER.warn("Failed to give player '{}' death note", player.getName().getString());
         }
     }
 

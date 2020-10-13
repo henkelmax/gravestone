@@ -7,14 +7,14 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 public class PageList {
 
     private List<Page> list;
 
-    public PageList(List<ItemStack> items, DeathInfoScreen gui) {
+    public PageList(NonNullList<ItemStack> items, ObituaryScreen gui) {
         this.list = new ArrayList<>();
 
         ItemStack[] temp = new ItemStack[10];
@@ -22,15 +22,15 @@ public class PageList {
         for (ItemStack s : items) {
             temp[i] = s;
 
-            i++;
-            if (i > 9) {
+            if (i >= 9) {
                 list.add(new Page(temp, gui));
                 temp = new ItemStack[10];
                 i = 0;
             }
+            i++;
         }
 
-        if (Stream.of(temp).noneMatch(Objects::nonNull)) {
+        if (Stream.of(temp).anyMatch(Objects::nonNull)) {
             list.add(new Page(temp, gui));
         }
 
@@ -46,7 +46,7 @@ public class PageList {
         }
 
         Page page = list.get(p);
-        page.drawPage(matrixStack, p + 1);
+        page.drawPage(matrixStack, p + 1, list.size());
     }
 
     @Override

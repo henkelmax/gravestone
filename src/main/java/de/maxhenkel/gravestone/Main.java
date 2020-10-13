@@ -4,11 +4,11 @@ import de.maxhenkel.corelib.CommonRegistry;
 import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
 import de.maxhenkel.gravestone.entity.GhostPlayerEntity;
 import de.maxhenkel.gravestone.entity.PlayerGhostRenderer;
-import de.maxhenkel.gravestone.events.BlockEvents;
 import de.maxhenkel.gravestone.events.DeathEvents;
-import de.maxhenkel.gravestone.items.DeathInfoItem;
+import de.maxhenkel.gravestone.items.ObituaryItem;
+import de.maxhenkel.gravestone.net.MessageOpenObituary;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
-import de.maxhenkel.gravestone.tileentity.GravestoneRenderer;
+import de.maxhenkel.gravestone.tileentity.render.GravestoneRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -29,6 +29,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,10 +41,12 @@ public class Main {
 
     public static final Logger LOGGER = LogManager.getLogger(Main.MODID);
 
+    public static SimpleChannel SIMPLE_CHANNEL;
+
     public static GraveStoneBlock GRAVESTONE;
     public static Item GRAVESTONE_ITEM;
     public static TileEntityType<GraveStoneTileEntity> GRAVESTONE_TILEENTITY;
-    public static DeathInfoItem DEATHINFO;
+    public static ObituaryItem OBITUARY;
     public static EntityType<GhostPlayerEntity> GHOST;
     public static ServerConfig SERVER_CONFIG;
     public static ClientConfig CLIENT_CONFIG;
@@ -64,8 +67,10 @@ public class Main {
     @SubscribeEvent
     public void commonSetup(FMLCommonSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(new DeathEvents());
-        MinecraftForge.EVENT_BUS.register(new BlockEvents());
         MinecraftForge.EVENT_BUS.register(this);
+
+        SIMPLE_CHANNEL = CommonRegistry.registerChannel(Main.MODID, "default");
+        CommonRegistry.registerMessage(SIMPLE_CHANNEL, 0, MessageOpenObituary.class);
     }
 
     @SubscribeEvent
@@ -87,7 +92,7 @@ public class Main {
     public void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
                 GRAVESTONE_ITEM = GRAVESTONE.toItem(),
-                DEATHINFO = new DeathInfoItem()
+                OBITUARY = new ObituaryItem()
         );
     }
 

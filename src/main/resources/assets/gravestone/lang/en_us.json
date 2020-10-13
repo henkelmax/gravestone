@@ -1,6 +1,6 @@
 {
   "block.gravestone.gravestone": "Grave",
-  "item.gravestone.death_info": "Obituary",
+  "item.gravestone.obituary": "Obituary",
   "entity.gravestone.player_ghost": "Ghost Player",
   "message.gravestone.name": "GraveStone",
   "message.gravestone.died": "%s died on %s",
@@ -12,9 +12,10 @@
   "gui.deathinfo.location": "Location",
   "gui.deathinfo.dimension": "Dimension",
   "gui.deathinfo.title.items": "Death Items",
-  "gui.deathinfo.page": "Page %s",
+  "gui.deathinfo.page": "Page %s of %s",
   "gui.deathinfo.time": "Date",
   "gui.deathitems": "Death Items",
+  "gui.gravestone.date_format": "yyyy/MM/dd HH:mm:ss",
   "button.gravestone.next": "Next",
   "button.gravestone.prev": "Back"
 }

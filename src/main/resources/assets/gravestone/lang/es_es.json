@@ -1,6 +1,6 @@
 {
   "block.gravestone.gravestone": "Tumba",
-  "item.gravestone.death_info": "Obituario",
+  "item.gravestone.obituary": "Obituario",
   "entity.gravestone.player_ghost": "Fantasma del jugador",
   "message.gravestone.name": "GraveStone",
   "message.gravestone.died": "%s murió el %s",

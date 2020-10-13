@@ -1,6 +1,6 @@
 {
   "block.gravestone.gravestone": "墓碑",
-  "item.gravestone.death_info": "死亡資訊",
+  "item.gravestone.obituary": "死亡資訊",
   "entity.gravestone.player_ghost": "亡魂玩家",
   "message.gravestone.name": "GraveStone",
   "message.gravestone.died": "%s 在 %s 死亡",

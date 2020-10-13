@@ -3,26 +3,29 @@ package de.maxhenkel.gravestone.gui;
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import de.maxhenkel.gravestone.DeathInfo;
+import de.maxhenkel.corelib.death.Death;
+import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
-import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
-import de.maxhenkel.gravestone.util.Tools;
-import net.minecraft.client.entity.player.RemoteClientPlayerEntity;
+import de.maxhenkel.gravestone.entity.DummyPlayer;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 
-public class DeathInfoScreen extends Screen {
+public class ObituaryScreen extends Screen {
 
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/info.png");
     private static final int TEXTURE_X = 163;
     private static final int TEXTURE_Y = 165;
 
-    private DeathInfo info;
+    private DummyPlayer player;
+    private Death death;
 
     private Button buttonPrev;
     private Button buttonNext;
@@ -31,11 +34,11 @@ public class DeathInfoScreen extends Screen {
 
     private PageList pageList;
 
-    public DeathInfoScreen(DeathInfo info) {
+    public ObituaryScreen(Death death) {
         super(new TranslationTextComponent("gui.deathinfo.title"));
-        this.info = info;
+        this.death = death;
         this.page = 0;
-        this.pageList = new PageList(info.getItems(), this);
+        this.pageList = new PageList(death.getAllItems(), this);
     }
 
     @Override
@@ -104,22 +107,32 @@ public class DeathInfoScreen extends Screen {
         drawCentered(matrixStack, field_230712_o_, new TranslationTextComponent("gui.deathinfo.title").func_240699_a_(TextFormatting.UNDERLINE), field_230708_k_ / 2, 30, TextFormatting.BLACK.getColor());
 
         drawLeft(matrixStack, new TranslationTextComponent("gui.deathinfo.name").func_240699_a_(TextFormatting.BLACK), 50);
-        drawRight(matrixStack, new StringTextComponent(info.getName()).func_240699_a_(TextFormatting.DARK_GRAY), 50);
+        drawRight(matrixStack, new StringTextComponent(death.getPlayerName()).func_240699_a_(TextFormatting.DARK_GRAY), 50);
 
         drawLeft(matrixStack, new TranslationTextComponent("gui.deathinfo.dimension").func_240699_a_(TextFormatting.BLACK), 63);
-        drawRight(matrixStack, new StringTextComponent(translateDimension(info.getDimension())).func_240699_a_(TextFormatting.DARK_GRAY), 63);
+        drawRight(matrixStack, new StringTextComponent(death.getDimension().split(":")[1]).func_240699_a_(TextFormatting.DARK_GRAY), 63); // todo max width
 
         drawLeft(matrixStack, new TranslationTextComponent("gui.deathinfo.time").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), 76);
-        drawRight(matrixStack, new StringTextComponent(GraveStoneTileEntity.timeToString(info.getTime())).func_240699_a_(TextFormatting.DARK_GRAY), 76);
+        IFormattableTextComponent date = GraveUtils.getDate(death.getTimestamp());
+        if (date != null) {
+            drawRight(matrixStack, date.func_240699_a_(TextFormatting.DARK_GRAY), 76);
+        } else {
+            drawRight(matrixStack, new StringTextComponent("N/A").func_240699_a_(TextFormatting.DARK_GRAY), 76);
+        }
 
         drawLeft(matrixStack, new TranslationTextComponent("gui.deathinfo.location").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), 89);
-        drawRight(matrixStack, new StringTextComponent("X: " + info.getDeathLocation().getX()).func_240699_a_(TextFormatting.DARK_GRAY), 89);
-        drawRight(matrixStack, new StringTextComponent("Y: " + info.getDeathLocation().getY()).func_240699_a_(TextFormatting.DARK_GRAY), 102);
-        drawRight(matrixStack, new StringTextComponent("Z: " + info.getDeathLocation().getZ()).func_240699_a_(TextFormatting.DARK_GRAY), 115);
+        BlockPos pos = death.getBlockPos();
+        drawRight(matrixStack, new StringTextComponent("X: " + pos.getX()).func_240699_a_(TextFormatting.DARK_GRAY), 89);
+        drawRight(matrixStack, new StringTextComponent("Y: " + pos.getY()).func_240699_a_(TextFormatting.DARK_GRAY), 102);
+        drawRight(matrixStack, new StringTextComponent("Z: " + pos.getZ()).func_240699_a_(TextFormatting.DARK_GRAY), 115);
 
         RenderSystem.color4f(1F, 1F, 1F, 1F);
-        PlayerEntity player = new RemoteClientPlayerEntity(field_230706_i_.world, new GameProfile(info.getUuid(), info.getName()));
-        InventoryScreen.drawEntityOnScreen(field_230708_k_ / 2, 175, 30, (field_230708_k_ / 2) - mouseX, 100 - mouseY, player);
+
+        if (player == null) {
+            player = new DummyPlayer(field_230706_i_.world, new GameProfile(death.getPlayerUUID(), death.getPlayerName()), death.getEquipment(), death.getModel());
+        }
+
+        InventoryScreen.drawEntityOnScreen(field_230708_k_ / 2, 170, 30, (field_230708_k_ / 2) - mouseX, 100 - mouseY, player);
     }
 
     public void drawCentered(MatrixStack matrixStack, FontRenderer fontRenderer, IFormattableTextComponent text, int x, int y, int color) {
@@ -156,10 +169,6 @@ public class DeathInfoScreen extends Screen {
 
     public FontRenderer getFontRenderer() {
         return field_230712_o_;
-    }
-
-    public static String translateDimension(String dim) {
-        return Main.CLIENT_CONFIG.dimensionNames.getOrDefault(dim, dim);
     }
 
 }

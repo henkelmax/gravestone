@@ -11,9 +11,9 @@ import java.util.Arrays;
 public class Page {
 
     private ItemStack[] items;
-    private DeathInfoScreen gui;
+    private ObituaryScreen gui;
 
-    public Page(ItemStack[] it, DeathInfoScreen gui) {
+    public Page(ItemStack[] it, ObituaryScreen gui) {
         this.gui = gui;
         int arraySize = 10;
         items = new ItemStack[10];
@@ -25,9 +25,9 @@ public class Page {
         }
     }
 
-    public void drawPage(MatrixStack matrixStack, int num) {
+    public void drawPage(MatrixStack matrixStack, int page, int pageCount) {
         gui.drawCentered(matrixStack, gui.getFontRenderer(), new TranslationTextComponent("gui.deathinfo.title.items").func_240699_a_(TextFormatting.UNDERLINE), gui.field_230708_k_ / 2, 30, TextFormatting.BLACK.getColor());
-        gui.drawCentered(matrixStack, gui.getFontRenderer(), new TranslationTextComponent("gui.deathinfo.page", num), gui.field_230708_k_ / 2, 43, TextFormatting.DARK_GRAY.getColor());
+        gui.drawCentered(matrixStack, gui.getFontRenderer(), new TranslationTextComponent("gui.deathinfo.page", page, pageCount), gui.field_230708_k_ / 2, 43, TextFormatting.DARK_GRAY.getColor());
 
         int y = 60;
         final int space = 12;
