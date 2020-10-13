@@ -46,7 +46,8 @@ import java.util.UUID;
 
 public class GraveStoneBlock extends Block implements ITileEntityProvider, IItemBlock, IBucketPickupHandler, ILiquidContainer {
 
-    public static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.Plane.HORIZONTAL);
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    ;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     private static final VoxelShape BASE1 = Block.makeCuboidShape(0D, 0D, 0D, 16D, 1D, 16D);
@@ -79,7 +80,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
                     Block.makeCuboidShape(1D, 14D, 3D, 2D, 15D, 13D)
             ).build();
 
-    public static final Material GRAVESTONE_MATERIAL = new Material(MaterialColor.DIRT, false, false, true, false, false, false, PushReaction.BLOCK);
+    public static final Material GRAVESTONE_MATERIAL = new Material(MaterialColor.DIRT, false, true, true, false, false, false, PushReaction.BLOCK);
 
     public GraveStoneBlock() {
         super(Properties.create(GRAVESTONE_MATERIAL, MaterialColor.DIRT).hardnessAndResistance(0.3F, Float.MAX_VALUE));
@@ -98,9 +99,10 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
         builder.add(WATERLOGGED);
     }
 
-    public Fluid pickupFluid(IWorld worldIn, BlockPos pos, BlockState state) {
+    @Override
+    public Fluid pickupFluid(IWorld world, BlockPos pos, BlockState state) {
         if (state.get(WATERLOGGED)) {
-            worldIn.setBlockState(pos, state.with(WATERLOGGED, false), 3);
+            world.setBlockState(pos, state.with(WATERLOGGED, false), 3);
             return Fluids.WATER;
         } else {
             return Fluids.EMPTY;
@@ -113,16 +115,16 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public boolean canContainFluid(IBlockReader worldIn, BlockPos pos, BlockState state, Fluid fluidIn) {
-        return !state.get(WATERLOGGED) && fluidIn == Fluids.WATER;
+    public boolean canContainFluid(IBlockReader world, BlockPos pos, BlockState state, Fluid fluid) {
+        return !state.get(WATERLOGGED) && fluid == Fluids.WATER;
     }
 
     @Override
-    public boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn) {
-        if (!state.get(WATERLOGGED) && fluidStateIn.getFluid() == Fluids.WATER) {
-            if (!worldIn.isRemote()) {
-                worldIn.setBlockState(pos, state.with(WATERLOGGED, true), 3);
-                worldIn.getPendingFluidTicks().scheduleTick(pos, fluidStateIn.getFluid(), fluidStateIn.getFluid().getTickRate(worldIn));
+    public boolean receiveFluid(IWorld world, BlockPos pos, BlockState state, FluidState fluidState) {
+        if (!state.get(WATERLOGGED) && fluidState.getFluid() == Fluids.WATER) {
+            if (!world.isRemote()) {
+                world.setBlockState(pos, state.with(WATERLOGGED, true), 3);
+                world.getPendingFluidTicks().scheduleTick(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
             }
             return true;
         } else {
@@ -131,12 +133,12 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.get(WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+    public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
+        if (state.get(WATERLOGGED)) {
+            world.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
-        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return super.updatePostPlacement(state, facing, facingState, world, currentPos, facingPos);
     }
 
     @Override
@@ -241,7 +243,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
         return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
     }
 
-    private void spawnGhost(World world, BlockPos pos, GraveStoneTileEntity grave) {
+    protected void spawnGhost(World world, BlockPos pos, GraveStoneTileEntity grave) {
         if (!Main.SERVER_CONFIG.spawnGhost.get()) {
             return;
         }
@@ -260,7 +262,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
         world.addEntity(ghost);
     }
 
-    private void removeObituary(PlayerEntity p, GraveStoneTileEntity grave) {
+    protected void removeObituary(PlayerEntity p, GraveStoneTileEntity grave) {
         if (!Main.SERVER_CONFIG.removeDeathNote.get()) {
             return;
         }
@@ -308,7 +310,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
         world.destroyBlock(pos, true);
     }
 
-    public void sortItems(World world, BlockPos pos, PlayerEntity player, GraveStoneTileEntity grave) {
+    protected void sortItems(World world, BlockPos pos, PlayerEntity player, GraveStoneTileEntity grave) {
         Death death = grave.getDeath();
 
         NonNullList<ItemStack> additionalItems = NonNullList.create();
@@ -330,7 +332,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
         world.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_REMOVE_ITEM, SoundCategory.BLOCKS, 1F, 1F);
     }
 
-    private void fill(List<ItemStack> additionalItems, NonNullList<ItemStack> inventory, NonNullList<ItemStack> playerInv) {
+    protected void fill(List<ItemStack> additionalItems, NonNullList<ItemStack> inventory, NonNullList<ItemStack> playerInv) {
         for (int i = 0; i < inventory.size(); i++) {
             ItemStack stack = inventory.get(i);
             if (stack.isEmpty()) {

@@ -29,7 +29,7 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
     }
 
     @Override
-    public void render(GraveStoneTileEntity grave, float f1, MatrixStack matrixStack, IRenderTypeBuffer buffer, int light, int i2) {
+    public void render(GraveStoneTileEntity grave, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         ITextComponent name = grave.getGraveName();
         if (name == null) {
             return;

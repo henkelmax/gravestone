@@ -166,11 +166,11 @@ public class GhostPlayerEntity extends MonsterEntity {
     }
 
     @Override
-    public boolean attackEntityAsMob(Entity entityIn) {
-        if (entityIn.getName().getString().equals("henkelmax") || entityIn.getUniqueID().toString().equals("af3bd5f4-8634-4700-8281-e4cc851be180")) {
+    public boolean attackEntityAsMob(Entity entity) {
+        if (entity.getName().getString().equals("henkelmax") || entity.getUniqueID().toString().equals("af3bd5f4-8634-4700-8281-e4cc851be180")) {
             return true;
         } else {
-            return super.attackEntityAsMob(entityIn);
+            return super.attackEntityAsMob(entity);
         }
     }
 

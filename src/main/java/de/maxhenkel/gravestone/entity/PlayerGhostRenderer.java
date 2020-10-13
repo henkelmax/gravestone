@@ -32,9 +32,9 @@ public class PlayerGhostRenderer extends LivingRenderer<GhostPlayerEntity, Playe
     }
 
     @Override
-    protected void preRenderCallback(GhostPlayerEntity ghost, MatrixStack matrixStackIn, float partialTickTime) {
+    protected void preRenderCallback(GhostPlayerEntity ghost, MatrixStack matrixStack, float partialTickTime) {
         float scale = 0.9375F;
-        matrixStackIn.scale(scale, scale, scale);
+        matrixStack.scale(scale, scale, scale);
     }
 
     @Override
@@ -43,8 +43,8 @@ public class PlayerGhostRenderer extends LivingRenderer<GhostPlayerEntity, Playe
     }
 
     @Override
-    public void render(GhostPlayerEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLightIn) {
-        packedLightIn = 0xFFFFFF;
+    public void render(GhostPlayerEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
+        packedLight = 0xFFFFFF;
         matrixStack.push();
 
         if (PlayerSkins.isSlim(entity.getPlayerUUID())) {
@@ -53,7 +53,7 @@ public class PlayerGhostRenderer extends LivingRenderer<GhostPlayerEntity, Playe
             entityModel = playerModel;
         }
         setModelVisibilities(entity);
-        super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLightIn);
+        super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
 
         matrixStack.pop();
     }

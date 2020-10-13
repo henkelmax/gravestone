@@ -12,7 +12,7 @@ import net.minecraft.util.NonNullList;
 
 public class PageList {
 
-    private List<Page> list;
+    private final List<Page> list;
 
     public PageList(NonNullList<ItemStack> items, ObituaryScreen gui) {
         this.list = new ArrayList<>();
