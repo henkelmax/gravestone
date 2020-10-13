@@ -35,7 +35,7 @@ public class ObituaryScreen extends Screen {
     private PageList pageList;
 
     public ObituaryScreen(Death death) {
-        super(new TranslationTextComponent("gui.deathinfo.title"));
+        super(new TranslationTextComponent("gui.obituary.title"));
         this.death = death;
         this.page = 0;
         this.pageList = new PageList(death.getAllItems(), this);
@@ -104,15 +104,15 @@ public class ObituaryScreen extends Screen {
     }
 
     public void drawFirstPage(MatrixStack matrixStack, int mouseX, int mouseY) {
-        drawCentered(matrixStack, field_230712_o_, new TranslationTextComponent("gui.deathinfo.title").func_240699_a_(TextFormatting.UNDERLINE), field_230708_k_ / 2, 30, TextFormatting.BLACK.getColor());
+        drawCentered(matrixStack, field_230712_o_, new TranslationTextComponent("gui.obituary.title").func_240699_a_(TextFormatting.UNDERLINE), field_230708_k_ / 2, 30, TextFormatting.BLACK.getColor());
 
-        drawLeft(matrixStack, new TranslationTextComponent("gui.deathinfo.name").func_240699_a_(TextFormatting.BLACK), 50);
+        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.name").func_240699_a_(TextFormatting.BLACK), 50);
         drawRight(matrixStack, new StringTextComponent(death.getPlayerName()).func_240699_a_(TextFormatting.DARK_GRAY), 50);
 
-        drawLeft(matrixStack, new TranslationTextComponent("gui.deathinfo.dimension").func_240699_a_(TextFormatting.BLACK), 63);
+        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.dimension").func_240699_a_(TextFormatting.BLACK), 63);
         drawRight(matrixStack, new StringTextComponent(death.getDimension().split(":")[1]).func_240699_a_(TextFormatting.DARK_GRAY), 63); // todo max width
 
-        drawLeft(matrixStack, new TranslationTextComponent("gui.deathinfo.time").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), 76);
+        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.time").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), 76);
         IFormattableTextComponent date = GraveUtils.getDate(death.getTimestamp());
         if (date != null) {
             drawRight(matrixStack, date.func_240699_a_(TextFormatting.DARK_GRAY), 76);
@@ -120,7 +120,7 @@ public class ObituaryScreen extends Screen {
             drawRight(matrixStack, new StringTextComponent("N/A").func_240699_a_(TextFormatting.DARK_GRAY), 76);
         }
 
-        drawLeft(matrixStack, new TranslationTextComponent("gui.deathinfo.location").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), 89);
+        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.location").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), 89);
         BlockPos pos = death.getBlockPos();
         drawRight(matrixStack, new StringTextComponent("X: " + pos.getX()).func_240699_a_(TextFormatting.DARK_GRAY), 89);
         drawRight(matrixStack, new StringTextComponent("Y: " + pos.getY()).func_240699_a_(TextFormatting.DARK_GRAY), 102);
