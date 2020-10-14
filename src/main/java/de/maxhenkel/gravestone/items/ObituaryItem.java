@@ -12,6 +12,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentUtils;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -31,22 +38,21 @@ public class ObituaryItem extends Item {
         ServerPlayerEntity player = (ServerPlayerEntity) p;
         Death death = fromStack(player, player.getHeldItem(hand));
 
-        if (player.isSneaking() && player.abilities.isCreativeMode) {
-            if (player instanceof ServerPlayerEntity) {
-                //TODO
-                /*NetworkHooks.openGui((ServerPlayerEntity) playerIn, new INamedContainerProvider() {
-
-                    @Nullable
-                    @Override
-                    public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-                        return ChestContainer.createGeneric9X6(id, playerInventory, new DeathItemsInventory(death));
-                    }
-
-                    @Override
-                    public ITextComponent getDisplayName() {
-                        return new TranslationTextComponent(ObituaryItem.this.getTranslationKey());
-                    }
-                });*/
+        if (player.isSneaking()) {
+            if (player.hasPermissionLevel(player.server.getOpPermissionLevel())) {
+                ITextComponent replace = TextComponentUtils.func_240647_a_(new TranslationTextComponent("message.gravestone.restore.replace"))
+                        .func_240700_a_((style) -> style
+                                .func_240723_c_(TextFormatting.GREEN)
+                                .func_240715_a_(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore @s " + death.getId().toString() + " replace"))
+                                .func_240716_a_(new HoverEvent(HoverEvent.Action.field_230550_a_, new TranslationTextComponent("message.gravestone.restore.replace.description")))
+                        );
+                ITextComponent add = TextComponentUtils.func_240647_a_(new TranslationTextComponent("message.gravestone.restore.add"))
+                        .func_240700_a_((style) -> style
+                                .func_240723_c_(TextFormatting.GREEN)
+                                .func_240715_a_(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore @s " + death.getId().toString() + " add"))
+                                .func_240716_a_(new HoverEvent(HoverEvent.Action.field_230550_a_, new TranslationTextComponent("message.gravestone.restore.add.description")))
+                        );
+                player.sendMessage(new TranslationTextComponent("message.gravestone.restore").func_240702_b_(" ").func_230529_a_(replace).func_240702_b_(" ").func_230529_a_(add), Util.field_240973_b_);
             }
         } else {
             NetUtils.sendTo(Main.SIMPLE_CHANNEL, player, new MessageOpenObituary(death));
