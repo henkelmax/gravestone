@@ -50,7 +50,7 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
         matrixStack.translate(0D, 0.3D, 0.37D);
         matrixStack.scale((float) textScale, (float) textScale, (float) textScale);
         float left = (float) (-textWidth / 2);
-        renderer.func_238407_a_(matrixStack, name.func_241878_f(), left, 0F, Main.CLIENT_CONFIG.graveTextColor);
+        renderer.renderString(name.getString(), left, 0F, Main.CLIENT_CONFIG.graveTextColor, false, matrixStack.getLast().getMatrix(), buffer, false, 0, combinedLight);
         matrixStack.pop();
 
         BlockState state = grave.getWorld().getBlockState(grave.getPos().down());
@@ -58,11 +58,11 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
         boolean render = Block.isOpaque(state.getRenderShape(grave.getWorld(), grave.getPos()));
         UUID playerUUID = grave.getDeath().getPlayerUUID();
         if (playerUUID != null && !playerUUID.equals(GraveUtils.EMPTY_UUID) && Main.CLIENT_CONFIG.renderSkull.get() && render) {
-            renderSkull(playerUUID, name.getString(), direction, matrixStack, buffer);
+            renderSkull(playerUUID, name.getString(), direction, matrixStack, buffer, combinedLight);
         }
     }
 
-    public void renderSkull(UUID uuid, String name, Direction rotation, MatrixStack matrixStack, IRenderTypeBuffer buffer) {
+    public void renderSkull(UUID uuid, String name, Direction rotation, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight) {
         HumanoidHeadModel model = new HumanoidHeadModel();
         ResourceLocation resourcelocation = PlayerSkins.getSkin(uuid, name);
 
@@ -77,7 +77,7 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
         matrixStack.rotate(Vector3f.XP.rotationDegrees(-61F));
 
         RenderSystem.color4f(1F, 1F, 1F, 1F);
-        model.render(matrixStack, buffer.getBuffer(model.getRenderType(resourcelocation)), 15728880, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        model.render(matrixStack, buffer.getBuffer(model.getRenderType(resourcelocation)), combinedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 
         matrixStack.pop();
     }
