@@ -38,6 +38,10 @@ public class DeathEvents {
 
         BlockPos graveStoneLocation = GraveUtils.getGraveStoneLocation(world, death.getBlockPos());
 
+        if (Main.SERVER_CONFIG.giveObituaries.get()) {
+            player.inventory.addItemStackToInventory(Main.OBITUARY.toStack(death));
+        }
+
         if (graveStoneLocation == null) {
             Main.LOGGER.info("Grave of '{}' can't be placed (No space)", death.getPlayerName());
             Main.LOGGER.info("The death ID of '{}' is {}", death.getPlayerName(), death.getId().toString());
@@ -61,10 +65,6 @@ public class DeathEvents {
         GraveStoneTileEntity gravestone = (GraveStoneTileEntity) tileentity;
 
         gravestone.setDeath(death);
-
-        if (Main.SERVER_CONFIG.giveObituaries.get()) {
-            player.inventory.addItemStackToInventory(Main.OBITUARY.toStack(death));
-        }
 
         event.removeDrops();
     }
