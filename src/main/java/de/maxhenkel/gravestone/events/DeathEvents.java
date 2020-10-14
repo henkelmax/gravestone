@@ -32,10 +32,15 @@ public class DeathEvents {
         PlayerEntity player = event.getPlayer();
         World world = player.world;
 
+        if (keepInventory(player)) {
+            return;
+        }
+
         BlockPos graveStoneLocation = GraveUtils.getGraveStoneLocation(world, death.getBlockPos());
 
         if (graveStoneLocation == null) {
             Main.LOGGER.info("Grave of '{}' can't be placed (No space)", death.getPlayerName());
+            Main.LOGGER.info("The death ID of '{}' is {}", death.getPlayerName(), death.getId().toString());
             return;
         }
 
@@ -49,6 +54,7 @@ public class DeathEvents {
 
         if (!(tileentity instanceof GraveStoneTileEntity)) {
             Main.LOGGER.info("Grave of '{}' can't be filled with loot (No tileentity found)", death.getPlayerName());
+            Main.LOGGER.info("The death ID of '{}' is {}", death.getPlayerName(), death.getId().toString());
             return;
         }
 
