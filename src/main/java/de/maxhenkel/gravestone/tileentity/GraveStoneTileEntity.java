@@ -52,7 +52,7 @@ public class GraveStoneTileEntity extends TileEntity implements INameable {
             } catch (Exception e) {
             }
 
-            Death.Builder builder = new Death.Builder(playerUUID, GraveUtils.EMPTY_UUID);
+            Death.Builder builder = new Death.Builder(playerUUID, UUID.randomUUID());
 
             NonNullList<ItemStack> items = NonNullList.create();
             ListNBT list = compound.getList("ItemStacks", 10);
@@ -63,6 +63,7 @@ public class GraveStoneTileEntity extends TileEntity implements INameable {
             builder.additionalItems(items);
             builder.playerName(compound.getString("PlayerName"));
             builder.timestamp(compound.getLong("DeathTime"));
+            death = builder.build();
         }
 
         if (compound.contains("CustomName")) {
