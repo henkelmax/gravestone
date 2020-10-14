@@ -63,7 +63,7 @@ public class DeathEvents {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPlayerCloneLast(PlayerEvent.Clone event) {
-        if (!Main.SERVER_CONFIG.giveDeathNotes.get()) {
+        if (!Main.SERVER_CONFIG.giveObituaries.get()) {
             return;
         }
 

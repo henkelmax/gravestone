@@ -262,7 +262,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     protected void removeObituary(PlayerEntity p, GraveStoneTileEntity grave) {
-        if (!Main.SERVER_CONFIG.removeDeathNote.get()) {
+        if (!Main.SERVER_CONFIG.removeObituary.get()) {
             return;
         }
         if (!(p instanceof ServerPlayerEntity)) {
