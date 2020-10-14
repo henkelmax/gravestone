@@ -56,7 +56,9 @@ public class DeathEvents {
 
         gravestone.setDeath(death);
 
-        player.inventory.addItemStackToInventory(Main.OBITUARY.toStack(death));
+        if (Main.SERVER_CONFIG.giveObituaries.get()) {
+            player.inventory.addItemStackToInventory(Main.OBITUARY.toStack(death));
+        }
 
         event.removeDrops();
     }
