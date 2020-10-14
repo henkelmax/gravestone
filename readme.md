@@ -10,34 +10,80 @@
 
 ---
 
-This mod adds a gravestone to your Minecraft world.
-When you die a gravestone will be placed at your death position and the players name is written on it.
-Optionally you can get a piece of paper with the necessary informations about your death.
-There is also an option to automatically remove this item when you break the gravestone.
-When you break the gravestone it will drop the items of your inventory.
-If you enable the gamerule keepInventory there will be placed no gravestone.
-You can also break the gravestone with silktouch to get it as an item to use it for decoration.
-When you rightclick the gravestone the name of the player who died and the death time will be displayed.
-The gravestone can be named by simply renaming it in an anvil and then placing it.
+## Basic Functionality
+Every time you die, a grave is placed at your position.
+To retrieve your items just break the grave.
+There is also a config option to get your items back by sneaking on the grave (1.16.3+ only).
 
-![](http://fs5.directupload.net/images/160727/q3vf7hhf.png)
+![](https://i.imgur.com/7CGWKim.png)
 
-![](http://fs5.directupload.net/images/160727/3wrez3h7.png)
+When you right-click the grave it will show information regarding the death of the player.
 
-![](http://fs5.directupload.net/images/160727/vxm89hq7.png)
+![](https://i.imgur.com/2CtZE7H.png)
 
-![](http://fs5.directupload.net/images/160118/a3q224t9.png)
+## Sorting (1.16.3+)
+Since version 1.16.3-2.0.0 the grave is now able to store your items back into their original slots.
 
-![](http://fs5.directupload.net/images/160118/2utyu4j5.png)
+![](https://media1.giphy.com/media/em8yzTjuJOxrMQJqBG/giphy.gif)
 
-![](http://fs5.directupload.net/images/160118/6y2ib9jp.png)
+## The Obituary
+Everytime you die you get an obituary. If you don't want that you can disable it in the config.
 
-![](http://fs5.directupload.net/images/160118/484nbt6t.png)
+It contains:
 
-![](http://fs5.directupload.net/images/160118/6q3qpy6e.png)
+- The name of the player
+- The dimension the player died in
+- The date the player died
+- The coordinates where the player died
+- An image of the player with its equipment at the time of death
+- A list of every item the player had when he died
 
-![](http://fs5.directupload.net/images/160116/algzy8bg.png)
+If you don't want to keep the obituary after you recovered your items, you can enable the automatic removal in the config.
 
-![](http://fs5.directupload.net/images/161011/qglzohlx.png)
+![](https://i.imgur.com/mc2CMaK.png)
 
-![](http://fs5.directupload.net/images/161011/z67y4rts.png)
+![](https://i.imgur.com/vOVetsl.png)
+
+## Naming the Grave
+If you break the grave with silk touch, you get it dropped as an item.
+You can also craft graves.
+
+Naming the grave in an anvil, allows you to have custom text displayed on your grave.
+
+![](https://i.imgur.com/fB6gl6Y.png)
+
+![](https://i.imgur.com/auVMOS1.png)
+
+## Customization
+There are several things you can change in the configs:
+
+- The color of the text on the grave
+- If the skull on the grave should be rendered
+- Whether you want to get the obituary on death
+- The plocks that can get replaced by a grave
+- If the death note should get removed form the players inventory when breaking a grave
+- If only the owners of the grave should be able to break it
+- If a ghost of the player should spawn when breaking the grave
+- If the ghost should be friendly and defend the player or if it should attack the player
+- If the grave should get broken when sneaking on the grave
+- If the items should get sorted back into their original slots when breaking the grave
+
+## Recovering Lost Items (1.16.3+)
+If you somehow lost your items you can recover them with the recover command.
+
+The syntax is `/restore <player> <death_id> <replace|add>`.
+
+The parameter `player` is the player whose inventory should get restored.
+
+The parameter `death_id` is the ID of the death. You can find it out by enabling advanced tooltips (F3 + H) and opening the obituary. The death ID also gets written into the logs if a grave couldn't get placed.
+
+The last parameter defines if you want to get the players inventory replaced (Overwritten) or added (Just adds the items to the players existing inventory).
+
+
+You can also get a pre made restore command by sneaking and right-clicking the obituary as an admin.
+
+
+## Edge Cases
+If you die inside a block, the grave is placed at the next empty space above your location. If there is no free block above your position, or you are above the build limit, your items drop as usual.
+
+If you fall into the void, the grave is placed at Y=1. If there is no free space it will get placed at the next free spot above.
