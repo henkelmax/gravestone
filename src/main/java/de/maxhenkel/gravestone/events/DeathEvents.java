@@ -3,7 +3,6 @@ package de.maxhenkel.gravestone.events;
 import de.maxhenkel.gravestone.DeathInfo;
 import de.maxhenkel.gravestone.GraveProcessor;
 import de.maxhenkel.gravestone.Main;
-import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;

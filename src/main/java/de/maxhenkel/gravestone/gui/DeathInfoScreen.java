@@ -6,7 +6,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import de.maxhenkel.gravestone.DeathInfo;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
-import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.client.entity.player.RemoteClientPlayerEntity;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;

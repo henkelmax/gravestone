@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.item.ItemStack;
 
 public class PageList {
