@@ -174,7 +174,7 @@ public class ObituaryScreen extends Screen {
                 ITextComponent deathID = TextComponentUtils.func_240647_a_(new TranslationTextComponent("message.gravestone.death_id"))
                         .func_240700_a_((style) -> style
                                 .func_240723_c_(TextFormatting.GREEN)
-                                .func_240715_a_(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore " + death.getId().toString() + " @s replace"))
+                                .func_240715_a_(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore @s " + death.getId().toString() + " replace"))
                                 .func_240716_a_(new HoverEvent(HoverEvent.Action.field_230550_a_, new StringTextComponent(death.getId().toString())))
                         );
                 field_230706_i_.player.sendMessage(new TranslationTextComponent("message.gravestone.copied", deathID), Util.field_240973_b_);

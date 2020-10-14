@@ -57,8 +57,8 @@ public class RestoreCommand {
         };
 
         literalBuilder
-                .then(Commands.argument("death_id", UUIDArgument.func_239194_a_())
-                        .then(Commands.argument("target", EntityArgument.player())
+                .then(Commands.argument("target", EntityArgument.player())
+                        .then(Commands.argument("death_id", UUIDArgument.func_239194_a_())
                                 .then(Commands.literal("replace").executes(replace))
                                 .then(Commands.literal("add").executes(add))
                         ));
