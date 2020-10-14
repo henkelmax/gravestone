@@ -22,12 +22,12 @@ public class PageList {
         for (ItemStack s : items) {
             temp[i] = s;
 
-            if (i >= 9) {
+            i++;
+            if (i > 9) {
                 list.add(new Page(temp, gui));
                 temp = new ItemStack[10];
                 i = 0;
             }
-            i++;
         }
 
         if (Stream.of(temp).anyMatch(Objects::nonNull)) {
@@ -40,13 +40,13 @@ public class PageList {
         return list.size();
     }
 
-    public void drawPage(MatrixStack matrixStack, int p) {
+    public void drawPage(MatrixStack matrixStack, int p, int mouseX, int mouseY) {
         if (p >= list.size()) {
             p = list.size() - 1;
         }
 
         Page page = list.get(p);
-        page.drawPage(matrixStack, p + 1, list.size());
+        page.drawPage(matrixStack, p + 1, list.size(), mouseX, mouseY);
     }
 
     @Override

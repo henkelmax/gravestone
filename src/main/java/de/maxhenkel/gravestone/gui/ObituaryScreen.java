@@ -7,22 +7,31 @@ import de.maxhenkel.corelib.death.Death;
 import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.entity.DummyPlayer;
+import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.InventoryScreen;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
+
+import java.util.Collections;
 
 public class ObituaryScreen extends Screen {
 
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/info.png");
-    private static final int TEXTURE_X = 163;
-    private static final int TEXTURE_Y = 165;
+    protected static final int TEXTURE_X = 163;
+    protected static final int TEXTURE_Y = 165;
+    protected static final int ITEM_OFFSET_LEFT = 40;
+    protected static final int OFFSET_LEFT = 7;
+    protected static final int OFFSET_RIGHT = 14;
+    protected static final int ITEM_SIZE_OFFSET_LEFT = 15;
 
     private DummyPlayer player;
     private Death death;
@@ -34,6 +43,9 @@ public class ObituaryScreen extends Screen {
 
     private PageList pageList;
 
+    private int guiLeft;
+    private int guiTop;
+
     public ObituaryScreen(Death death) {
         super(new TranslationTextComponent("gui.obituary.title"));
         this.death = death;
@@ -44,6 +56,9 @@ public class ObituaryScreen extends Screen {
     @Override
     protected void func_231160_c_() {
         super.func_231160_c_();
+
+        guiLeft = (field_230708_k_ - TEXTURE_X) / 2;
+        guiTop = (field_230709_l_ - TEXTURE_Y) / 2;
 
         field_230710_m_.clear();
 
@@ -98,7 +113,7 @@ public class ObituaryScreen extends Screen {
             if (pageList.getPages() < page - 1) {
 
             } else {
-                pageList.drawPage(matrixStack, page - 1);
+                pageList.drawPage(matrixStack, page - 1, mouseX, mouseY);
             }
         }
     }
@@ -106,25 +121,35 @@ public class ObituaryScreen extends Screen {
     public void drawFirstPage(MatrixStack matrixStack, int mouseX, int mouseY) {
         drawCentered(matrixStack, field_230712_o_, new TranslationTextComponent("gui.obituary.title").func_240699_a_(TextFormatting.UNDERLINE), field_230708_k_ / 2, 30, TextFormatting.BLACK.getColor());
 
-        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.name").func_240699_a_(TextFormatting.BLACK), 50);
-        drawRight(matrixStack, new StringTextComponent(death.getPlayerName()).func_240699_a_(TextFormatting.DARK_GRAY), 50);
+        int height = 50;
 
-        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.dimension").func_240699_a_(TextFormatting.BLACK), 63);
-        drawRight(matrixStack, new StringTextComponent(death.getDimension().split(":")[1]).func_240699_a_(TextFormatting.DARK_GRAY), 63); // todo max width
-
-        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.time").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), 76);
-        IFormattableTextComponent date = GraveUtils.getDate(death.getTimestamp());
-        if (date != null) {
-            drawRight(matrixStack, date.func_240699_a_(TextFormatting.DARK_GRAY), 76);
-        } else {
-            drawRight(matrixStack, new StringTextComponent("N/A").func_240699_a_(TextFormatting.DARK_GRAY), 76);
+        if (field_230706_i_.gameSettings.advancedItemTooltips) {
+            drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.id").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), height);
+            drawRight(matrixStack, new StringTextComponent(death.getId().toString()).func_240699_a_(TextFormatting.DARK_GRAY), height, 0.5F);
+            height += 13;
         }
 
-        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.location").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), 89);
+        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.name").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), height);
+        drawRight(matrixStack, new StringTextComponent(death.getPlayerName()).func_240699_a_(TextFormatting.DARK_GRAY), height);
+        height += 13;
+        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.dimension").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), height);
+        drawRight(matrixStack, new StringTextComponent(death.getDimension().split(":")[1]).func_240699_a_(TextFormatting.DARK_GRAY), height);
+        height += 13;
+        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.time").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), height);
+        IFormattableTextComponent date = GraveUtils.getDate(death.getTimestamp());
+        if (date != null) {
+            drawRight(matrixStack, date.func_240699_a_(TextFormatting.DARK_GRAY), height);
+        } else {
+            drawRight(matrixStack, new StringTextComponent("N/A").func_240699_a_(TextFormatting.DARK_GRAY), height);
+        }
+        height += 13;
+        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.location").func_240702_b_(":").func_240699_a_(TextFormatting.BLACK), height);
         BlockPos pos = death.getBlockPos();
-        drawRight(matrixStack, new StringTextComponent("X: " + pos.getX()).func_240699_a_(TextFormatting.DARK_GRAY), 89);
-        drawRight(matrixStack, new StringTextComponent("Y: " + pos.getY()).func_240699_a_(TextFormatting.DARK_GRAY), 102);
-        drawRight(matrixStack, new StringTextComponent("Z: " + pos.getZ()).func_240699_a_(TextFormatting.DARK_GRAY), 115);
+        drawRight(matrixStack, new StringTextComponent("X: " + pos.getX()).func_240699_a_(TextFormatting.DARK_GRAY), height);
+        height += 13;
+        drawRight(matrixStack, new StringTextComponent("Y: " + pos.getY()).func_240699_a_(TextFormatting.DARK_GRAY), height);
+        height += 13;
+        drawRight(matrixStack, new StringTextComponent("Z: " + pos.getZ()).func_240699_a_(TextFormatting.DARK_GRAY), height);
 
         RenderSystem.color4f(1F, 1F, 1F, 1F);
 
@@ -133,6 +158,32 @@ public class ObituaryScreen extends Screen {
         }
 
         InventoryScreen.drawEntityOnScreen(field_230708_k_ / 2, 170, 30, (field_230708_k_ / 2) - mouseX, 100 - mouseY, player);
+
+        if (field_230706_i_.gameSettings.advancedItemTooltips) {
+            if (mouseX >= guiLeft + 7 && mouseX <= guiLeft + TEXTURE_X - 7 && mouseY >= 50 && mouseY <= 50 + field_230712_o_.FONT_HEIGHT) {
+                func_238654_b_(matrixStack, Collections.singletonList(new TranslationTextComponent("gui.obituary.copy_id").func_241878_f()), mouseX, mouseY);
+            }
+        }
+    }
+
+    @Override
+    public boolean func_231044_a_(double x, double y, int clickType) {
+        if (field_230706_i_.gameSettings.advancedItemTooltips && page == 0) {
+            if (x >= guiLeft + 7 && x <= guiLeft + TEXTURE_X - 7 && y >= 50 && y <= 50 + field_230712_o_.FONT_HEIGHT) {
+                field_230706_i_.keyboardListener.setClipboardString(death.getId().toString());
+                ITextComponent deathID = TextComponentUtils.func_240647_a_(new TranslationTextComponent("message.gravestone.death_id"))
+                        .func_240700_a_((style) -> style
+                                .func_240723_c_(TextFormatting.GREEN)
+                                .func_240715_a_(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore " + death.getId().toString() + " @s replace"))
+                                .func_240716_a_(new HoverEvent(HoverEvent.Action.field_230550_a_, new StringTextComponent(death.getId().toString())))
+                        );
+                field_230706_i_.player.sendMessage(new TranslationTextComponent("message.gravestone.copied", deathID), Util.field_240973_b_);
+                field_230706_i_.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1F));
+                field_230706_i_.displayGuiScreen(null);
+            }
+        }
+
+        return super.func_231044_a_(x, y, clickType);
     }
 
     public void drawCentered(MatrixStack matrixStack, FontRenderer fontRenderer, IFormattableTextComponent text, int x, int y, int color) {
@@ -140,35 +191,46 @@ public class ObituaryScreen extends Screen {
     }
 
     public void drawItem(MatrixStack matrixStack, IFormattableTextComponent string, int height) {
-        int left = (field_230708_k_ - TEXTURE_X) / 2;
-        int offset = 40;
-        int offsetLeft = left + offset;
-        field_230712_o_.func_238422_b_(matrixStack, string.func_241878_f(), offsetLeft, height, TextFormatting.BLACK.getColor());
+        field_230712_o_.func_238422_b_(matrixStack, string.func_241878_f(), guiLeft + ITEM_OFFSET_LEFT, height, TextFormatting.BLACK.getColor());
     }
 
     public void drawItemSize(MatrixStack matrixStack, IFormattableTextComponent string, int height) {
-        int left = (field_230708_k_ - TEXTURE_X) / 2;
-        int offset = 15;
-        int offsetLeft = left + offset;
-        field_230712_o_.func_238422_b_(matrixStack, string.func_241878_f(), offsetLeft, height, TextFormatting.BLACK.getColor());
+        field_230712_o_.func_238422_b_(matrixStack, string.func_241878_f(), guiLeft + ITEM_SIZE_OFFSET_LEFT, height, TextFormatting.BLACK.getColor());
     }
 
     public void drawLeft(MatrixStack matrixStack, IFormattableTextComponent string, int height) {
-        int left = (field_230708_k_ - TEXTURE_X) / 2;
-        int offset = 7;
-        int offsetLeft = left + offset;
-        field_230712_o_.func_238422_b_(matrixStack, string.func_241878_f(), offsetLeft, height, TextFormatting.BLACK.getColor());
+        field_230712_o_.func_238422_b_(matrixStack, string.func_241878_f(), guiLeft + OFFSET_LEFT, height, TextFormatting.BLACK.getColor());
     }
 
     public void drawRight(MatrixStack matrixStack, IFormattableTextComponent string, int height) {
-        int left = (field_230708_k_ - TEXTURE_X) / 2;
-        int offset = 14;
+        drawRight(matrixStack, string, height, 1F);
+    }
+
+    public void drawRight(MatrixStack matrixStack, IFormattableTextComponent string, int height, float scale) {
+        matrixStack.push();
+        matrixStack.scale(scale, scale, 1F);
+        float f = 1F / scale;
         int strWidth = field_230712_o_.func_238414_a_(string);
-        field_230712_o_.func_238422_b_(matrixStack, string.func_241878_f(), left + TEXTURE_X - strWidth - offset, height, TextFormatting.BLACK.getColor());
+        float spacing = (field_230712_o_.FONT_HEIGHT * f - field_230712_o_.FONT_HEIGHT) / 2F;
+        field_230712_o_.func_238422_b_(matrixStack, string.func_241878_f(), (guiLeft + TEXTURE_X - strWidth * scale - OFFSET_RIGHT) * f, height * f + spacing, TextFormatting.BLACK.getColor());
+        matrixStack.pop();
+    }
+
+    @Override
+    protected void func_230457_a_(MatrixStack matrixStack, ItemStack stack, int x, int y) {
+        super.func_230457_a_(matrixStack, stack, x, y);
     }
 
     public FontRenderer getFontRenderer() {
         return field_230712_o_;
+    }
+
+    public int getGuiLeft() {
+        return guiLeft;
+    }
+
+    public int getGuiTop() {
+        return guiTop;
     }
 
 }

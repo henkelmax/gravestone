@@ -47,7 +47,6 @@ import java.util.UUID;
 public class GraveStoneBlock extends Block implements ITileEntityProvider, IItemBlock, IBucketPickupHandler, ILiquidContainer {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    ;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     private static final VoxelShape BASE1 = Block.makeCuboidShape(0D, 0D, 0D, 16D, 1D, 16D);
@@ -312,11 +311,16 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
 
     protected void sortItems(World world, BlockPos pos, PlayerEntity player, GraveStoneTileEntity grave) {
         Death death = grave.getDeath();
+        dropItems(world, pos, fillPlayerInventory(player, death));
+        world.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_REMOVE_ITEM, SoundCategory.BLOCKS, 1F, 1F);
+        grave.markDirty();
+    }
 
+    public NonNullList<ItemStack> fillPlayerInventory(PlayerEntity player, Death death) {
         NonNullList<ItemStack> additionalItems = NonNullList.create();
-        fill(additionalItems, death.getMainInventory(), player.inventory.mainInventory);
-        fill(additionalItems, death.getArmorInventory(), player.inventory.armorInventory);
-        fill(additionalItems, death.getOffHandInventory(), player.inventory.offHandInventory);
+        fillInventory(additionalItems, death.getMainInventory(), player.inventory.mainInventory);
+        fillInventory(additionalItems, death.getArmorInventory(), player.inventory.armorInventory);
+        fillInventory(additionalItems, death.getOffHandInventory(), player.inventory.offHandInventory);
 
         additionalItems.addAll(death.getAdditionalItems());
         NonNullList<ItemStack> restItems = NonNullList.create();
@@ -327,12 +331,10 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
         }
 
         death.getAdditionalItems().clear();
-        grave.markDirty();
-        dropItems(world, pos, restItems);
-        world.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_REMOVE_ITEM, SoundCategory.BLOCKS, 1F, 1F);
+        return restItems;
     }
 
-    protected void fill(List<ItemStack> additionalItems, NonNullList<ItemStack> inventory, NonNullList<ItemStack> playerInv) {
+    public void fillInventory(List<ItemStack> additionalItems, NonNullList<ItemStack> inventory, NonNullList<ItemStack> playerInv) {
         for (int i = 0; i < inventory.size(); i++) {
             ItemStack stack = inventory.get(i);
             if (stack.isEmpty()) {

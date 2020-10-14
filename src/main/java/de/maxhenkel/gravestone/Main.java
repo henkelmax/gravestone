@@ -2,6 +2,7 @@ package de.maxhenkel.gravestone;
 
 import de.maxhenkel.corelib.CommonRegistry;
 import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
+import de.maxhenkel.gravestone.commands.RestoreCommand;
 import de.maxhenkel.gravestone.entity.GhostPlayerEntity;
 import de.maxhenkel.gravestone.entity.PlayerGhostRenderer;
 import de.maxhenkel.gravestone.events.DeathEvents;
@@ -19,6 +20,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -82,6 +84,11 @@ public class Main {
     }
 
     @SubscribeEvent
+    public void onRegisterCommands(RegisterCommandsEvent event) {
+        RestoreCommand.register(event.getDispatcher());
+    }
+
+    @SubscribeEvent
     public void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().registerAll(
                 GRAVESTONE = new GraveStoneBlock()
@@ -109,4 +116,5 @@ public class Main {
         event.getRegistry().register(GHOST);
         GlobalEntityTypeAttributes.put(GHOST, GhostPlayerEntity.getAttributes().func_233813_a_());
     }
+
 }
