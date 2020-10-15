@@ -1,6 +1,1 @@
-- Ghost players can now have equipment
-- Items can now be sorted back into their original slots
-- Items can now be picked up by sneaking on the grave (Config option)
-- Added restore command
-- Added death ID to obituary
-- Added item tooltips to obituary
+- Fixed obituary not being removed when using sneak pickup

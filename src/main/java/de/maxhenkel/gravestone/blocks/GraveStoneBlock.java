@@ -305,6 +305,9 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
             return;
         }
 
+        removeObituary(player, grave);
+        spawnGhost(world, pos, grave);
+
         sortItems(world, pos, player, grave);
         world.destroyBlock(pos, true);
     }
