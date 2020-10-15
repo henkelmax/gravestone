@@ -2,7 +2,6 @@
   "block.gravestone.gravestone": "墓碑",
   "item.gravestone.obituary": "死亡資訊",
   "entity.gravestone.player_ghost": "亡魂玩家",
-  "message.gravestone.name": "GraveStone",
   "message.gravestone.died": "%s 在 %s 死亡",
   "message.gravestone.deathlocation": "死亡地點",
   "message.gravestone.no_deathlocation": "找不到任何死亡地點",
@@ -14,7 +13,6 @@
   "gui.obituary.title.items": "死亡時攜帶的物品",
   "gui.obituary.page": "頁數 %s",
   "gui.obituary.time": "時間",
-  "gui.gravestone.deathitems": "生前物品",
   "button.gravestone.next": "下一頁",
   "button.gravestone.prev": "上一頁"
 }

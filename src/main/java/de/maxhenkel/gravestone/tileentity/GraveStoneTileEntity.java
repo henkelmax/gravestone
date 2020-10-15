@@ -120,7 +120,11 @@ public class GraveStoneTileEntity extends TileEntity implements INameable {
     }
 
     protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent(Main.GRAVESTONE.getTranslationKey());
+        String name = death.getPlayerName();
+        if (name == null || name.isEmpty()) {
+            return new TranslationTextComponent(Main.GRAVESTONE.getTranslationKey());
+        }
+        return new TranslationTextComponent("message.gravestone.grave_of", name);
     }
 
     @Nullable

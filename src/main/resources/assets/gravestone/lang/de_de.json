@@ -2,7 +2,9 @@
   "block.gravestone.gravestone": "Grabstein",
   "item.gravestone.obituary": "Nachruf",
   "entity.gravestone.player_ghost": "Geisterspieler",
-  "message.gravestone.name": "GraveStone",
+  "message.gravestone.grave_of": "Grab von %s",
+  "message.gravestone.date_of_death": "Starb am %s",
+  "message.gravestone.item_count": "Enthält %s stack(s)",
   "message.gravestone.died": "%s starb am %s",
   "message.gravestone.deathlocation": "Todesposition",
   "message.gravestone.no_deathlocation": "Keine Todesposition vorhanden",
@@ -25,7 +27,6 @@
   "gui.obituary.time": "Zeit",
   "gui.obituary.id": "ID",
   "gui.obituary.copy_id": "ID kopieren",
-  "gui.gravestone.deathitems": "Todesgegenstände",
   "gui.gravestone.date_format": "yyyy.MM.dd HH:mm:ss",
   "button.gravestone.next": "Weiter",
   "button.gravestone.prev": "Zurück"

@@ -1,1 +1,1 @@
-- Fixed obituary not being removed when using sneak pickup
+- Added WAILA/HWYLA compatibility

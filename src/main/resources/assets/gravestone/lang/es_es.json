@@ -2,7 +2,6 @@
   "block.gravestone.gravestone": "Tumba",
   "item.gravestone.obituary": "Obituario",
   "entity.gravestone.player_ghost": "Fantasma del jugador",
-  "message.gravestone.name": "GraveStone",
   "message.gravestone.died": "%s murió el %s",
   "message.gravestone.deathlocation": "Lugar de fallecimiento",
   "message.gravestone.no_deathlocation": "No está disponible el lugar de fallecimiento",
@@ -14,7 +13,6 @@
   "gui.obituary.title.items": "Objetos portados",
   "gui.obituary.page": "Página %s",
   "gui.obituary.time": "Fecha",
-  "gui.gravestone.deathitems": "Objetos portados",
   "button.gravestone.next": "Siguiente",
   "button.gravestone.prev": "Atrás"
 }

@@ -2,7 +2,6 @@
   "block.gravestone.gravestone": "墓碑",
   "item.gravestone.obituary": "死亡笔记",
   "entity.gravestone.player_ghost": "幽灵玩家",
-  "message.gravestone.name": "GraveStone",
   "message.gravestone.died": "%s 死亡时间 %s",
   "message.gravestone.deathlocation": "死亡地点",
   "message.gravestone.no_deathlocation": "无死亡地点记录",
@@ -14,7 +13,6 @@
   "gui.obituary.title.items": "生前物品",
   "gui.obituary.page": "页 %s",
   "gui.obituary.time": "时间",
-  "gui.gravestone.deathitems": "生前物品",
   "button.gravestone.next": "下一页",
   "button.gravestone.prev": "上一页"
 }

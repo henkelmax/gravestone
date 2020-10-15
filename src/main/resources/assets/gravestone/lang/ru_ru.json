@@ -1,7 +1,6 @@
 {
   "block.gravestone.gravestone": "Надгробие",
   "item.gravestone.obituary": "Некролог",
-  "message.gravestone.name": "GraveStone",
   "message.gravestone.died": "%s умер %s",
   "message.gravestone.deathlocation": "Место смерти",
   "message.gravestone.no_deathlocation": "Нет доступных мест смертей",

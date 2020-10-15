@@ -77,6 +77,18 @@ minecraft {
 
 repositories {
     maven {
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+    maven {
+        name = "Hwyla"
+        url = "https://maven.tehnut.info"
+    }
+    maven {
         name = "henkelmax.public"
         url = 'https://maven.maxhenkel.de/repository/public'
     }
@@ -85,6 +97,11 @@ repositories {
 
 dependencies {
     minecraft "net.minecraftforge:forge:${mod_minecraft_version}-${forge_version}"
+
+    compileOnly fg.deobf("mezz.jei:jei-${mod_minecraft_version}:${jei_version}:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-${mod_minecraft_version}:${jei_version}")
+
+    compile fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
 
     shadow fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:api")
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")

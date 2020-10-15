@@ -2,7 +2,6 @@
   "block.gravestone.gravestone": "Grób",
   "item.gravestone.obituary": "Nekrolog",
   "entity.gravestone.player_ghost": "Duch gracza",
-  "message.gravestone.name": "GraveStone",
   "message.gravestone.died": "Gracz %s zmarł %s",
   "message.gravestone.deathlocation": "Lokalizacja miejsca śmierci",
   "message.gravestone.no_deathlocation": "Brak dostępnej lokalizacji miejsca śmierci",
@@ -14,7 +13,6 @@
   "gui.obituary.title.items": "Rzeczy zmarłego",
   "gui.obituary.page": "Strona %s",
   "gui.obituary.time": "Data",
-  "gui.gravestone.deathitems": "Rzeczy zmarłego",
   "button.gravestone.next": "Dalej",
   "button.gravestone.prev": "Wstecz"
 }

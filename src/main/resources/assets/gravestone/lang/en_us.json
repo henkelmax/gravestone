@@ -2,7 +2,9 @@
   "block.gravestone.gravestone": "Grave",
   "item.gravestone.obituary": "Obituary",
   "entity.gravestone.player_ghost": "Ghost Player",
-  "message.gravestone.name": "GraveStone",
+  "message.gravestone.grave_of": "Grave of %s",
+  "message.gravestone.date_of_death": "Died on %s",
+  "message.gravestone.item_count": "Contains %s stack(s)",
   "message.gravestone.died": "%s died on %s",
   "message.gravestone.deathlocation": "Death location",
   "message.gravestone.no_deathlocation": "No death location available",
@@ -25,7 +27,6 @@
   "gui.obituary.time": "Date",
   "gui.obituary.id": "ID",
   "gui.obituary.copy_id": "Copy ID",
-  "gui.gravestone.deathitems": "Death Items",
   "gui.gravestone.date_format": "yyyy/MM/dd HH:mm:ss",
   "button.gravestone.next": "Next",
   "button.gravestone.prev": "Back"
