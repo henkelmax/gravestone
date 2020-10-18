@@ -1,1 +1,1 @@
-- Added WAILA/HWYLA compatibility
+- Added swedish translation
