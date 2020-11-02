@@ -1,1 +1,1 @@
-- Added swedish translation
+- Updated to 1.16.4

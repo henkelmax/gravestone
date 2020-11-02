@@ -28,8 +28,8 @@ public class Page {
     }
 
     public void drawPage(MatrixStack matrixStack, int page, int pageCount, int mouseX, int mouseY) {
-        gui.drawCentered(matrixStack, gui.getFontRenderer(), new TranslationTextComponent("gui.obituary.title.items").func_240699_a_(TextFormatting.UNDERLINE), gui.field_230708_k_ / 2, 30, TextFormatting.BLACK.getColor());
-        gui.drawCentered(matrixStack, gui.getFontRenderer(), new TranslationTextComponent("gui.obituary.page", page, pageCount), gui.field_230708_k_ / 2, 43, TextFormatting.DARK_GRAY.getColor());
+        gui.drawCentered(matrixStack, gui.getFontRenderer(), new TranslationTextComponent("gui.obituary.title.items").mergeStyle(TextFormatting.UNDERLINE), gui.width / 2, 30, TextFormatting.BLACK.getColor());
+        gui.drawCentered(matrixStack, gui.getFontRenderer(), new TranslationTextComponent("gui.obituary.page", page, pageCount), gui.width / 2, 43, TextFormatting.DARK_GRAY.getColor());
 
         int y = ITEM_START_Y;
         final int space = 12;
@@ -38,7 +38,7 @@ public class Page {
             if (s == null || s.isEmpty()) {
                 continue;
             }
-            gui.drawItem(matrixStack, new TranslationTextComponent(s.getTranslationKey()).func_240699_a_(TextFormatting.ITALIC), y);
+            gui.drawItem(matrixStack, new TranslationTextComponent(s.getTranslationKey()).mergeStyle(TextFormatting.ITALIC), y);
             gui.drawItemSize(matrixStack, new StringTextComponent(String.valueOf(s.getCount())), y);
             y = y + space;
         }
@@ -48,7 +48,7 @@ public class Page {
                 int index = (mouseY + 3 - ITEM_START_Y) / 12;
                 ItemStack stack = items[Math.max(0, Math.min(items.length - 1, index))];
                 if (stack != null && !stack.isEmpty()) {
-                    gui.func_230457_a_(matrixStack, stack, mouseX, mouseY);
+                    gui.renderTooltip(matrixStack, stack, mouseX, mouseY);
                 }
             }
         }

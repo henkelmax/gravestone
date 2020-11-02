@@ -197,9 +197,9 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
         if (world.isRemote) {
             ITextComponent time = GraveUtils.getDate(grave.getDeath().getTimestamp());
             if (time == null) {
-                player.sendMessage(name, Util.field_240973_b_);
+                player.sendMessage(name, Util.DUMMY_UUID);
             } else {
-                player.sendMessage(new TranslationTextComponent("message.gravestone.died", name, time), Util.field_240973_b_);
+                player.sendMessage(new TranslationTextComponent("message.gravestone.died", name, time), Util.DUMMY_UUID);
             }
         }
 

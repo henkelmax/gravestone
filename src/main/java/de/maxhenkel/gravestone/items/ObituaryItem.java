@@ -40,19 +40,19 @@ public class ObituaryItem extends Item {
 
         if (player.isSneaking()) {
             if (player.hasPermissionLevel(player.server.getOpPermissionLevel())) {
-                ITextComponent replace = TextComponentUtils.func_240647_a_(new TranslationTextComponent("message.gravestone.restore.replace"))
-                        .func_240700_a_((style) -> style
-                                .func_240723_c_(TextFormatting.GREEN)
-                                .func_240715_a_(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore @s " + death.getId().toString() + " replace"))
-                                .func_240716_a_(new HoverEvent(HoverEvent.Action.field_230550_a_, new TranslationTextComponent("message.gravestone.restore.replace.description")))
+                ITextComponent replace = TextComponentUtils.wrapWithSquareBrackets(new TranslationTextComponent("message.gravestone.restore.replace"))
+                        .modifyStyle((style) -> style
+                                .applyFormatting(TextFormatting.GREEN)
+                                .setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore @s " + death.getId().toString() + " replace"))
+                                .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslationTextComponent("message.gravestone.restore.replace.description")))
                         );
-                ITextComponent add = TextComponentUtils.func_240647_a_(new TranslationTextComponent("message.gravestone.restore.add"))
-                        .func_240700_a_((style) -> style
-                                .func_240723_c_(TextFormatting.GREEN)
-                                .func_240715_a_(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore @s " + death.getId().toString() + " add"))
-                                .func_240716_a_(new HoverEvent(HoverEvent.Action.field_230550_a_, new TranslationTextComponent("message.gravestone.restore.add.description")))
+                ITextComponent add = TextComponentUtils.wrapWithSquareBrackets(new TranslationTextComponent("message.gravestone.restore.add"))
+                        .modifyStyle((style) -> style
+                                .applyFormatting(TextFormatting.GREEN)
+                                .setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore @s " + death.getId().toString() + " add"))
+                                .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslationTextComponent("message.gravestone.restore.add.description")))
                         );
-                player.sendMessage(new TranslationTextComponent("message.gravestone.restore").func_240702_b_(" ").func_230529_a_(replace).func_240702_b_(" ").func_230529_a_(add), Util.field_240973_b_);
+                player.sendMessage(new TranslationTextComponent("message.gravestone.restore").appendString(" ").append(replace).appendString(" ").append(add), Util.DUMMY_UUID);
             }
         } else {
             NetUtils.sendTo(Main.SIMPLE_CHANNEL, player, new MessageOpenObituary(death));

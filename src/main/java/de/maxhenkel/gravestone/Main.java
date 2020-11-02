@@ -114,7 +114,7 @@ public class Main {
     public void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
         GHOST = CommonRegistry.registerEntity(Main.MODID, "player_ghost", EntityClassification.MONSTER, GhostPlayerEntity.class, builder -> builder.size(0.6F, 1.95F));
         event.getRegistry().register(GHOST);
-        GlobalEntityTypeAttributes.put(GHOST, GhostPlayerEntity.getAttributes().func_233813_a_());
+        GlobalEntityTypeAttributes.put(GHOST, GhostPlayerEntity.getAttributes().create());
     }
 
 }

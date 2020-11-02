@@ -40,8 +40,8 @@ public class GraveStoneTileEntity extends TileEntity implements INameable {
     }
 
     @Override
-    public void func_230337_a_(BlockState state, CompoundNBT compound) {
-        super.func_230337_a_(state, compound);
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state, compound);
 
         if (compound.contains("Death")) {
             death = Death.fromNBT(compound.getCompound("Death"));
@@ -67,7 +67,7 @@ public class GraveStoneTileEntity extends TileEntity implements INameable {
         }
 
         if (compound.contains("CustomName")) {
-            customName = ITextComponent.Serializer.func_240643_a_(compound.getString("CustomName"));
+            customName = ITextComponent.Serializer.getComponentFromJson(compound.getString("CustomName"));
         }
     }
 
@@ -78,7 +78,7 @@ public class GraveStoneTileEntity extends TileEntity implements INameable {
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.func_230337_a_(null, pkt.getNbtCompound());
+        this.read(null, pkt.getNbtCompound());
     }
 
     @Override

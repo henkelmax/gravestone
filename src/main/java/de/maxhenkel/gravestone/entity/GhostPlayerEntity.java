@@ -60,10 +60,10 @@ public class GhostPlayerEntity extends MonsterEntity {
 
     public static AttributeModifierMap.MutableAttribute getAttributes() {
         return MonsterEntity.func_234295_eP_()
-                .func_233815_a_(Attributes.field_233823_f_, 3D)
-                .func_233815_a_(Attributes.field_233826_i_, 2D)
-                .func_233815_a_(Attributes.field_233821_d_, 0.23000000417232513D)
-                .func_233815_a_(Attributes.field_233819_b_, 35D);
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 3D)
+                .createMutableAttribute(Attributes.ARMOR, 2D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.23000000417232513D)
+                .createMutableAttribute(Attributes.FOLLOW_RANGE, 35D);
     }
 
     @Override
@@ -111,9 +111,9 @@ public class GhostPlayerEntity extends MonsterEntity {
     }
 
     private void setOverpowered() {
-        getAttribute(Attributes.field_233819_b_).setBaseValue(35.0D);
-        getAttribute(Attributes.field_233821_d_).setBaseValue(0.4D);
-        getAttribute(Attributes.field_233823_f_).setBaseValue(20.0D);
+        getAttribute(Attributes.FOLLOW_RANGE).setBaseValue(35.0D);
+        getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.4D);
+        getAttribute(Attributes.ATTACK_DAMAGE).setBaseValue(20.0D);
     }
 
     @Override
