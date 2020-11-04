@@ -289,7 +289,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         super.onEntityCollision(state, world, pos, entity);
-        if (!(entity instanceof ServerPlayerEntity) || !Main.SERVER_CONFIG.sneakPickup.get()) {
+        if (!(entity instanceof ServerPlayerEntity) || !entity.isAlive() || !Main.SERVER_CONFIG.sneakPickup.get()) {
             return;
         }
         ServerPlayerEntity player = (ServerPlayerEntity) entity;

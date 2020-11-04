@@ -1,1 +1,1 @@
-- Added swedish translation
+- Fixed grave disappearing when having sneaking on toggle
