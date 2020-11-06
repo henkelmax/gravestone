@@ -1,1 +1,2 @@
-- Fixed grave disappearing when having sneaking on toggle
+- Fixed crash when spawning a player ghost
+- Removed ghost player transparency

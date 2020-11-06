@@ -39,12 +39,11 @@ public class PlayerGhostRenderer extends LivingRenderer<GhostPlayerEntity, Playe
 
     @Override
     public ResourceLocation getEntityTexture(GhostPlayerEntity entity) {
-        return PlayerSkins.getSkin(entity.getPlayerUUID(), entity.getCustomName().getString());
+        return PlayerSkins.getSkin(entity.getPlayerUUID(), entity.getName().getString());
     }
 
     @Override
     public void render(GhostPlayerEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
-        packedLight = 0xFFFFFF;
         matrixStack.push();
 
         if (PlayerSkins.isSlim(entity.getPlayerUUID())) {
