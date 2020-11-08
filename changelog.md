@@ -1,2 +1,1 @@
-- Fixed crash when spawning a player ghost
-- Removed ghost player transparency
+- Re-added JEI compatibility
