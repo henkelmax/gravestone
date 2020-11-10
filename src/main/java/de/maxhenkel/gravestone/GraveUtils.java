@@ -47,7 +47,7 @@ public class GraveUtils {
             return true;
         }
 
-        return Main.SERVER_CONFIG.replaceableBlocks.stream().anyMatch(b::equals);
+        return Main.SERVER_CONFIG.replaceableBlocks.stream().anyMatch(b::isIn);
     }
 
     @Nullable

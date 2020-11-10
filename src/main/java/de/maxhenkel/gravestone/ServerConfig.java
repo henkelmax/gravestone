@@ -1,14 +1,14 @@
 package de.maxhenkel.gravestone;
 
 import de.maxhenkel.corelib.config.ConfigBase;
+import de.maxhenkel.corelib.tag.TagUtils;
 import net.minecraft.block.Block;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tags.ITag;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -24,7 +24,7 @@ public class ServerConfig extends ConfigBase {
     public final ForgeConfigSpec.BooleanValue sneakPickup;
     public final ForgeConfigSpec.BooleanValue breakPickup;
 
-    public List<Block> replaceableBlocks = new ArrayList<>();
+    public List<ITag<Block>> replaceableBlocks = new ArrayList<>();
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         super(builder);
@@ -32,44 +32,8 @@ public class ServerConfig extends ConfigBase {
                 .comment("If this is set to true you get an obituary after you died")
                 .define("enable_obituary", true);
         replaceableBlocksSpec = builder
-                .comment("The blocks that can be replaced with a grave")
-                .defineList("replaceable_blocks",
-                        Arrays.asList(
-                                "minecraft:tall_grass",
-                                "minecraft:grass",
-                                "minecraft:water",
-                                "minecraft:lava",
-                                "minecraft:dandelion",
-                                "minecraft:lilac",
-                                "minecraft:rose_bush",
-                                "minecraft:peony",
-                                "minecraft:sunflower",
-                                "minecraft:poppy",
-                                "minecraft:blue_orchid",
-                                "minecraft:azure_bluet",
-                                "minecraft:oxeye_daisy",
-                                "minecraft:orange_tulip",
-                                "minecraft:pink_tulip",
-                                "minecraft:red_tulip",
-                                "minecraft:white_tulip",
-                                "minecraft:allium",
-                                "minecraft:fern",
-                                "minecraft:large_fern",
-                                "minecraft:spruce_sapling",
-                                "minecraft:acacia_sapling",
-                                "minecraft:birch_sapling",
-                                "minecraft:dark_oak_sapling",
-                                "minecraft:jungle_sapling",
-                                "minecraft:oak_sapling",
-                                "minecraft:brown_mushroom",
-                                "minecraft:red_mushroom",
-                                "minecraft:snow",
-                                "minecraft:vine",
-                                "minecraft:dead_bush",
-                                "minecraft:fire"),
-                        Objects::nonNull
-                );
-
+                .comment("The blocks that can be replaced with a grave", "If it starts with '#' it is a tag")
+                .defineList("replaceable_blocks", Collections.singletonList("#gravestone:grave_replaceable"), Objects::nonNull);
         removeObituary = builder
                 .comment("If this is set to true the obituary will be taken out of your inventory when you break the grave")
                 .define("remove_obituary", false);
@@ -93,6 +57,6 @@ public class ServerConfig extends ConfigBase {
     @Override
     public void onReload(ModConfig.ModConfigEvent event) {
         super.onReload(event);
-        replaceableBlocks = replaceableBlocksSpec.get().stream().map(s -> ForgeRegistries.BLOCKS.getValue(new ResourceLocation(s))).filter(Objects::nonNull).collect(Collectors.toList());
+        replaceableBlocks = replaceableBlocksSpec.get().stream().map(TagUtils::getBlock).filter(Objects::nonNull).collect(Collectors.toList());
     }
 }

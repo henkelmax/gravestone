@@ -1,1 +1,2 @@
-- Re-added JEI compatibility
+- Added grave_replaceable tag
+- Added tag support in config
