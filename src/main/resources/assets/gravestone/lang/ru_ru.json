@@ -10,7 +10,7 @@
   "gui.obituary.location": "Расположение",
   "gui.obituary.dimension": "Измерение",
   "gui.obituary.title.items": "Оставшиеся предметы",
-  "gui.obituary.page": "Стр. %s",
+  "gui.obituary.page": "Стр. %s из %s",
   "gui.obituary.time": "Время",
   "button.gravestone.next": "След.",
   "button.gravestone.prev": "Пред."
