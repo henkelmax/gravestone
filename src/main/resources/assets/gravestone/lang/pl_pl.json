@@ -11,7 +11,7 @@
   "gui.obituary.location": "Lokalizacja",
   "gui.obituary.dimension": "Wymiar",
   "gui.obituary.title.items": "Rzeczy zmarłego",
-  "gui.obituary.page": "Strona %s",
+  "gui.obituary.page": "Strona %s z %s",
   "gui.obituary.time": "Data",
   "button.gravestone.next": "Dalej",
   "button.gravestone.prev": "Wstecz"
