@@ -1,2 +1,1 @@
-- Added grave_replaceable tag
-- Added tag support in config
+- Improved translations
