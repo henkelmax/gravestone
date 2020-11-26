@@ -1,3 +1,1 @@
-- Updated Forge version
-- Updated MCP mapping version
-- Updated Gradle wrapper
+- Updated polish translation
