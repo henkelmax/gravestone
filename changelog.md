@@ -1,1 +1,1 @@
-- Added death not found message
+- Updated polish translation
