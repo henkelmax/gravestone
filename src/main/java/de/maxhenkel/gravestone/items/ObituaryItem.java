@@ -38,7 +38,9 @@ public class ObituaryItem extends Item {
         ServerPlayerEntity player = (ServerPlayerEntity) p;
         Death death = fromStack(player, player.getHeldItem(hand));
 
-        if (player.isSneaking()) {
+        if (death == null) {
+            player.sendStatusMessage(new TranslationTextComponent("message.gravestone.death_not_found"), true);
+        } else if (player.isSneaking()) {
             if (player.hasPermissionLevel(player.server.getOpPermissionLevel())) {
                 ITextComponent replace = TextComponentUtils.wrapWithSquareBrackets(new TranslationTextComponent("message.gravestone.restore.replace"))
                         .modifyStyle((style) -> style

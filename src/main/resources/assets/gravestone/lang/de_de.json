@@ -18,6 +18,7 @@
   "message.gravestone.death_id": "Todes ID",
   "message.gravestone.death_id_not_found": "Todes ID %s wurde nicht gefunden",
   "message.gravestone.restore.success": "Die Gegenstände von %s wurden erfolgreich wiederhergestellt",
+  "message.gravestone.death_not_found": "Tod nicht gefunden",
   "gui.obituary.name": "Name",
   "gui.obituary.title": "Nachruf",
   "gui.obituary.location": "Position",
