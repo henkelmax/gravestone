@@ -1,0 +1,8 @@
+tile.gravestone.name=Gravestone
+item.death_location_finder.name=Death location finder
+message.died=died on
+message.update=An update is available
+message.update.hover=Download the new version
+message.name=GraveStone
+message.deathlocation=Death location
+message.no_deathlocation=No death location available
