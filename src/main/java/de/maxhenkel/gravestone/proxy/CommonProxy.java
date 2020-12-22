@@ -1,11 +1,15 @@
 package de.maxhenkel.gravestone.proxy;
 
-import de.maxhenkel.gravestone.DeathPosition;
-import de.maxhenkel.gravestone.Events;
+import de.maxhenkel.gravestone.Config;
+import de.maxhenkel.gravestone.Log;
 import de.maxhenkel.gravestone.Main;
-import de.maxhenkel.gravestone.MBlocks;
-import de.maxhenkel.gravestone.MItems;
-import de.maxhenkel.gravestone.TileEntityGraveStone;
+import de.maxhenkel.gravestone.ModBlocks;
+import de.maxhenkel.gravestone.ModItems;
+import de.maxhenkel.gravestone.events.BlockEvents;
+import de.maxhenkel.gravestone.events.DeathEvents;
+import de.maxhenkel.gravestone.events.UpdateCheckEvents;
+import de.maxhenkel.gravestone.gui.GuiHandler;
+import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
@@ -30,33 +34,33 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class CommonProxy {
 
 	public void preinit(FMLPreInitializationEvent event) {
-		registerBlock(MBlocks.GRAVESTONE);
-		registerItem(MItems.DEATH_LOCATION_FINDER);
-		
-		
-		GameRegistry.registerTileEntity(TileEntityGraveStone.class, "TileEntityGaveStone");
-
-		GameRegistry.addRecipe(new ItemStack(MBlocks.GRAVESTONE), new Object[] { "CXX", "CXX", "DDD", Character.valueOf('C'), Blocks.cobblestone, Character.valueOf('D'), Blocks.dirt });
-
-		GameRegistry.addRecipe(new ItemStack(MBlocks.GRAVESTONE), new Object[] { "XXC", "XXC", "DDD", Character.valueOf('C'), Blocks.cobblestone, Character.valueOf('D'), Blocks.dirt });
-	
-		boolean addLocationFinderReciepe=false;
-		try {
-			Main.getInstance().getConfig().load();
-			addLocationFinderReciepe = Main.getInstance().getConfig().get(Main.MODID, "enable_death_location_finder_reciepe", false).getBoolean();
-			Main.getInstance().getConfig().save();
-		} catch (Exception e) {
-			e.printStackTrace();
+		Configuration c=null;
+    	try{
+			c=new Configuration(event.getSuggestedConfigurationFile());
+			Config config=new Config(c);
+			config.setInstance();
+		}catch(Exception e){
+			Log.w("Could not create config file: " +e.getMessage());
 		}
-		
-		if(addLocationFinderReciepe){
-			GameRegistry.addRecipe(new ItemStack(MItems.DEATH_LOCATION_FINDER), new Object[] { "XRR", "XSR", "SXX", Character.valueOf('R'), Items.redstone, Character.valueOf('S'), Items.stick });
-		}
-		
+    	
+    	Log.setLogger(event.getModLog());
 	}
 
 	public void init(FMLInitializationEvent event) {
+		MinecraftForge.EVENT_BUS.register(new UpdateCheckEvents());
+		MinecraftForge.EVENT_BUS.register(new DeathEvents());
+		MinecraftForge.EVENT_BUS.register(new BlockEvents());
+		registerBlock(ModBlocks.GRAVESTONE);
+		registerItem(ModItems.DEATH_INFO);
 		
+		NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance(), new GuiHandler());
+		
+		GameRegistry.registerTileEntity(TileEntityGraveStone.class, "TileEntityGaveStone");
+
+		GameRegistry.addRecipe(new ItemStack(ModBlocks.GRAVESTONE), new Object[] { "CXX", "CXX", "DDD", Character.valueOf('C'), Blocks.cobblestone, Character.valueOf('D'), Blocks.dirt });
+
+		GameRegistry.addRecipe(new ItemStack(ModBlocks.GRAVESTONE), new Object[] { "XXC", "XXC", "DDD", Character.valueOf('C'), Blocks.cobblestone, Character.valueOf('D'), Blocks.dirt });
+
 	}
 
 	public void postinit(FMLPostInitializationEvent event) {
