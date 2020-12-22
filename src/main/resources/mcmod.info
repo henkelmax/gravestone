@@ -1,0 +1,16 @@
+[
+{
+  "modid": "gravestone",
+  "name": "Gravestone",
+  "description": "Gravestone",
+  "version": "0.7.10.3",
+  "mcversion": "1.7.10",
+  "url": "",
+  "updateUrl": "http://minecraft.curseforge.com/projects/gravestone-mod",
+  "authorList": ["Max Henkel"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
