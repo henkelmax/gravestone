@@ -1,8 +1,8 @@
 package de.maxhenkel.gravestone.gui;
 
 import java.util.Arrays;
-import de.maxhenkel.gravestone.Tools;
 import de.maxhenkel.gravestone.DeathInfo.ItemInfo;
+import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.Item;
@@ -49,7 +49,7 @@ public class Page {
 				continue;
 			}
 
-			String name = Tools.translateItem(s.getName());
+			String name = Tools.translateItem(s.getName(), s.getMeta());
 
 			if (name == null) {
 				continue;
