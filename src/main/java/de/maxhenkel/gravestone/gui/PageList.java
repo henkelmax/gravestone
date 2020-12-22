@@ -3,9 +3,8 @@ package de.maxhenkel.gravestone.gui;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import de.maxhenkel.gravestone.Tools;
 import de.maxhenkel.gravestone.DeathInfo.ItemInfo;
+import de.maxhenkel.gravestone.util.Tools;
 
 public class PageList {
 

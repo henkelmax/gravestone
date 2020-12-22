@@ -1,4 +1,4 @@
-package de.maxhenkel.gravestone;
+package de.maxhenkel.gravestone.tileentity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +8,8 @@ import org.lwjgl.opengl.GL11;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture.Type;
+
+import de.maxhenkel.gravestone.Config;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -25,13 +27,11 @@ import net.minecraft.util.ResourceLocation;
 
 public class TileentitySpecialRendererGraveStone extends TileEntitySpecialRenderer<TileEntityGraveStone> {
 
-	public static final String KEY_RENDER_SKULL = "render_skull";
-
 	private boolean renderSkull;
 	private HashMap<String, GameProfile> players;
 
 	public TileentitySpecialRendererGraveStone() {
-		this.renderSkull = Main.getInstance().getConfig().getBoolean(KEY_RENDER_SKULL, true);
+		this.renderSkull = Config.instance().renderSkull;
 		this.players=new HashMap<String, GameProfile>();
 	}
 
@@ -80,22 +80,24 @@ public class TileentitySpecialRendererGraveStone extends TileEntitySpecialRender
 			return;
 		}
 
-		if (block.isVisuallyOpaque()) {
+		if (block.isNormalCube(state, target.getWorld(), target.getPos().down())) {//is opaque
 			render = true;
 		}
-		
-		if (renderSkull && render) {
-			renderSkull(x, y, z, target.getPlayerName(), target.getBlockMetadata());
+
+		if (target.renderHead() && target.getPlayerUUID() != null && !target.getPlayerUUID().isEmpty() && renderSkull && render) {
+			try{
+				renderSkull(x, y, z, target.getPlayerUUID(), target.getPlayerName(), target.getBlockMetadata());
+			}catch(Exception e){}
 		}
 	}
 
-	public void renderSkull(double x, double y, double z, String name, int rotation) {
+	public void renderSkull(double x, double y, double z, String uuid, String name, int rotation) {
 
 		ModelBase modelbase = new ModelHumanoidHead();
 		ResourceLocation resourcelocation = DefaultPlayerSkin.getDefaultSkinLegacy();
 		
-		if (name != null) {
-			GameProfile profile = getGameProfile(name);
+		if (uuid != null) {
+			GameProfile profile = getGameProfile(uuid, name);
 			Minecraft minecraft = Minecraft.getMinecraft();
 			Map<Type, MinecraftProfileTexture> map = minecraft.getSkinManager().loadSkinFromCache(profile);
 
@@ -137,12 +139,12 @@ public class TileentitySpecialRendererGraveStone extends TileEntitySpecialRender
 
 	}
 
-	public GameProfile getGameProfile(String name) {
-		if (players.containsKey(name)) {
-			return players.get(name);
+	public GameProfile getGameProfile(String uuid, String name) {
+		if (players.containsKey(uuid)) {
+			return players.get(uuid);
 		} else {
-			GameProfile profile = TileEntitySkull.updateGameprofile(new GameProfile(null, name));
-			players.put(name, profile);
+			GameProfile profile = TileEntitySkull.updateGameprofile(new GameProfile(UUID.fromString(uuid), name));
+			players.put(uuid, profile);
 			return profile;
 		}
 	}
