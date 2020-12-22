@@ -1,10 +1,10 @@
 package de.maxhenkel.gravestone.proxy;
 
 import de.maxhenkel.gravestone.Main;
-import de.maxhenkel.gravestone.MBlocks;
-import de.maxhenkel.gravestone.MItems;
-import de.maxhenkel.gravestone.TileEntityGraveStone;
-import de.maxhenkel.gravestone.TileentitySpecialRendererGraveStone;
+import de.maxhenkel.gravestone.ModBlocks;
+import de.maxhenkel.gravestone.ModItems;
+import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
+import de.maxhenkel.gravestone.tileentity.TileentitySpecialRendererGraveStone;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -27,8 +27,8 @@ public class ClientProxy extends CommonProxy{
 	public void init(FMLInitializationEvent event) {
 		super.init(event);
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGraveStone.class, new TileentitySpecialRendererGraveStone());
-		addRenderBlock(MBlocks.GRAVESTONE);
-		addRenderItem(MItems.DEATH_LOCATION_FINDER);
+		addRenderBlock(ModBlocks.GRAVESTONE);
+		addRenderItem(ModItems.DEATH_INFO);
 	}
 	
 	public void postinit(FMLPostInitializationEvent event) {
