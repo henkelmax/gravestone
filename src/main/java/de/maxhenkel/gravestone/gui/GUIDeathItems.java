@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -13,14 +14,16 @@ import org.lwjgl.input.Keyboard;
 
 import com.google.common.collect.Lists;
 import com.google.gson.JsonParseException;
+import com.mojang.authlib.GameProfile;
 
 import de.maxhenkel.gravestone.DeathInfo;
-import de.maxhenkel.gravestone.DeathPosition;
+import de.maxhenkel.gravestone.GraveProcessor;
 import de.maxhenkel.gravestone.Main;
-import de.maxhenkel.gravestone.Tools;
+import de.maxhenkel.gravestone.util.Tools;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -31,6 +34,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemWrittenBook;
 import net.minecraft.nbt.NBTTagCompound;
@@ -73,17 +77,15 @@ public class GUIDeathItems extends GuiScreen {
 	public void initGui() {
 		this.buttonList.clear();
 		int left = (this.width - TEXTURE_X) / 2;
-		
-		this.buttonPrev=new GuiButton(0, left, 190, 75, 20, Tools.translate("button.prev"));
+		this.buttonPrev = new GuiButton(0, left, 190, 75, 20, Tools.translate("button.prev"));
+		this.buttonNext = new GuiButton(1, left + TEXTURE_X - 75, 190, 75, 20, Tools.translate("button.next"));
 		buttonList.add(buttonPrev);
-		
-		this.buttonNext=new GuiButton(1, left + TEXTURE_X - 75, 190, 75, 20, Tools.translate("button.next"));
 		buttonList.add(buttonNext);
-		
 		this.buttonPrev.enabled=false;
 		if(pageList.getPages()<=0){
 			this.buttonNext.enabled=false;
 		}
+		
 	}
 
 	protected void actionPerformed(GuiButton button) throws IOException {
@@ -192,8 +194,9 @@ public class GUIDeathItems extends GuiScreen {
 		// Player
 		
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-		GuiInventory.drawEntityOnScreen(width / 2, 175, 30, (width / 2) - mouseX, 100 - mouseY, this.mc.thePlayer);
+		
+		EntityPlayer player=new EntityOtherPlayerMP(this.mc.theWorld, new GameProfile(info.getUuid(), info.getName()));
+		GuiInventory.drawEntityOnScreen(width / 2, 175, 30, (width / 2) - mouseX, 100 - mouseY, player);
 
 	}
 

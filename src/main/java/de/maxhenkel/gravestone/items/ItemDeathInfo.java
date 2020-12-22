@@ -1,5 +1,6 @@
-package de.maxhenkel.gravestone;
+package de.maxhenkel.gravestone.items;
 
+import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.gui.GuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -24,14 +25,15 @@ public class ItemDeathInfo extends Item{
 	}
 	
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+	public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn,
+			EnumHand hand) {
 		if(!worldIn.isRemote){
 			return super.onItemRightClick(itemStackIn, worldIn, playerIn, hand);
 		}
 		
 		playerIn.openGui(Main.MODID, GuiHandler.ID_INFO, worldIn, playerIn.getPosition().getX(), playerIn.getPosition().getY(), playerIn.getPosition().getZ());
 		
-		return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
+		return new ActionResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(hand));
 	}
-	
+
 }

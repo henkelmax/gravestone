@@ -1,4 +1,4 @@
-package de.maxhenkel.gravestone;
+package de.maxhenkel.gravestone.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,12 +8,12 @@ import java.net.URL;
 
 public class UpdateChecker {
 
-	private IUpdateCheckResult uCheck;
+	private IUpdateCheckResult checkResult;
 	private int thisVersion;
 	private String url;
 	
 	public UpdateChecker(IUpdateCheckResult uCheck, int thisVersion, String url){
-		this.uCheck=uCheck;
+		this.checkResult=uCheck;
 		this.thisVersion=thisVersion;
 		this.url=url;
 	}
@@ -23,7 +23,7 @@ public class UpdateChecker {
 			@Override
 			public void run() {
 				boolean available=isUpdateAvailable(thisVersion, url);
-				uCheck.onResult(available);
+				checkResult.onResult(available);
 			}
 		}).start();
 	}
@@ -41,9 +41,7 @@ public class UpdateChecker {
 		
 		try {
 			newestVersion = getNewestVersionInt(url);
-		} catch (NumberFormatException e) {
-			return false;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			return false;
 		}
 		
@@ -56,10 +54,7 @@ public class UpdateChecker {
 	}
 	
 	public interface IUpdateCheckResult {
-
 		public void onResult(boolean isAvailable);
-		
 	}
-
 	
 }
