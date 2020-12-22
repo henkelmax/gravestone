@@ -1,0 +1,8 @@
+tile.gravestone.name=Надгробие
+item.death_location_finder.name=Поиск места смерти
+message.died=умер
+message.update=Доступно обновление
+message.update.hover=Скачать новую версию
+message.name=Надгробие
+message.deathlocation=Место смерти
+message.no_deathlocation=Нет доступных мест смертей
