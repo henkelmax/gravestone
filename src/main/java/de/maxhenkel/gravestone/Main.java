@@ -1,12 +1,6 @@
 package de.maxhenkel.gravestone;
 
 import de.maxhenkel.gravestone.proxy.CommonProxy;
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -15,14 +9,13 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = Main.MODID, version = Main.VERSION)
+@Mod(modid = Main.MODID, version = Main.VERSION, acceptedMinecraftVersions=Main.MC_VERSION)
 public class Main{
+	
     public static final String MODID = "gravestone";
-    public static final String VERSION = "1.1.5";
-    public static final int VERSION_NUMBER = 15;
-    
-    private Configuration config;
-    private Events events;
+    public static final String VERSION = "1.1.7";
+    public static final String MC_VERSION = "[1.8.8]";
+    public static final int VERSION_NUMBER = 26;
 
 	@Instance
     private static Main instance;
@@ -30,17 +23,12 @@ public class Main{
 	@SidedProxy(clientSide="de.maxhenkel.gravestone.proxy.ClientProxy", serverSide="de.maxhenkel.gravestone.proxy.CommonProxy")
     public static CommonProxy proxy;
     
+	public Main() {
+		instance=this;
+	}
+	
     @EventHandler
     public void preinit(FMLPreInitializationEvent event){
-		try{
-			config=new Configuration(event.getSuggestedConfigurationFile());
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-    	instance=this;
-    	this.events=new Events();
-    	MinecraftForge.EVENT_BUS.register(events);
 		proxy.preinit(event);
     }
     
@@ -54,16 +42,8 @@ public class Main{
 		proxy.postinit(event);
     }
     
-    public Configuration getConfig() {
-		return config;
-	}
-	
-    public Events getEvents() {
-		return events;
-	}
-
-	public static Main getInstance() {
+	public static Main instance() {
 		return instance;
 	}
-
+	
 }
