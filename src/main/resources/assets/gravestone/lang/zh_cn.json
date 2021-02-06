@@ -7,7 +7,7 @@
     "message.gravestone.item_count": "包含%s个格子的物品",
     "message.gravestone.died": "%s死于%s",
     "message.gravestone.deathlocation": "死亡位置",
-    "message.gravestone.no_deathlocation": "没有可用的死亡位置",
+    "message.gravestone.no_deathlocation": "没有死亡位置记录",
     "message.gravestone.create_grave_failed": "无法生成墓碑",
     "message.gravestone.copied": "已把%s复制到到剪贴板",
     "message.gravestone.restore": "取回物品",
