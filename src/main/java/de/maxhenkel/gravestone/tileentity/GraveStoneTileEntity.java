@@ -31,17 +31,17 @@ public class GraveStoneTileEntity extends TileEntity implements INameable {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         compound.put("Death", death.toNBT());
         if (customName != null) {
             compound.putString("CustomName", ITextComponent.Serializer.toJson(customName));
         }
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
 
         if (compound.contains("Death")) {
             death = Death.fromNBT(compound.getCompound("Death"));
@@ -57,7 +57,7 @@ public class GraveStoneTileEntity extends TileEntity implements INameable {
             NonNullList<ItemStack> items = NonNullList.create();
             ListNBT list = compound.getList("ItemStacks", 10);
             for (int i = 0; i < list.size(); i++) {
-                items.add(ItemStack.read(list.getCompound(i)));
+                items.add(ItemStack.of(list.getCompound(i)));
             }
 
             builder.additionalItems(items);
@@ -67,18 +67,18 @@ public class GraveStoneTileEntity extends TileEntity implements INameable {
         }
 
         if (compound.contains("CustomName")) {
-            customName = ITextComponent.Serializer.getComponentFromJson(compound.getString("CustomName"));
+            customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
         }
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 1, getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 1, getUpdateTag());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.read(null, pkt.getNbtCompound());
+        this.load(null, pkt.getTag());
     }
 
     @Override
@@ -86,7 +86,7 @@ public class GraveStoneTileEntity extends TileEntity implements INameable {
         CompoundNBT compound = new CompoundNBT();
         compound.put("Death", death.toNBT(false));
         compound.putString("CustomName", ITextComponent.Serializer.toJson(customName));
-        return super.write(compound);
+        return super.save(compound);
     }
 
     public Death getDeath() {
@@ -95,12 +95,12 @@ public class GraveStoneTileEntity extends TileEntity implements INameable {
 
     public void setDeath(Death death) {
         this.death = death;
-        markDirty();
+        setChanged();
     }
 
     public void setCustomName(ITextComponent name) {
         this.customName = name;
-        markDirty();
+        setChanged();
     }
 
     @Override
@@ -122,7 +122,7 @@ public class GraveStoneTileEntity extends TileEntity implements INameable {
     protected ITextComponent getDefaultName() {
         String name = death.getPlayerName();
         if (name == null || name.isEmpty()) {
-            return new TranslationTextComponent(Main.GRAVESTONE.getTranslationKey());
+            return new TranslationTextComponent(Main.GRAVESTONE.getDescriptionId());
         }
         return new TranslationTextComponent("message.gravestone.grave_of", name);
     }

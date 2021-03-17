@@ -30,7 +30,7 @@ public class DeathEvents {
 
         Death death = event.getDeath();
         PlayerEntity player = event.getPlayer();
-        World world = player.world;
+        World world = player.level;
 
         if (keepInventory(player)) {
             return;
@@ -39,7 +39,7 @@ public class DeathEvents {
         BlockPos graveStoneLocation = GraveUtils.getGraveStoneLocation(world, death.getBlockPos());
 
         if (Main.SERVER_CONFIG.giveObituaries.get()) {
-            player.inventory.addItemStackToInventory(Main.OBITUARY.toStack(death));
+            player.inventory.add(Main.OBITUARY.toStack(death));
         }
 
         if (graveStoneLocation == null) {
@@ -48,13 +48,13 @@ public class DeathEvents {
             return;
         }
 
-        world.setBlockState(graveStoneLocation, Main.GRAVESTONE.getDefaultState().with(GraveStoneBlock.FACING, player.getHorizontalFacing().getOpposite()));
+        world.setBlockAndUpdate(graveStoneLocation, Main.GRAVESTONE.defaultBlockState().setValue(GraveStoneBlock.FACING, player.getDirection().getOpposite()));
 
-        if (GraveUtils.isReplaceable(world, graveStoneLocation.down())) {
-            world.setBlockState(graveStoneLocation.down(), Blocks.DIRT.getDefaultState());
+        if (GraveUtils.isReplaceable(world, graveStoneLocation.below())) {
+            world.setBlockAndUpdate(graveStoneLocation.below(), Blocks.DIRT.defaultBlockState());
         }
 
-        TileEntity tileentity = world.getTileEntity(graveStoneLocation);
+        TileEntity tileentity = world.getBlockEntity(graveStoneLocation);
 
         if (!(tileentity instanceof GraveStoneTileEntity)) {
             Main.LOGGER.info("Grave of '{}' can't be filled with loot (No tileentity found)", death.getPlayerName());
@@ -87,16 +87,16 @@ public class DeathEvents {
             return;
         }
 
-        for (ItemStack stack : event.getOriginal().inventory.mainInventory) {
+        for (ItemStack stack : event.getOriginal().inventory.items) {
             if (stack.getItem() instanceof ObituaryItem) {
-                event.getPlayer().inventory.addItemStackToInventory(stack);
+                event.getPlayer().inventory.add(stack);
             }
         }
     }
 
     public static boolean keepInventory(PlayerEntity player) {
         try {
-            return player.getEntityWorld().getWorldInfo().getGameRulesInstance().getBoolean(GameRules.KEEP_INVENTORY);
+            return player.getCommandSenderWorld().getLevelData().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY);
         } catch (Exception e) {
             return false;
         }

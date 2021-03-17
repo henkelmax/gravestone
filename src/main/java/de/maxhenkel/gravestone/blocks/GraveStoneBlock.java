@@ -49,59 +49,59 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    private static final VoxelShape BASE1 = Block.makeCuboidShape(0D, 0D, 0D, 16D, 1D, 16D);
-    private static final VoxelShape BASE2 = Block.makeCuboidShape(1D, 1D, 1D, 15D, 2D, 15D);
+    private static final VoxelShape BASE1 = Block.box(0D, 0D, 0D, 16D, 1D, 16D);
+    private static final VoxelShape BASE2 = Block.box(1D, 1D, 1D, 15D, 2D, 15D);
 
     private static final DirectionalVoxelShape SHAPE = new DirectionalVoxelShape.Builder()
             .direction(Direction.NORTH,
                     BASE1,
                     BASE2,
-                    Block.makeCuboidShape(1D, 2D, 1D, 15D, 12D, 2D),
-                    Block.makeCuboidShape(2D, 12D, 1D, 14D, 14D, 2D),
-                    Block.makeCuboidShape(3D, 14D, 1D, 13D, 15D, 2D))
+                    Block.box(1D, 2D, 1D, 15D, 12D, 2D),
+                    Block.box(2D, 12D, 1D, 14D, 14D, 2D),
+                    Block.box(3D, 14D, 1D, 13D, 15D, 2D))
             .direction(Direction.SOUTH,
                     BASE1,
                     BASE2,
-                    Block.makeCuboidShape(1D, 2D, 15D, 15D, 12D, 14D),
-                    Block.makeCuboidShape(2D, 12D, 15D, 14D, 14D, 14D),
-                    Block.makeCuboidShape(3D, 14D, 15D, 13D, 15D, 14D)
+                    Block.box(1D, 2D, 15D, 15D, 12D, 14D),
+                    Block.box(2D, 12D, 15D, 14D, 14D, 14D),
+                    Block.box(3D, 14D, 15D, 13D, 15D, 14D)
             ).direction(Direction.EAST,
                     BASE1,
                     BASE2,
-                    Block.makeCuboidShape(15D, 2D, 1D, 14D, 12D, 15D),
-                    Block.makeCuboidShape(15D, 12D, 2D, 14D, 14D, 14D),
-                    Block.makeCuboidShape(15D, 14D, 3D, 14D, 15D, 13D)
+                    Block.box(15D, 2D, 1D, 14D, 12D, 15D),
+                    Block.box(15D, 12D, 2D, 14D, 14D, 14D),
+                    Block.box(15D, 14D, 3D, 14D, 15D, 13D)
             ).direction(Direction.WEST,
                     BASE1,
                     BASE2,
-                    Block.makeCuboidShape(1D, 2D, 1D, 2D, 12D, 15D),
-                    Block.makeCuboidShape(1D, 12D, 2D, 2D, 14D, 14D),
-                    Block.makeCuboidShape(1D, 14D, 3D, 2D, 15D, 13D)
+                    Block.box(1D, 2D, 1D, 2D, 12D, 15D),
+                    Block.box(1D, 12D, 2D, 2D, 14D, 14D),
+                    Block.box(1D, 14D, 3D, 2D, 15D, 13D)
             ).build();
 
     public static final Material GRAVESTONE_MATERIAL = new Material(MaterialColor.DIRT, false, true, true, false, false, false, PushReaction.BLOCK);
 
     public GraveStoneBlock() {
-        super(Properties.create(GRAVESTONE_MATERIAL, MaterialColor.DIRT).hardnessAndResistance(0.3F, Float.MAX_VALUE));
-        setDefaultState(stateContainer.getBaseState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
+        super(Properties.of(GRAVESTONE_MATERIAL, MaterialColor.DIRT).strength(0.3F, Float.MAX_VALUE));
+        registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
         setRegistryName(Main.MODID, "gravestone");
     }
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)).setRegistryName(getRegistryName());
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
         builder.add(WATERLOGGED);
     }
 
     @Override
-    public Fluid pickupFluid(IWorld world, BlockPos pos, BlockState state) {
-        if (state.get(WATERLOGGED)) {
-            world.setBlockState(pos, state.with(WATERLOGGED, false), 3);
+    public Fluid takeLiquid(IWorld world, BlockPos pos, BlockState state) {
+        if (state.getValue(WATERLOGGED)) {
+            world.setBlock(pos, state.setValue(WATERLOGGED, false), 3);
             return Fluids.WATER;
         } else {
             return Fluids.EMPTY;
@@ -110,20 +110,20 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
-    public boolean canContainFluid(IBlockReader world, BlockPos pos, BlockState state, Fluid fluid) {
-        return !state.get(WATERLOGGED) && fluid == Fluids.WATER;
+    public boolean canPlaceLiquid(IBlockReader world, BlockPos pos, BlockState state, Fluid fluid) {
+        return !state.getValue(WATERLOGGED) && fluid == Fluids.WATER;
     }
 
     @Override
-    public boolean receiveFluid(IWorld world, BlockPos pos, BlockState state, FluidState fluidState) {
-        if (!state.get(WATERLOGGED) && fluidState.getFluid() == Fluids.WATER) {
-            if (!world.isRemote()) {
-                world.setBlockState(pos, state.with(WATERLOGGED, true), 3);
-                world.getPendingFluidTicks().scheduleTick(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
+    public boolean placeLiquid(IWorld world, BlockPos pos, BlockState state, FluidState fluidState) {
+        if (!state.getValue(WATERLOGGED) && fluidState.getType() == Fluids.WATER) {
+            if (!world.isClientSide()) {
+                world.setBlock(pos, state.setValue(WATERLOGGED, true), 3);
+                world.getLiquidTicks().scheduleTick(pos, fluidState.getType(), fluidState.getType().getTickDelay(world));
             }
             return true;
         } else {
@@ -132,28 +132,28 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos currentPos, BlockPos facingPos) {
+        if (state.getValue(WATERLOGGED)) {
+            world.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
 
-        return super.updatePostPlacement(state, facing, facingState, world, currentPos, facingPos);
+        return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (stack.hasDisplayName()) {
-            TileEntity tileentity = world.getTileEntity(pos);
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+        if (stack.hasCustomHoverName()) {
+            TileEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof GraveStoneTileEntity) {
                 GraveStoneTileEntity grave = (GraveStoneTileEntity) tileentity;
                 grave.setCustomName(stack.getDisplayName());
             }
         }
-        super.onBlockPlacedBy(world, pos, state, placer, stack);
+        super.setPlacedBy(world, pos, state, placer, stack);
     }
 
     @Override
-    public void onExplosionDestroy(World world, BlockPos pos, Explosion explosion) {
+    public void wasExploded(World world, BlockPos pos, Explosion explosion) {
 
     }
 
@@ -165,7 +165,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing()).with(WATERLOGGED, context.getWorld().getFluidState(context.getPos()).getFluid() == Fluids.WATER);
+        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection()).setValue(WATERLOGGED, context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
     }
 
     @Override
@@ -174,13 +174,13 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
-        TileEntity tileentity = world.getTileEntity(pos);
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult result) {
+        TileEntity tileentity = world.getBlockEntity(pos);
 
         if (!(tileentity instanceof GraveStoneTileEntity)) {
             return ActionResultType.FAIL;
@@ -194,12 +194,12 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
             return ActionResultType.FAIL;
         }
 
-        if (world.isRemote) {
+        if (world.isClientSide) {
             ITextComponent time = GraveUtils.getDate(grave.getDeath().getTimestamp());
             if (time == null) {
-                player.sendMessage(name, Util.DUMMY_UUID);
+                player.sendMessage(name, Util.NIL_UUID);
             } else {
-                player.sendMessage(new TranslationTextComponent("message.gravestone.died", name, time), Util.DUMMY_UUID);
+                player.sendMessage(new TranslationTextComponent("message.gravestone.died", name, time), Util.NIL_UUID);
             }
         }
 
@@ -207,19 +207,19 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (state.getBlock() != newState.getBlock()) {
-            TileEntity tileentity = world.getTileEntity(pos);
+            TileEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof GraveStoneTileEntity) {
                 dropItems(world, pos, ((GraveStoneTileEntity) tileentity).getDeath().getAllItems());
             }
-            super.onReplaced(state, world, pos, newState, isMoving);
+            super.onRemove(state, world, pos, newState, isMoving);
         }
     }
 
     public void dropItems(World world, BlockPos pos, NonNullList<ItemStack> items) {
         for (ItemStack item : items) {
-            InventoryHelper.spawnItemStack(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, item);
+            InventoryHelper.dropItemStack(world, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, item);
         }
     }
 
@@ -228,8 +228,8 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
         if (!GraveUtils.canBreakGrave(world, player, pos)) {
             return false;
         }
-        TileEntity te = world.getTileEntity(pos);
-        if (!world.isRemote && te instanceof GraveStoneTileEntity) {
+        TileEntity te = world.getBlockEntity(pos);
+        if (!world.isClientSide && te instanceof GraveStoneTileEntity) {
             GraveStoneTileEntity grave = (GraveStoneTileEntity) te;
 
             removeObituary(player, grave);
@@ -246,7 +246,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
         if (!Main.SERVER_CONFIG.spawnGhost.get()) {
             return;
         }
-        if (!world.isAirBlock(pos.up())) {
+        if (!world.isEmptyBlock(pos.above())) {
             return;
         }
 
@@ -257,8 +257,8 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
         }
 
         GhostPlayerEntity ghost = new GhostPlayerEntity(world, uuid, new StringTextComponent(grave.getDeath().getPlayerName()), grave.getDeath().getEquipment(), grave.getDeath().getModel());
-        ghost.setPosition(pos.getX() + 0.5D, pos.getY() + 0.1D, pos.getZ() + 0.5D);
-        world.addEntity(ghost);
+        ghost.setPos(pos.getX() + 0.5D, pos.getY() + 0.1D, pos.getZ() + 0.5D);
+        world.addFreshEntity(ghost);
     }
 
     protected void removeObituary(PlayerEntity p, GraveStoneTileEntity grave) {
@@ -272,14 +272,14 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
 
         PlayerInventory inv = player.inventory;
 
-        List<NonNullList<ItemStack>> invs = ImmutableList.of(player.inventory.mainInventory, player.inventory.armorInventory, player.inventory.offHandInventory);
+        List<NonNullList<ItemStack>> invs = ImmutableList.of(player.inventory.items, player.inventory.armor, player.inventory.offhand);
 
         for (NonNullList<ItemStack> i : invs) {
             for (ItemStack stack : i) {
                 if (stack.getItem().equals(Main.OBITUARY)) {
                     Death death = Main.OBITUARY.fromStack(player, stack);
                     if (death != null && !grave.getDeath().getId().equals(GraveUtils.EMPTY_UUID) && grave.getDeath().getId().equals(death.getId())) {
-                        inv.deleteStack(stack);
+                        inv.removeItem(stack);
                     }
                 }
             }
@@ -287,16 +287,16 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        super.onEntityCollision(state, world, pos, entity);
+    public void entityInside(BlockState state, World world, BlockPos pos, Entity entity) {
+        super.entityInside(state, world, pos, entity);
         if (!(entity instanceof ServerPlayerEntity) || !entity.isAlive() || !Main.SERVER_CONFIG.sneakPickup.get()) {
             return;
         }
         ServerPlayerEntity player = (ServerPlayerEntity) entity;
-        if (!player.isSneaking() || player.abilities.isCreativeMode || !GraveUtils.canBreakGrave(world, player, pos)) {
+        if (!player.isShiftKeyDown() || player.abilities.instabuild || !GraveUtils.canBreakGrave(world, player, pos)) {
             return;
         }
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
         if (!(te instanceof GraveStoneTileEntity)) {
             return;
         }
@@ -315,20 +315,20 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
     protected void sortItems(World world, BlockPos pos, PlayerEntity player, GraveStoneTileEntity grave) {
         Death death = grave.getDeath();
         dropItems(world, pos, fillPlayerInventory(player, death));
-        world.playSound(null, pos, SoundEvents.ENTITY_ITEM_FRAME_REMOVE_ITEM, SoundCategory.BLOCKS, 1F, 1F);
-        grave.markDirty();
+        world.playSound(null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundCategory.BLOCKS, 1F, 1F);
+        grave.setChanged();
     }
 
     public NonNullList<ItemStack> fillPlayerInventory(PlayerEntity player, Death death) {
         NonNullList<ItemStack> additionalItems = NonNullList.create();
-        fillInventory(additionalItems, death.getMainInventory(), player.inventory.mainInventory);
-        fillInventory(additionalItems, death.getArmorInventory(), player.inventory.armorInventory);
-        fillInventory(additionalItems, death.getOffHandInventory(), player.inventory.offHandInventory);
+        fillInventory(additionalItems, death.getMainInventory(), player.inventory.items);
+        fillInventory(additionalItems, death.getArmorInventory(), player.inventory.armor);
+        fillInventory(additionalItems, death.getOffHandInventory(), player.inventory.offhand);
 
         additionalItems.addAll(death.getAdditionalItems());
         NonNullList<ItemStack> restItems = NonNullList.create();
         for (ItemStack stack : additionalItems) {
-            if (!player.inventory.addItemStackToInventory(stack)) {
+            if (!player.inventory.add(stack)) {
                 restItems.add(stack);
             }
         }
@@ -354,11 +354,11 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
-        return SHAPE.get(state.get(FACING));
+        return SHAPE.get(state.getValue(FACING));
     }
 
     @Override
-    public TileEntity createNewTileEntity(IBlockReader reader) {
+    public TileEntity newBlockEntity(IBlockReader reader) {
         return new GraveStoneTileEntity();
     }
 

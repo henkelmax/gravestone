@@ -20,45 +20,45 @@ import java.util.UUID;
 public class RestoreCommand {
 
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        LiteralArgumentBuilder<CommandSource> literalBuilder = Commands.literal("restore").requires((commandSource) -> commandSource.hasPermissionLevel(2));
+        LiteralArgumentBuilder<CommandSource> literalBuilder = Commands.literal("restore").requires((commandSource) -> commandSource.hasPermission(2));
 
         Command<CommandSource> add = (commandSource) -> {
-            UUID deathID = UUIDArgument.func_239195_a_(commandSource, "death_id");
+            UUID deathID = UUIDArgument.getUuid(commandSource, "death_id");
             ServerPlayerEntity player = EntityArgument.getPlayer(commandSource, "target");
-            Death death = DeathManager.getDeath(player.getServerWorld(), deathID);
+            Death death = DeathManager.getDeath(player.getLevel(), deathID);
             if (death == null) {
-                commandSource.getSource().sendErrorMessage(new TranslationTextComponent("message.gravestone.death_id_not_found", deathID.toString()));
+                commandSource.getSource().sendFailure(new TranslationTextComponent("message.gravestone.death_id_not_found", deathID.toString()));
                 return 0;
             }
             for (ItemStack stack : death.getAllItems()) {
-                if (!player.inventory.addItemStackToInventory(stack)) {
-                    player.dropItem(stack, false);
+                if (!player.inventory.add(stack)) {
+                    player.drop(stack, false);
                 }
             }
-            commandSource.getSource().sendFeedback(new TranslationTextComponent("message.gravestone.restore.success", player.getDisplayName()), true);
+            commandSource.getSource().sendSuccess(new TranslationTextComponent("message.gravestone.restore.success", player.getDisplayName()), true);
             return 1;
         };
 
         Command<CommandSource> replace = (commandSource) -> {
-            UUID deathID = UUIDArgument.func_239195_a_(commandSource, "death_id");
+            UUID deathID = UUIDArgument.getUuid(commandSource, "death_id");
             ServerPlayerEntity player = EntityArgument.getPlayer(commandSource, "target");
-            Death death = DeathManager.getDeath(player.getServerWorld(), deathID);
+            Death death = DeathManager.getDeath(player.getLevel(), deathID);
             if (death == null) {
-                commandSource.getSource().sendErrorMessage(new TranslationTextComponent("message.gravestone.death_id_not_found", deathID.toString()));
+                commandSource.getSource().sendFailure(new TranslationTextComponent("message.gravestone.death_id_not_found", deathID.toString()));
                 return 0;
             }
-            player.inventory.clear();
+            player.inventory.clearContent();
             NonNullList<ItemStack> itemStacks = Main.GRAVESTONE.fillPlayerInventory(player, death);
             for (ItemStack stack : itemStacks) {
-                player.dropItem(stack, false);
+                player.drop(stack, false);
             }
-            commandSource.getSource().sendFeedback(new TranslationTextComponent("message.gravestone.restore.success", player.getDisplayName()), true);
+            commandSource.getSource().sendSuccess(new TranslationTextComponent("message.gravestone.restore.success", player.getDisplayName()), true);
             return 1;
         };
 
         literalBuilder
                 .then(Commands.argument("target", EntityArgument.player())
-                        .then(Commands.argument("death_id", UUIDArgument.func_239194_a_())
+                        .then(Commands.argument("death_id", UUIDArgument.uuid())
                                 .then(Commands.literal("replace").executes(replace))
                                 .then(Commands.literal("add").executes(add))
                         ));

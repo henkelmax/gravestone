@@ -104,7 +104,7 @@ public class ObituaryScreen extends Screen {
         int left = (width - TEXTURE_X) / 2;
 
         RenderSystem.color4f(1F, 1F, 1F, 1F);
-        minecraft.getTextureManager().bindTexture(GUI_TEXTURE);
+        minecraft.getTextureManager().bind(GUI_TEXTURE);
         blit(matrixStack, left, 20, 0, 0, TEXTURE_X, TEXTURE_Y);
 
         if (page == 0) {
@@ -119,67 +119,67 @@ public class ObituaryScreen extends Screen {
     }
 
     public void drawFirstPage(MatrixStack matrixStack, int mouseX, int mouseY) {
-        drawCentered(matrixStack, font, new TranslationTextComponent("gui.obituary.title").mergeStyle(TextFormatting.UNDERLINE), width / 2, 30, TextFormatting.BLACK.getColor());
+        drawCentered(matrixStack, font, new TranslationTextComponent("gui.obituary.title").withStyle(TextFormatting.UNDERLINE), width / 2, 30, TextFormatting.BLACK.getColor());
 
         int height = 50;
 
-        if (minecraft.gameSettings.advancedItemTooltips) {
-            drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.id").appendString(":").mergeStyle(TextFormatting.BLACK), height);
-            drawRight(matrixStack, new StringTextComponent(death.getId().toString()).mergeStyle(TextFormatting.DARK_GRAY), height, 0.5F);
+        if (minecraft.options.advancedItemTooltips) {
+            drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.id").append(":").withStyle(TextFormatting.BLACK), height);
+            drawRight(matrixStack, new StringTextComponent(death.getId().toString()).withStyle(TextFormatting.DARK_GRAY), height, 0.5F);
             height += 13;
         }
 
-        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.name").appendString(":").mergeStyle(TextFormatting.BLACK), height);
-        drawRight(matrixStack, new StringTextComponent(death.getPlayerName()).mergeStyle(TextFormatting.DARK_GRAY), height);
+        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.name").append(":").withStyle(TextFormatting.BLACK), height);
+        drawRight(matrixStack, new StringTextComponent(death.getPlayerName()).withStyle(TextFormatting.DARK_GRAY), height);
         height += 13;
-        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.dimension").appendString(":").mergeStyle(TextFormatting.BLACK), height);
-        drawRight(matrixStack, new StringTextComponent(death.getDimension().split(":")[1]).mergeStyle(TextFormatting.DARK_GRAY), height);
+        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.dimension").append(":").withStyle(TextFormatting.BLACK), height);
+        drawRight(matrixStack, new StringTextComponent(death.getDimension().split(":")[1]).withStyle(TextFormatting.DARK_GRAY), height);
         height += 13;
-        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.time").appendString(":").mergeStyle(TextFormatting.BLACK), height);
+        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.time").append(":").withStyle(TextFormatting.BLACK), height);
         IFormattableTextComponent date = GraveUtils.getDate(death.getTimestamp());
         if (date != null) {
-            drawRight(matrixStack, date.mergeStyle(TextFormatting.DARK_GRAY), height);
+            drawRight(matrixStack, date.withStyle(TextFormatting.DARK_GRAY), height);
         } else {
-            drawRight(matrixStack, new StringTextComponent("N/A").mergeStyle(TextFormatting.DARK_GRAY), height);
+            drawRight(matrixStack, new StringTextComponent("N/A").withStyle(TextFormatting.DARK_GRAY), height);
         }
         height += 13;
-        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.location").appendString(":").mergeStyle(TextFormatting.BLACK), height);
+        drawLeft(matrixStack, new TranslationTextComponent("gui.obituary.location").append(":").withStyle(TextFormatting.BLACK), height);
         BlockPos pos = death.getBlockPos();
-        drawRight(matrixStack, new StringTextComponent("X: " + pos.getX()).mergeStyle(TextFormatting.DARK_GRAY), height);
+        drawRight(matrixStack, new StringTextComponent("X: " + pos.getX()).withStyle(TextFormatting.DARK_GRAY), height);
         height += 13;
-        drawRight(matrixStack, new StringTextComponent("Y: " + pos.getY()).mergeStyle(TextFormatting.DARK_GRAY), height);
+        drawRight(matrixStack, new StringTextComponent("Y: " + pos.getY()).withStyle(TextFormatting.DARK_GRAY), height);
         height += 13;
-        drawRight(matrixStack, new StringTextComponent("Z: " + pos.getZ()).mergeStyle(TextFormatting.DARK_GRAY), height);
+        drawRight(matrixStack, new StringTextComponent("Z: " + pos.getZ()).withStyle(TextFormatting.DARK_GRAY), height);
 
         RenderSystem.color4f(1F, 1F, 1F, 1F);
 
         if (player == null) {
-            player = new DummyPlayer(minecraft.world, new GameProfile(death.getPlayerUUID(), death.getPlayerName()), death.getEquipment(), death.getModel());
+            player = new DummyPlayer(minecraft.level, new GameProfile(death.getPlayerUUID(), death.getPlayerName()), death.getEquipment(), death.getModel());
         }
 
-        InventoryScreen.drawEntityOnScreen(width / 2, 170, 30, (width / 2) - mouseX, 100 - mouseY, player);
+        InventoryScreen.renderEntityInInventory(width / 2, 170, 30, (width / 2) - mouseX, 100 - mouseY, player);
 
-        if (minecraft.gameSettings.advancedItemTooltips) {
-            if (mouseX >= guiLeft + 7 && mouseX <= guiLeft + TEXTURE_X - 7 && mouseY >= 50 && mouseY <= 50 + font.FONT_HEIGHT) {
-                renderTooltip(matrixStack, Collections.singletonList(new TranslationTextComponent("gui.obituary.copy_id").func_241878_f()), mouseX, mouseY);
+        if (minecraft.options.advancedItemTooltips) {
+            if (mouseX >= guiLeft + 7 && mouseX <= guiLeft + TEXTURE_X - 7 && mouseY >= 50 && mouseY <= 50 + font.lineHeight) {
+                renderTooltip(matrixStack, Collections.singletonList(new TranslationTextComponent("gui.obituary.copy_id").getVisualOrderText()), mouseX, mouseY);
             }
         }
     }
 
     @Override
     public boolean mouseClicked(double x, double y, int clickType) {
-        if (minecraft.gameSettings.advancedItemTooltips && page == 0) {
-            if (x >= guiLeft + 7 && x <= guiLeft + TEXTURE_X - 7 && y >= 50 && y <= 50 + font.FONT_HEIGHT) {
-                minecraft.keyboardListener.setClipboardString(death.getId().toString());
-                ITextComponent deathID = TextComponentUtils.wrapWithSquareBrackets(new TranslationTextComponent("message.gravestone.death_id"))
-                        .modifyStyle((style) -> style
-                                .applyFormatting(TextFormatting.GREEN)
-                                .setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore @s " + death.getId().toString() + " replace"))
-                                .setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(death.getId().toString())))
+        if (minecraft.options.advancedItemTooltips && page == 0) {
+            if (x >= guiLeft + 7 && x <= guiLeft + TEXTURE_X - 7 && y >= 50 && y <= 50 + font.lineHeight) {
+                minecraft.keyboardHandler.setClipboard(death.getId().toString());
+                ITextComponent deathID = TextComponentUtils.wrapInSquareBrackets(new TranslationTextComponent("message.gravestone.death_id"))
+                        .withStyle((style) -> style
+                                .applyFormat(TextFormatting.GREEN)
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore @s " + death.getId().toString() + " replace"))
+                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new StringTextComponent(death.getId().toString())))
                         );
-                minecraft.player.sendMessage(new TranslationTextComponent("message.gravestone.copied", deathID), Util.DUMMY_UUID);
-                minecraft.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1F));
-                minecraft.displayGuiScreen(null);
+                minecraft.player.sendMessage(new TranslationTextComponent("message.gravestone.copied", deathID), Util.NIL_UUID);
+                minecraft.getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
+                minecraft.setScreen(null);
             }
         }
 
@@ -187,19 +187,19 @@ public class ObituaryScreen extends Screen {
     }
 
     public void drawCentered(MatrixStack matrixStack, FontRenderer fontRenderer, IFormattableTextComponent text, int x, int y, int color) {
-        fontRenderer.func_238422_b_(matrixStack, text.func_241878_f(), (float) (x - fontRenderer.getStringPropertyWidth(text) / 2), (float) y, color);
+        fontRenderer.draw(matrixStack, text.getVisualOrderText(), (float) (x - fontRenderer.width(text) / 2), (float) y, color);
     }
 
     public void drawItem(MatrixStack matrixStack, IFormattableTextComponent string, int height) {
-        font.func_238422_b_(matrixStack, string.func_241878_f(), guiLeft + ITEM_OFFSET_LEFT, height, TextFormatting.BLACK.getColor());
+        font.draw(matrixStack, string.getVisualOrderText(), guiLeft + ITEM_OFFSET_LEFT, height, TextFormatting.BLACK.getColor());
     }
 
     public void drawItemSize(MatrixStack matrixStack, IFormattableTextComponent string, int height) {
-        font.func_238422_b_(matrixStack, string.func_241878_f(), guiLeft + ITEM_SIZE_OFFSET_LEFT, height, TextFormatting.BLACK.getColor());
+        font.draw(matrixStack, string.getVisualOrderText(), guiLeft + ITEM_SIZE_OFFSET_LEFT, height, TextFormatting.BLACK.getColor());
     }
 
     public void drawLeft(MatrixStack matrixStack, IFormattableTextComponent string, int height) {
-        font.func_238422_b_(matrixStack, string.func_241878_f(), guiLeft + OFFSET_LEFT, height, TextFormatting.BLACK.getColor());
+        font.draw(matrixStack, string.getVisualOrderText(), guiLeft + OFFSET_LEFT, height, TextFormatting.BLACK.getColor());
     }
 
     public void drawRight(MatrixStack matrixStack, IFormattableTextComponent string, int height) {
@@ -207,13 +207,13 @@ public class ObituaryScreen extends Screen {
     }
 
     public void drawRight(MatrixStack matrixStack, IFormattableTextComponent string, int height, float scale) {
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.scale(scale, scale, 1F);
         float f = 1F / scale;
-        int strWidth = font.getStringPropertyWidth(string);
-        float spacing = (font.FONT_HEIGHT * f - font.FONT_HEIGHT) / 2F;
-        font.func_238422_b_(matrixStack, string.func_241878_f(), (guiLeft + TEXTURE_X - strWidth * scale - OFFSET_RIGHT) * f, height * f + spacing, TextFormatting.BLACK.getColor());
-        matrixStack.pop();
+        int strWidth = font.width(string);
+        float spacing = (font.lineHeight * f - font.lineHeight) / 2F;
+        font.draw(matrixStack, string.getVisualOrderText(), (guiLeft + TEXTURE_X - strWidth * scale - OFFSET_RIGHT) * f, height * f + spacing, TextFormatting.BLACK.getColor());
+        matrixStack.popPose();
     }
 
     public FontRenderer getFontRenderer() {

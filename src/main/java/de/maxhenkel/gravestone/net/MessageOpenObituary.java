@@ -29,18 +29,18 @@ public class MessageOpenObituary implements Message {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void executeClientSide(NetworkEvent.Context context) {
-        Minecraft.getInstance().displayGuiScreen(new ObituaryScreen(death));
+        Minecraft.getInstance().setScreen(new ObituaryScreen(death));
     }
 
     @Override
     public MessageOpenObituary fromBytes(PacketBuffer buf) {
-        death = Death.fromNBT(buf.readCompoundTag());
+        death = Death.fromNBT(buf.readNbt());
         return this;
     }
 
     @Override
     public void toBytes(PacketBuffer buf) {
-        buf.writeCompoundTag(death.toNBT());
+        buf.writeNbt(death.toNBT());
     }
 
 }

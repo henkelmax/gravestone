@@ -26,7 +26,7 @@ public class GraveUtils {
         BlockPos.Mutable location = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
 
         if (World.isOutsideBuildHeight(location) && location.getY() <= 0) {
-            location.setPos(location.getX(), 1, location.getZ());
+            location.set(location.getX(), 1, location.getZ());
         }
 
         while (!World.isOutsideBuildHeight(location)) {
@@ -43,11 +43,11 @@ public class GraveUtils {
     public static boolean isReplaceable(World world, BlockPos pos) {
         Block b = world.getBlockState(pos).getBlock();
 
-        if (world.isAirBlock(pos)) {
+        if (world.isEmptyBlock(pos)) {
             return true;
         }
 
-        return Main.SERVER_CONFIG.replaceableBlocks.stream().anyMatch(b::isIn);
+        return Main.SERVER_CONFIG.replaceableBlocks.stream().anyMatch(b::is);
     }
 
     @Nullable
@@ -64,7 +64,7 @@ public class GraveUtils {
             return true;
         }
 
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity te = world.getBlockEntity(pos);
 
         if (!(te instanceof GraveStoneTileEntity)) {
             return true;
@@ -74,7 +74,7 @@ public class GraveUtils {
 
         if (player instanceof ServerPlayerEntity) {
             ServerPlayerEntity p = (ServerPlayerEntity) player;
-            if (p.hasPermissionLevel(p.server.getOpPermissionLevel())) {
+            if (p.hasPermissions(p.server.getOperatorUserPermissionLevel())) {
                 return true;
             }
         }
@@ -83,7 +83,7 @@ public class GraveUtils {
             return true;
         }
 
-        return player.getUniqueID().equals(uuid);
+        return player.getUUID().equals(uuid);
     }
 
 }

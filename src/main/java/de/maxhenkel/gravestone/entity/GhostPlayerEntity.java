@@ -31,8 +31,8 @@ import java.util.UUID;
 
 public class GhostPlayerEntity extends MonsterEntity {
 
-    private static final DataParameter<Optional<UUID>> PLAYER_UUID = EntityDataManager.createKey(GhostPlayerEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
-    private static final DataParameter<Byte> PLAYER_MODEL = EntityDataManager.createKey(GhostPlayerEntity.class, DataSerializers.BYTE);
+    private static final DataParameter<Optional<UUID>> PLAYER_UUID = EntityDataManager.defineId(GhostPlayerEntity.class, DataSerializers.OPTIONAL_UUID);
+    private static final DataParameter<Byte> PLAYER_MODEL = EntityDataManager.defineId(GhostPlayerEntity.class, DataSerializers.BYTE);
 
     public GhostPlayerEntity(EntityType type, World world) {
         super(type, world);
@@ -43,31 +43,31 @@ public class GhostPlayerEntity extends MonsterEntity {
         setPlayerUUID(playerUUID);
         setCustomName(name);
         setModel(model);
-        Arrays.fill(inventoryArmorDropChances, 0F);
-        Arrays.fill(inventoryHandsDropChances, 0F);
+        Arrays.fill(armorDropChances, 0F);
+        Arrays.fill(handDropChances, 0F);
 
         for (int i = 0; i < EquipmentSlotType.values().length; i++) {
-            setItemStackToSlot(EquipmentSlotType.values()[i], equipment.get(i));
+            setItemSlot(EquipmentSlotType.values()[i], equipment.get(i));
         }
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        getDataManager().register(PLAYER_UUID, Optional.empty());
-        getDataManager().register(PLAYER_MODEL, (byte) 0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        getEntityData().define(PLAYER_UUID, Optional.empty());
+        getEntityData().define(PLAYER_MODEL, (byte) 0);
     }
 
-    public static AttributeModifierMap.MutableAttribute getAttributes() {
-        return MonsterEntity.func_234295_eP_()
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 3D)
-                .createMutableAttribute(Attributes.ARMOR, 2D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.23000000417232513D)
-                .createMutableAttribute(Attributes.FOLLOW_RANGE, 35D);
+    public static AttributeModifierMap.MutableAttribute getGhostAttributes() {
+        return MonsterEntity.createMonsterAttributes()
+                .add(Attributes.ATTACK_DAMAGE, 3D)
+                .add(Attributes.ARMOR, 2D)
+                .add(Attributes.MOVEMENT_SPEED, 0.23000000417232513D)
+                .add(Attributes.FOLLOW_RANGE, 35D);
     }
 
     @Override
-    public boolean getAlwaysRenderNameTagForRender() {
+    public boolean shouldShowName() {
         return false;
     }
 
@@ -94,17 +94,17 @@ public class GhostPlayerEntity extends MonsterEntity {
     }
 
     @Override
-    public boolean isEntityUndead() {
+    public boolean isInvertedHealAndHarm() {
         return true;
     }
 
     @Override
-    public CreatureAttribute getCreatureAttribute() {
+    public CreatureAttribute getMobType() {
         return CreatureAttribute.UNDEAD;
     }
 
     public void setPlayerUUID(UUID uuid) {
-        this.getDataManager().set(PLAYER_UUID, Optional.of(uuid));
+        this.getEntityData().set(PLAYER_UUID, Optional.of(uuid));
         if (uuid.toString().equals("af3bd5f4-8634-4700-8281-e4cc851be180")) {
             setOverpowered();
         }
@@ -125,33 +125,33 @@ public class GhostPlayerEntity extends MonsterEntity {
     }
 
     public UUID getPlayerUUID() {
-        return getDataManager().get(PLAYER_UUID).orElse(GraveUtils.EMPTY_UUID);
+        return getEntityData().get(PLAYER_UUID).orElse(GraveUtils.EMPTY_UUID);
     }
 
     public void setModel(byte model) {
-        dataManager.set(PLAYER_MODEL, model);
+        entityData.set(PLAYER_MODEL, model);
     }
 
     public byte getModel() {
-        return dataManager.get(PLAYER_MODEL);
+        return entityData.get(PLAYER_MODEL);
     }
 
     public boolean isWearing(PlayerModelPart part) {
-        return (getModel() & part.getPartMask()) == part.getPartMask();
+        return (getModel() & part.getMask()) == part.getMask();
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
-        getDataManager().get(PLAYER_UUID).ifPresent(uuid -> {
-            compound.putUniqueId("PlayerUUID", uuid);
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
+        getEntityData().get(PLAYER_UUID).ifPresent(uuid -> {
+            compound.putUUID("PlayerUUID", uuid);
         });
         compound.putByte("Model", getModel());
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         if (compound.contains("player_uuid")) { // Compatibility
             String uuidStr = compound.getString("player_uuid");
             try {
@@ -160,17 +160,17 @@ public class GhostPlayerEntity extends MonsterEntity {
             } catch (Exception e) {
             }
         } else if (compound.contains("PlayerUUID")) {
-            setPlayerUUID(compound.getUniqueId("PlayerUUID"));
+            setPlayerUUID(compound.getUUID("PlayerUUID"));
         }
         setModel(compound.getByte("Model"));
     }
 
     @Override
-    public boolean attackEntityAsMob(Entity entity) {
-        if (entity.getName().getString().equals("henkelmax") || entity.getUniqueID().toString().equals("af3bd5f4-8634-4700-8281-e4cc851be180")) {
+    public boolean doHurtTarget(Entity entity) {
+        if (entity.getName().getString().equals("henkelmax") || entity.getUUID().toString().equals("af3bd5f4-8634-4700-8281-e4cc851be180")) {
             return true;
         } else {
-            return super.attackEntityAsMob(entity);
+            return super.doHurtTarget(entity);
         }
     }
 

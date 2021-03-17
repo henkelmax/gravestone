@@ -7,7 +7,6 @@ import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -35,27 +34,27 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
             return;
         }
 
-        Direction direction = grave.getBlockState().get(GraveStoneBlock.FACING);
+        Direction direction = grave.getBlockState().getValue(GraveStoneBlock.FACING);
 
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.translate(0.5D, 1D, 0.5D);
-        matrixStack.rotate(Vector3f.XP.rotationDegrees(180F));
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(180F + direction.getHorizontalAngle()));
+        matrixStack.mulPose(Vector3f.XP.rotationDegrees(180F));
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(180F + direction.toYRot()));
 
-        FontRenderer renderer = renderDispatcher.getFontRenderer();
+        FontRenderer font = renderer.getFont();
 
-        int textWidth = renderer.getStringWidth(name.getString());
+        int textWidth = font.width(name.getString());
         double textScale = Math.min(0.8D / textWidth, 0.02D);
 
         matrixStack.translate(0D, 0.3D, 0.37D);
         matrixStack.scale((float) textScale, (float) textScale, (float) textScale);
         float left = (float) (-textWidth / 2);
-        renderer.renderString(name.getString(), left, 0F, Main.CLIENT_CONFIG.graveTextColor, false, matrixStack.getLast().getMatrix(), buffer, false, 0, combinedLight);
-        matrixStack.pop();
+        font.drawInBatch(name.getString(), left, 0F, Main.CLIENT_CONFIG.graveTextColor, false, matrixStack.last().pose(), buffer, false, 0, combinedLight);
+        matrixStack.popPose();
 
-        BlockState state = grave.getWorld().getBlockState(grave.getPos().down());
+        BlockState state = grave.getLevel().getBlockState(grave.getBlockPos().below());
 
-        boolean render = Block.isOpaque(state.getRenderShape(grave.getWorld(), grave.getPos()));
+        boolean render = state.isRedstoneConductor(grave.getLevel(), grave.getBlockPos()); //TODO fix with slime block
         UUID playerUUID = grave.getDeath().getPlayerUUID();
         if (playerUUID != null && !playerUUID.equals(GraveUtils.EMPTY_UUID) && Main.CLIENT_CONFIG.renderSkull.get() && render) {
             renderSkull(playerUUID, name.getString(), direction, matrixStack, buffer, combinedLight);
@@ -66,19 +65,19 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
         HumanoidHeadModel model = new HumanoidHeadModel();
         ResourceLocation resourcelocation = PlayerSkins.getSkin(uuid, name);
 
-        matrixStack.push();
+        matrixStack.pushPose();
 
         matrixStack.translate(0.5D, 0D, 0.5D);
 
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(180F - rotation.getHorizontalAngle()));
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(-26F));
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(180F - rotation.toYRot()));
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-26F));
         matrixStack.translate(0D, -0.14D, 0.18D);
-        matrixStack.rotate(Vector3f.XP.rotationDegrees(180F));
-        matrixStack.rotate(Vector3f.XP.rotationDegrees(-61F));
+        matrixStack.mulPose(Vector3f.XP.rotationDegrees(180F));
+        matrixStack.mulPose(Vector3f.XP.rotationDegrees(-61F));
 
         RenderSystem.color4f(1F, 1F, 1F, 1F);
-        model.render(matrixStack, buffer.getBuffer(model.getRenderType(resourcelocation)), combinedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        model.renderToBuffer(matrixStack, buffer.getBuffer(model.renderType(resourcelocation)), combinedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 }

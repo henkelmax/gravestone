@@ -28,7 +28,7 @@ public class Page {
     }
 
     public void drawPage(MatrixStack matrixStack, int page, int pageCount, int mouseX, int mouseY) {
-        gui.drawCentered(matrixStack, gui.getFontRenderer(), new TranslationTextComponent("gui.obituary.title.items").mergeStyle(TextFormatting.UNDERLINE), gui.width / 2, 30, TextFormatting.BLACK.getColor());
+        gui.drawCentered(matrixStack, gui.getFontRenderer(), new TranslationTextComponent("gui.obituary.title.items").withStyle(TextFormatting.UNDERLINE), gui.width / 2, 30, TextFormatting.BLACK.getColor());
         gui.drawCentered(matrixStack, gui.getFontRenderer(), new TranslationTextComponent("gui.obituary.page", page, pageCount), gui.width / 2, 43, TextFormatting.DARK_GRAY.getColor());
 
         int y = ITEM_START_Y;
@@ -38,7 +38,7 @@ public class Page {
             if (s == null || s.isEmpty()) {
                 continue;
             }
-            gui.drawItem(matrixStack, new TranslationTextComponent(s.getTranslationKey()).mergeStyle(TextFormatting.ITALIC), y);
+            gui.drawItem(matrixStack, new TranslationTextComponent(s.getDescriptionId()).withStyle(TextFormatting.ITALIC), y);
             gui.drawItemSize(matrixStack, new StringTextComponent(String.valueOf(s.getCount())), y);
             y = y + space;
         }

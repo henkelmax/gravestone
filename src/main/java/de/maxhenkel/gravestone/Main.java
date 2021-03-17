@@ -105,16 +105,16 @@ public class Main {
 
     @SubscribeEvent
     public void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-        GRAVESTONE_TILEENTITY = TileEntityType.Builder.create(GraveStoneTileEntity::new, GRAVESTONE).build(null);
+        GRAVESTONE_TILEENTITY = TileEntityType.Builder.of(GraveStoneTileEntity::new, GRAVESTONE).build(null);
         GRAVESTONE_TILEENTITY.setRegistryName(new ResourceLocation(MODID, "gravestone"));
         event.getRegistry().register(GRAVESTONE_TILEENTITY);
     }
 
     @SubscribeEvent
     public void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
-        GHOST = CommonRegistry.registerEntity(Main.MODID, "player_ghost", EntityClassification.MONSTER, GhostPlayerEntity.class, builder -> builder.size(0.6F, 1.95F));
+        GHOST = CommonRegistry.registerEntity(Main.MODID, "player_ghost", EntityClassification.MONSTER, GhostPlayerEntity.class, builder -> builder.sized(0.6F, 1.95F));
         event.getRegistry().register(GHOST);
-        GlobalEntityTypeAttributes.put(GHOST, GhostPlayerEntity.getAttributes().create());
+        GlobalEntityTypeAttributes.put(GHOST, GhostPlayerEntity.getGhostAttributes().build());
     }
 
 }

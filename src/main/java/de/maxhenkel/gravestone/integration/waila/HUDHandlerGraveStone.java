@@ -30,7 +30,7 @@ public class HUDHandlerGraveStone implements IComponentProvider, IServerDataProv
         ITaggableList<ResourceLocation, ITextComponent> tooltip = (ITaggableList<ResourceLocation, ITextComponent>) t;
         tooltip.setTag(OBJECT_NAME_TAG, new StringTextComponent(String.format(Waila.CONFIG.get().getFormatting().getBlockName(), ((GraveStoneTileEntity) accessor.getTileEntity()).getName().getString())));
         if (config.get(CONFIG_SHOW_REGISTRY)) {
-            tooltip.setTag(REGISTRY_NAME_TAG, new StringTextComponent(accessor.getBlock().getRegistryName().toString()).mergeStyle(TextFormatting.GRAY));
+            tooltip.setTag(REGISTRY_NAME_TAG, new StringTextComponent(accessor.getBlock().getRegistryName().toString()).withStyle(TextFormatting.GRAY));
         }
     }
 

@@ -1,1 +1,1 @@
-- Updated chinese translation
+- Updated to official mappings

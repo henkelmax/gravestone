@@ -23,7 +23,7 @@ public class PlayerGhostRenderer extends LivingRenderer<GhostPlayerEntity, Playe
         super(renderManager, null, 0.5F);
         playerModel = new PlayerModel<>(0F, false);
         playerModelSmallArms = new PlayerModel<>(0F, true);
-        entityModel = playerModel;
+        model = playerModel;
 
         addLayer(new BipedArmorLayer<>(this, new BipedModel<>(0.5F), new BipedModel<>(1F)));
         addLayer(new HeldItemLayer<>(this));
@@ -32,38 +32,38 @@ public class PlayerGhostRenderer extends LivingRenderer<GhostPlayerEntity, Playe
     }
 
     @Override
-    protected void preRenderCallback(GhostPlayerEntity ghost, MatrixStack matrixStack, float partialTickTime) {
+    protected void scale(GhostPlayerEntity ghost, MatrixStack matrixStack, float partialTickTime) {
         float scale = 0.9375F;
         matrixStack.scale(scale, scale, scale);
     }
 
     @Override
-    public ResourceLocation getEntityTexture(GhostPlayerEntity entity) {
+    public ResourceLocation getTextureLocation(GhostPlayerEntity entity) {
         return PlayerSkins.getSkin(entity.getPlayerUUID(), entity.getName().getString());
     }
 
     @Override
     public void render(GhostPlayerEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
-        matrixStack.push();
+        matrixStack.pushPose();
 
         if (PlayerSkins.isSlim(entity.getPlayerUUID())) {
-            entityModel = playerModelSmallArms;
+            model = playerModelSmallArms;
         } else {
-            entityModel = playerModel;
+            model = playerModel;
         }
         setModelVisibilities(entity);
         super.render(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     private void setModelVisibilities(GhostPlayerEntity playerEntity) {
-        entityModel.bipedHeadwear.showModel = playerEntity.isWearing(PlayerModelPart.HAT);
-        entityModel.bipedBodyWear.showModel = playerEntity.isWearing(PlayerModelPart.JACKET);
-        entityModel.bipedLeftLegwear.showModel = playerEntity.isWearing(PlayerModelPart.LEFT_PANTS_LEG);
-        entityModel.bipedRightLegwear.showModel = playerEntity.isWearing(PlayerModelPart.RIGHT_PANTS_LEG);
-        entityModel.bipedLeftArmwear.showModel = playerEntity.isWearing(PlayerModelPart.LEFT_SLEEVE);
-        entityModel.bipedRightArmwear.showModel = playerEntity.isWearing(PlayerModelPart.RIGHT_SLEEVE);
+        model.hat.visible = playerEntity.isWearing(PlayerModelPart.HAT);
+        model.jacket.visible = playerEntity.isWearing(PlayerModelPart.JACKET);
+        model.leftPants.visible = playerEntity.isWearing(PlayerModelPart.LEFT_PANTS_LEG);
+        model.rightPants.visible = playerEntity.isWearing(PlayerModelPart.RIGHT_PANTS_LEG);
+        model.leftSleeve.visible = playerEntity.isWearing(PlayerModelPart.LEFT_SLEEVE);
+        model.rightSleeve.visible = playerEntity.isWearing(PlayerModelPart.RIGHT_SLEEVE);
     }
 
 }

@@ -18,9 +18,9 @@ public class DummyPlayer extends RemoteClientPlayerEntity {
         super(world, gameProfile);
         this.model = model;
         for (EquipmentSlotType type : EquipmentSlotType.values()) {
-            setItemStackToSlot(type, equipment.get(type.ordinal()));
+            setItemSlot(type, equipment.get(type.ordinal()));
         }
-        recalculateSize();
+        refreshDimensions();
     }
 
     @Override
@@ -29,12 +29,12 @@ public class DummyPlayer extends RemoteClientPlayerEntity {
     }
 
     @Override
-    public EntitySize getSize(Pose pose) {
-        return new EntitySize(super.getSize(pose).width, Float.MAX_VALUE, true);
+    public EntitySize getDimensions(Pose pose) {
+        return new EntitySize(super.getDimensions(pose).width, Float.MAX_VALUE, true);
     }
 
     @Override
-    public boolean isWearing(PlayerModelPart part) {
-        return (model & part.getPartMask()) == part.getPartMask();
+    public boolean isModelPartShown(PlayerModelPart part) {
+        return (model & part.getMask()) == part.getMask();
     }
 }
