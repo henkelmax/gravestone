@@ -1,5 +1,4 @@
-# GraveStone Mod ![](http://cf.way2muchnoise.eu/full_238551_downloads.svg)
-![](http://cf.way2muchnoise.eu/versions/238551.svg)
+# GraveStone Mod ![](http://cf.way2muchnoise.eu/full_238551_downloads.svg) ![](http://cf.way2muchnoise.eu/versions/238551.svg)
 
 ## Links
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/gravestone-mod)
