@@ -1,1 +1,1 @@
-- Added japanese translation
+- Fixed ghost player attributes

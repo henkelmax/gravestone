@@ -13,7 +13,6 @@ import de.maxhenkel.gravestone.tileentity.render.GravestoneRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
@@ -22,6 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -59,6 +59,7 @@ public class Main {
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(TileEntityType.class, this::registerTileEntities);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(EntityType.class, this::registerEntities);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerAttributes);
 
         SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class, true);
         CLIENT_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.CLIENT, ClientConfig.class, true);
@@ -114,7 +115,11 @@ public class Main {
     public void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
         GHOST = CommonRegistry.registerEntity(Main.MODID, "player_ghost", EntityClassification.MONSTER, GhostPlayerEntity.class, builder -> builder.sized(0.6F, 1.95F));
         event.getRegistry().register(GHOST);
-        GlobalEntityTypeAttributes.put(GHOST, GhostPlayerEntity.getGhostAttributes().build());
+    }
+
+    @SubscribeEvent
+    public void registerAttributes(EntityAttributeCreationEvent event) {
+        event.put(Main.GHOST, GhostPlayerEntity.getGhostAttributes());
     }
 
 }

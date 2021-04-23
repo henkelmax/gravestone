@@ -24,7 +24,7 @@ public class DeathEvents {
         de.maxhenkel.corelib.death.DeathEvents.register();
     }
 
-    @SubscribeEvent()
+    @SubscribeEvent
     public void playerDeath(PlayerDeathEvent event) {
         event.storeDeath();
 

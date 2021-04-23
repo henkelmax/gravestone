@@ -2,10 +2,7 @@ package de.maxhenkel.gravestone.entity;
 
 import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
-import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
@@ -58,12 +55,13 @@ public class GhostPlayerEntity extends MonsterEntity {
         getEntityData().define(PLAYER_MODEL, (byte) 0);
     }
 
-    public static AttributeModifierMap.MutableAttribute getGhostAttributes() {
-        return MonsterEntity.createMonsterAttributes()
+    public static AttributeModifierMap getGhostAttributes() {
+        return MobEntity.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 20D)
                 .add(Attributes.ATTACK_DAMAGE, 3D)
                 .add(Attributes.ARMOR, 2D)
                 .add(Attributes.MOVEMENT_SPEED, 0.23000000417232513D)
-                .add(Attributes.FOLLOW_RANGE, 35D);
+                .add(Attributes.FOLLOW_RANGE, 35D).build();
     }
 
     @Override
