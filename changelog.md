@@ -1,1 +1,1 @@
-- Fixed ghost player attributes
+- Fixed grave names

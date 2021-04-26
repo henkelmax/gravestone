@@ -146,7 +146,7 @@ public class GraveStoneBlock extends Block implements ITileEntityProvider, IItem
             TileEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof GraveStoneTileEntity) {
                 GraveStoneTileEntity grave = (GraveStoneTileEntity) tileentity;
-                grave.setCustomName(stack.getDisplayName());
+                grave.setCustomName(stack.getHoverName());
             }
         }
         super.setPlacedBy(world, pos, state, placer, stack);
