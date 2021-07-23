@@ -3,45 +3,46 @@ package de.maxhenkel.gravestone.tileentity;
 import de.maxhenkel.corelib.death.Death;
 import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.INameable;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Nameable;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public class GraveStoneTileEntity extends TileEntity implements INameable {
+public class GraveStoneTileEntity extends BlockEntity implements Nameable {
 
     protected Death death;
 
-    protected ITextComponent customName;
+    protected Component customName;
 
-    public GraveStoneTileEntity() {
-        super(Main.GRAVESTONE_TILEENTITY);
+    public GraveStoneTileEntity(BlockPos pos, BlockState state) {
+        super(Main.GRAVESTONE_TILEENTITY, pos, state);
         death = new Death.Builder(GraveUtils.EMPTY_UUID, GraveUtils.EMPTY_UUID).build();
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         compound.put("Death", death.toNBT());
         if (customName != null) {
-            compound.putString("CustomName", ITextComponent.Serializer.toJson(customName));
+            compound.putString("CustomName", Component.Serializer.toJson(customName));
         }
         return super.save(compound);
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
 
         if (compound.contains("Death")) {
             death = Death.fromNBT(compound.getCompound("Death"));
@@ -55,7 +56,7 @@ public class GraveStoneTileEntity extends TileEntity implements INameable {
             Death.Builder builder = new Death.Builder(playerUUID, UUID.randomUUID());
 
             NonNullList<ItemStack> items = NonNullList.create();
-            ListNBT list = compound.getList("ItemStacks", 10);
+            ListTag list = compound.getList("ItemStacks", 10);
             for (int i = 0; i < list.size(); i++) {
                 items.add(ItemStack.of(list.getCompound(i)));
             }
@@ -67,25 +68,25 @@ public class GraveStoneTileEntity extends TileEntity implements INameable {
         }
 
         if (compound.contains("CustomName")) {
-            customName = ITextComponent.Serializer.fromJson(compound.getString("CustomName"));
+            customName = Component.Serializer.fromJson(compound.getString("CustomName"));
         }
     }
 
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 1, getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 1, getUpdateTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        this.load(null, pkt.getTag());
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        this.load(pkt.getTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT compound = new CompoundNBT();
+    public CompoundTag getUpdateTag() {
+        CompoundTag compound = new CompoundTag();
         compound.put("Death", death.toNBT(false));
-        compound.putString("CustomName", ITextComponent.Serializer.toJson(customName));
+        compound.putString("CustomName", Component.Serializer.toJson(customName));
         return super.save(compound);
     }
 
@@ -98,39 +99,39 @@ public class GraveStoneTileEntity extends TileEntity implements INameable {
         setChanged();
     }
 
-    public void setCustomName(ITextComponent name) {
+    public void setCustomName(Component name) {
         this.customName = name;
         setChanged();
     }
 
     @Override
-    public ITextComponent getName() {
+    public Component getName() {
         return customName != null ? customName : getDefaultName();
     }
 
     @Override
-    public ITextComponent getDisplayName() {
+    public Component getDisplayName() {
         return getName();
     }
 
     @Nullable
     @Override
-    public ITextComponent getCustomName() {
+    public Component getCustomName() {
         return customName;
     }
 
-    protected ITextComponent getDefaultName() {
+    protected Component getDefaultName() {
         String name = death.getPlayerName();
         if (name == null || name.isEmpty()) {
-            return new TranslationTextComponent(Main.GRAVESTONE.getDescriptionId());
+            return new TranslatableComponent(Main.GRAVESTONE.getDescriptionId());
         }
-        return new TranslationTextComponent("message.gravestone.grave_of", name);
+        return new TranslatableComponent("message.gravestone.grave_of", name);
     }
 
     @Nullable
-    public ITextComponent getGraveName() {
+    public Component getGraveName() {
         if (!death.getPlayerName().isEmpty()) {
-            return new StringTextComponent(death.getPlayerName());
+            return new TextComponent(death.getPlayerName());
         } else if (customName != null) {
             return customName;
         } else {

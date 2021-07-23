@@ -2,7 +2,7 @@ package de.maxhenkel.gravestone;
 
 import de.maxhenkel.corelib.config.ConfigBase;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 public class ClientConfig extends ConfigBase {
 
@@ -24,7 +24,7 @@ public class ClientConfig extends ConfigBase {
     }
 
     @Override
-    public void onReload(ModConfig.ModConfigEvent event) {
+    public void onReload(ModConfigEvent event) {
         super.onReload(event);
         graveTextColor = Integer.parseInt(graveTextColorSpec.get(), 16);
     }

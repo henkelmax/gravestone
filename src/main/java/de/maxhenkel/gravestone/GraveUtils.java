@@ -1,16 +1,15 @@
 package de.maxhenkel.gravestone;
 
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nullable;
 import java.text.SimpleDateFormat;
@@ -22,14 +21,14 @@ public class GraveUtils {
     public static final UUID EMPTY_UUID = new UUID(0L, 0L);
 
     @Nullable
-    public static BlockPos getGraveStoneLocation(World world, BlockPos pos) {
-        BlockPos.Mutable location = new BlockPos.Mutable(pos.getX(), pos.getY(), pos.getZ());
+    public static BlockPos getGraveStoneLocation(Level world, BlockPos pos) {
+        BlockPos.MutableBlockPos location = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ());
 
-        if (World.isOutsideBuildHeight(location) && location.getY() <= 0) {
+        if (world.isOutsideBuildHeight(location) && location.getY() <= 0) {
             location.set(location.getX(), 1, location.getZ());
         }
 
-        while (!World.isOutsideBuildHeight(location)) {
+        while (!world.isOutsideBuildHeight(location)) {
             if (isReplaceable(world, location)) {
                 return location;
             }
@@ -40,31 +39,31 @@ public class GraveUtils {
         return null;
     }
 
-    public static boolean isReplaceable(World world, BlockPos pos) {
+    public static boolean isReplaceable(Level world, BlockPos pos) {
         Block b = world.getBlockState(pos).getBlock();
 
         if (world.isEmptyBlock(pos)) {
             return true;
         }
 
-        return Main.SERVER_CONFIG.replaceableBlocks.stream().anyMatch(b::is);
+        return Main.SERVER_CONFIG.replaceableBlocks.stream().anyMatch(blockTag -> blockTag.contains(b));
     }
 
     @Nullable
-    public static IFormattableTextComponent getDate(long timestamp) {
+    public static MutableComponent getDate(long timestamp) {
         if (timestamp <= 0L) {
             return null;
         }
-        SimpleDateFormat dateFormat = new SimpleDateFormat(new TranslationTextComponent("gui.gravestone.date_format").getString());
-        return new StringTextComponent(dateFormat.format(new Date(timestamp)));
+        SimpleDateFormat dateFormat = new SimpleDateFormat(new TranslatableComponent("gui.gravestone.date_format").getString());
+        return new TextComponent(dateFormat.format(new Date(timestamp)));
     }
 
-    public static boolean canBreakGrave(IWorld world, PlayerEntity player, BlockPos pos) {
+    public static boolean canBreakGrave(Level world, Player player, BlockPos pos) {
         if (!Main.SERVER_CONFIG.onlyOwnersCanBreak.get()) {
             return true;
         }
 
-        TileEntity te = world.getBlockEntity(pos);
+        BlockEntity te = world.getBlockEntity(pos);
 
         if (!(te instanceof GraveStoneTileEntity)) {
             return true;
@@ -72,8 +71,8 @@ public class GraveUtils {
 
         GraveStoneTileEntity grave = (GraveStoneTileEntity) te;
 
-        if (player instanceof ServerPlayerEntity) {
-            ServerPlayerEntity p = (ServerPlayerEntity) player;
+        if (player instanceof ServerPlayer) {
+            ServerPlayer p = (ServerPlayer) player;
             if (p.hasPermissions(p.server.getOperatorUserPermissionLevel())) {
                 return true;
             }

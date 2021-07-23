@@ -2,10 +2,10 @@ package de.maxhenkel.gravestone;
 
 import de.maxhenkel.corelib.config.ConfigBase;
 import de.maxhenkel.corelib.tag.TagUtils;
-import net.minecraft.block.Block;
-import net.minecraft.tags.ITag;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +24,7 @@ public class ServerConfig extends ConfigBase {
     public final ForgeConfigSpec.BooleanValue sneakPickup;
     public final ForgeConfigSpec.BooleanValue breakPickup;
 
-    public List<ITag<Block>> replaceableBlocks = new ArrayList<>();
+    public List<Tag<Block>> replaceableBlocks = new ArrayList<>();
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         super(builder);
@@ -55,7 +55,7 @@ public class ServerConfig extends ConfigBase {
     }
 
     @Override
-    public void onReload(ModConfig.ModConfigEvent event) {
+    public void onReload(ModConfigEvent event) {
         super.onReload(event);
         replaceableBlocks = replaceableBlocksSpec.get().stream().map(TagUtils::getBlock).filter(Objects::nonNull).collect(Collectors.toList());
     }

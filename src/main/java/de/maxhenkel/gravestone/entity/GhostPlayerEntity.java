@@ -2,40 +2,40 @@ package de.maxhenkel.gravestone.entity;
 
 import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.monster.SlimeEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerModelPart;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.PlayerModelPart;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
-public class GhostPlayerEntity extends MonsterEntity {
+public class GhostPlayerEntity extends Monster {
 
-    private static final DataParameter<Optional<UUID>> PLAYER_UUID = EntityDataManager.defineId(GhostPlayerEntity.class, DataSerializers.OPTIONAL_UUID);
-    private static final DataParameter<Byte> PLAYER_MODEL = EntityDataManager.defineId(GhostPlayerEntity.class, DataSerializers.BYTE);
+    private static final EntityDataAccessor<Optional<UUID>> PLAYER_UUID = SynchedEntityData.defineId(GhostPlayerEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Byte> PLAYER_MODEL = SynchedEntityData.defineId(GhostPlayerEntity.class, EntityDataSerializers.BYTE);
 
-    public GhostPlayerEntity(EntityType type, World world) {
+    public GhostPlayerEntity(EntityType type, Level world) {
         super(type, world);
     }
 
-    public GhostPlayerEntity(World world, UUID playerUUID, ITextComponent name, NonNullList<ItemStack> equipment, byte model) {
+    public GhostPlayerEntity(Level world, UUID playerUUID, Component name, NonNullList<ItemStack> equipment, byte model) {
         this(Main.GHOST, world);
         setPlayerUUID(playerUUID);
         setCustomName(name);
@@ -43,8 +43,8 @@ public class GhostPlayerEntity extends MonsterEntity {
         Arrays.fill(armorDropChances, 0F);
         Arrays.fill(handDropChances, 0F);
 
-        for (int i = 0; i < EquipmentSlotType.values().length; i++) {
-            setItemSlot(EquipmentSlotType.values()[i], equipment.get(i));
+        for (int i = 0; i < EquipmentSlot.values().length; i++) {
+            setItemSlot(EquipmentSlot.values()[i], equipment.get(i));
         }
     }
 
@@ -55,8 +55,8 @@ public class GhostPlayerEntity extends MonsterEntity {
         getEntityData().define(PLAYER_MODEL, (byte) 0);
     }
 
-    public static AttributeModifierMap getGhostAttributes() {
-        return MobEntity.createMobAttributes()
+    public static AttributeSupplier getGhostAttributes() {
+        return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20D)
                 .add(Attributes.ATTACK_DAMAGE, 3D)
                 .add(Attributes.ARMOR, 2D)
@@ -71,23 +71,23 @@ public class GhostPlayerEntity extends MonsterEntity {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
         this.goalSelector.addGoal(5, new MoveTowardsRestrictionGoal(this, 1.0D));
-        this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(9, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
 
         if (Main.SERVER_CONFIG.friendlyGhost.get()) {
             targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, false, true, (entityLiving) ->
                     entityLiving != null
                             && !entityLiving.isInvisible()
-                            && (entityLiving instanceof MonsterEntity || entityLiving instanceof SlimeEntity)
-                            && !(entityLiving instanceof CreeperEntity)
+                            && (entityLiving instanceof Monster || entityLiving instanceof Slime)
+                            && !(entityLiving instanceof Creeper)
                             && !(entityLiving instanceof GhostPlayerEntity)
             ));
         } else {
-            targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
+            targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, Player.class, true));
         }
     }
 
@@ -97,8 +97,8 @@ public class GhostPlayerEntity extends MonsterEntity {
     }
 
     @Override
-    public CreatureAttribute getMobType() {
-        return CreatureAttribute.UNDEAD;
+    public MobType getMobType() {
+        return MobType.UNDEAD;
     }
 
     public void setPlayerUUID(UUID uuid) {
@@ -115,7 +115,7 @@ public class GhostPlayerEntity extends MonsterEntity {
     }
 
     @Override
-    public void setCustomName(@Nullable ITextComponent name) {
+    public void setCustomName(@Nullable Component name) {
         super.setCustomName(name);
         if (name != null && name.getString().equals("henkelmax")) {
             setOverpowered();
@@ -139,7 +139,7 @@ public class GhostPlayerEntity extends MonsterEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT compound) {
+    public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         getEntityData().get(PLAYER_UUID).ifPresent(uuid -> {
             compound.putUUID("PlayerUUID", uuid);
@@ -148,7 +148,7 @@ public class GhostPlayerEntity extends MonsterEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT compound) {
+    public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         if (compound.contains("player_uuid")) { // Compatibility
             String uuidStr = compound.getString("player_uuid");

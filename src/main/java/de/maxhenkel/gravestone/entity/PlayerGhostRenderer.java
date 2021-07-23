@@ -1,38 +1,39 @@
 package de.maxhenkel.gravestone.entity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxhenkel.corelib.client.PlayerSkins;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.LivingRenderer;
-import net.minecraft.client.renderer.entity.layers.BipedArmorLayer;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
 import net.minecraft.client.renderer.entity.layers.ElytraLayer;
-import net.minecraft.client.renderer.entity.layers.HeadLayer;
-import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
-import net.minecraft.client.renderer.entity.model.BipedModel;
-import net.minecraft.client.renderer.entity.model.PlayerModel;
-import net.minecraft.entity.player.PlayerModelPart;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
+import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.PlayerModelPart;
 
-public class PlayerGhostRenderer extends LivingRenderer<GhostPlayerEntity, PlayerModel<GhostPlayerEntity>> {
+public class PlayerGhostRenderer extends LivingEntityRenderer<GhostPlayerEntity, PlayerModel<GhostPlayerEntity>> {
 
     private PlayerModel<GhostPlayerEntity> playerModel;
     private PlayerModel<GhostPlayerEntity> playerModelSmallArms;
 
-    public PlayerGhostRenderer(EntityRendererManager renderManager) {
-        super(renderManager, null, 0.5F);
-        playerModel = new PlayerModel<>(0F, false);
-        playerModelSmallArms = new PlayerModel<>(0F, true);
+    public PlayerGhostRenderer(EntityRendererProvider.Context renderer) {
+        super(renderer, null, 0.5F);
+        playerModel = new PlayerModel<>(renderer.bakeLayer(ModelLayers.PLAYER), false);
+        playerModelSmallArms = new PlayerModel<>(renderer.bakeLayer(ModelLayers.PLAYER_SLIM), true);
         model = playerModel;
 
-        addLayer(new BipedArmorLayer<>(this, new BipedModel<>(0.5F), new BipedModel<>(1F)));
-        addLayer(new HeldItemLayer<>(this));
-        addLayer(new HeadLayer<>(this));
-        addLayer(new ElytraLayer<>(this));
+        addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(renderer.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel<>(renderer.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR))));
+        this.addLayer(new CustomHeadLayer<>(this, renderer.getModelSet(), 1F, 1F, 1F));
+        this.addLayer(new ElytraLayer<>(this, renderer.getModelSet()));
+        this.addLayer(new ItemInHandLayer<>(this));
     }
 
     @Override
-    protected void scale(GhostPlayerEntity ghost, MatrixStack matrixStack, float partialTickTime) {
+    protected void scale(GhostPlayerEntity ghost, PoseStack matrixStack, float partialTickTime) {
         float scale = 0.9375F;
         matrixStack.scale(scale, scale, scale);
     }
@@ -43,7 +44,7 @@ public class PlayerGhostRenderer extends LivingRenderer<GhostPlayerEntity, Playe
     }
 
     @Override
-    public void render(GhostPlayerEntity entity, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
+    public void render(GhostPlayerEntity entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
         matrixStack.pushPose();
 
         if (PlayerSkins.isSlim(entity.getPlayerUUID())) {

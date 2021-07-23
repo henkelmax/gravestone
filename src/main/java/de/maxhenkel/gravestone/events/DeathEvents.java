@@ -7,13 +7,13 @@ import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
 import de.maxhenkel.gravestone.items.ObituaryItem;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,8 +29,8 @@ public class DeathEvents {
         event.storeDeath();
 
         Death death = event.getDeath();
-        PlayerEntity player = event.getPlayer();
-        World world = player.level;
+        Player player = event.getPlayer();
+        Level world = player.level;
 
         if (keepInventory(player)) {
             return;
@@ -39,7 +39,7 @@ public class DeathEvents {
         BlockPos graveStoneLocation = GraveUtils.getGraveStoneLocation(world, death.getBlockPos());
 
         if (Main.SERVER_CONFIG.giveObituaries.get()) {
-            player.inventory.add(Main.OBITUARY.toStack(death));
+            player.getInventory().add(Main.OBITUARY.toStack(death));
         }
 
         if (graveStoneLocation == null) {
@@ -54,7 +54,7 @@ public class DeathEvents {
             world.setBlockAndUpdate(graveStoneLocation.below(), Blocks.DIRT.defaultBlockState());
         }
 
-        TileEntity tileentity = world.getBlockEntity(graveStoneLocation);
+        BlockEntity tileentity = world.getBlockEntity(graveStoneLocation);
 
         if (!(tileentity instanceof GraveStoneTileEntity)) {
             Main.LOGGER.info("Grave of '{}' can't be filled with loot (No tileentity found)", death.getPlayerName());
@@ -87,14 +87,14 @@ public class DeathEvents {
             return;
         }
 
-        for (ItemStack stack : event.getOriginal().inventory.items) {
+        for (ItemStack stack : event.getOriginal().getInventory().items) {
             if (stack.getItem() instanceof ObituaryItem) {
-                event.getPlayer().inventory.add(stack);
+                event.getPlayer().getInventory().add(stack);
             }
         }
     }
 
-    public static boolean keepInventory(PlayerEntity player) {
+    public static boolean keepInventory(Player player) {
         try {
             return player.getCommandSenderWorld().getLevelData().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY);
         } catch (Exception e) {

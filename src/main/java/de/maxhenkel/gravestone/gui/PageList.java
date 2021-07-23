@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
 
 public class PageList {
 
@@ -40,7 +40,7 @@ public class PageList {
         return list.size();
     }
 
-    public void drawPage(MatrixStack matrixStack, int p, int mouseX, int mouseY) {
+    public void drawPage(PoseStack matrixStack, int p, int mouseX, int mouseY) {
         if (p >= list.size()) {
             p = list.size() - 1;
         }

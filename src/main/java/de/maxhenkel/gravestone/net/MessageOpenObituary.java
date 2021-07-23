@@ -4,10 +4,10 @@ import de.maxhenkel.corelib.death.Death;
 import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.gravestone.gui.ObituaryScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class MessageOpenObituary implements Message {
 
@@ -33,13 +33,13 @@ public class MessageOpenObituary implements Message {
     }
 
     @Override
-    public MessageOpenObituary fromBytes(PacketBuffer buf) {
+    public MessageOpenObituary fromBytes(FriendlyByteBuf buf) {
         death = Death.fromNBT(buf.readNbt());
         return this;
     }
 
     @Override
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeNbt(death.toNBT());
     }
 

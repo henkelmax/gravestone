@@ -1,5 +1,5 @@
 package de.maxhenkel.gravestone.integration.waila;
-
+/*
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import mcp.mobius.waila.api.IRegistrar;
 import mcp.mobius.waila.api.IWailaPlugin;
@@ -16,4 +16,4 @@ public class PluginGraveStone implements IWailaPlugin {
         registrar.registerBlockDataProvider(HUDHandlerGraveStone.INSTANCE, GraveStoneTileEntity.class);
     }
 
-}
+}*/

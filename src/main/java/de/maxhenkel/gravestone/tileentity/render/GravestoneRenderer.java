@@ -1,35 +1,38 @@
 package de.maxhenkel.gravestone.tileentity.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import de.maxhenkel.corelib.client.PlayerSkins;
 import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.model.HumanoidHeadModel;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.model.SkullModel;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.UUID;
 
-public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity> {
+public class GravestoneRenderer implements BlockEntityRenderer<GraveStoneTileEntity> {
 
-    public GravestoneRenderer(TileEntityRendererDispatcher rendererDispatcher) {
-        super(rendererDispatcher);
+    private BlockEntityRendererProvider.Context renderer;
+
+    public GravestoneRenderer(BlockEntityRendererProvider.Context renderer) {
+        this.renderer = renderer;
     }
 
     @Override
-    public void render(GraveStoneTileEntity grave, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
-        ITextComponent name = grave.getGraveName();
+    public void render(GraveStoneTileEntity grave, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+        Component name = grave.getGraveName();
         if (name == null) {
             return;
         }
@@ -41,7 +44,7 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(180F));
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(180F + direction.toYRot()));
 
-        FontRenderer font = renderer.getFont();
+        Font font = renderer.getFont();
 
         int textWidth = font.width(name.getString());
         double textScale = Math.min(0.8D / textWidth, 0.02D);
@@ -61,8 +64,8 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
         }
     }
 
-    public void renderSkull(UUID uuid, String name, Direction rotation, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight) {
-        HumanoidHeadModel model = new HumanoidHeadModel();
+    public void renderSkull(UUID uuid, String name, Direction rotation, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight) {
+        SkullModel model = new SkullModel(renderer.bakeLayer(ModelLayers.PLAYER_HEAD));
         ResourceLocation resourcelocation = PlayerSkins.getSkin(uuid, name);
 
         matrixStack.pushPose();
@@ -75,7 +78,7 @@ public class GravestoneRenderer extends TileEntityRenderer<GraveStoneTileEntity>
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(180F));
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(-61F));
 
-        RenderSystem.color4f(1F, 1F, 1F, 1F);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         model.renderToBuffer(matrixStack, buffer.getBuffer(model.renderType(resourcelocation)), combinedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 
         matrixStack.popPose();

@@ -1,6 +1,6 @@
 package de.maxhenkel.gravestone.integration.waila;
 
-import de.maxhenkel.corelib.death.Death;
+/*import de.maxhenkel.corelib.death.Death;
 import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import mcp.mobius.waila.Waila;
@@ -59,4 +59,4 @@ public class HUDHandlerGraveStone implements IComponentProvider, IServerDataProv
         compoundNBT.putInt("ItemCount", (int) death.getAllItems().stream().filter(itemStack -> !itemStack.isEmpty()).count());
     }
 
-}
+}*/
