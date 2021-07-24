@@ -11,6 +11,7 @@ import de.maxhenkel.gravestone.net.MessageOpenObituary;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import de.maxhenkel.gravestone.tileentity.render.GravestoneRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -30,7 +31,6 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fmlclient.registry.RenderingRegistry;
 import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -81,7 +81,9 @@ public class Main {
     public void clientSetup(FMLClientSetupEvent event) {
         BlockEntityRenderers.register(GRAVESTONE_TILEENTITY, GravestoneRenderer::new);
 
-        RenderingRegistry.registerEntityRenderingHandler(GHOST, PlayerGhostRenderer::new);
+        // TODO
+        // RenderingRegistry.registerEntityRenderingHandler(GHOST, PlayerGhostRenderer::new);
+        EntityRenderers.register(GHOST, PlayerGhostRenderer::new);
     }
 
     @SubscribeEvent
