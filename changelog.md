@@ -1,1 +1,1 @@
-- Fixed player ghost
+- Added Jade support

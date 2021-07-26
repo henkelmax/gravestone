@@ -1,62 +1,51 @@
 package de.maxhenkel.gravestone.integration.waila;
 
-/*import de.maxhenkel.corelib.death.Death;
 import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import mcp.mobius.waila.Waila;
 import mcp.mobius.waila.api.*;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import mcp.mobius.waila.api.config.IPluginConfig;
+import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
-import java.util.List;
+public class HUDHandlerGraveStone implements IComponentProvider, IServerDataProvider<BlockEntity> {
 
-public class HUDHandlerGraveStone implements IComponentProvider, IServerDataProvider<TileEntity> {
+    public static final HUDHandlerGraveStone INSTANCE = new HUDHandlerGraveStone();
 
-    static final ResourceLocation OBJECT_NAME_TAG = new ResourceLocation("waila", "object_name");
-    static final ResourceLocation CONFIG_SHOW_REGISTRY = new ResourceLocation("waila", "show_registry");
-    static final ResourceLocation REGISTRY_NAME_TAG = new ResourceLocation("waila", "registry_name");
-
-    static final HUDHandlerGraveStone INSTANCE = new HUDHandlerGraveStone();
+    private static final ResourceLocation OBJECT_NAME_TAG = new ResourceLocation("waila", "object_name");
 
     @Override
-    public void appendHead(List<ITextComponent> t, IDataAccessor accessor, IPluginConfig config) {
-        ITaggableList<ResourceLocation, ITextComponent> tooltip = (ITaggableList<ResourceLocation, ITextComponent>) t;
-        tooltip.setTag(OBJECT_NAME_TAG, new StringTextComponent(String.format(Waila.CONFIG.get().getFormatting().getBlockName(), ((GraveStoneTileEntity) accessor.getTileEntity()).getName().getString())));
-        if (config.get(CONFIG_SHOW_REGISTRY)) {
-            tooltip.setTag(REGISTRY_NAME_TAG, new StringTextComponent(accessor.getBlock().getRegistryName().toString()).withStyle(TextFormatting.GRAY));
+    public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
+        if (blockAccessor.getBlockEntity() instanceof GraveStoneTileEntity grave) {
+            if (blockAccessor.getTooltipPosition().equals(TooltipPosition.BODY)) {
+                Component time = GraveUtils.getDate(grave.getDeath().getTimestamp());
+                if (time != null) {
+                    iTooltip.add(new TranslatableComponent("message.gravestone.date_of_death", time));
+                }
+
+                CompoundTag data = blockAccessor.getServerData();
+                if (data.contains("ItemCount")) {
+                    iTooltip.add(new TranslatableComponent("message.gravestone.item_count", data.getInt("ItemCount")));
+                }
+            } else if (blockAccessor.getTooltipPosition().equals(TooltipPosition.HEAD)) {
+                iTooltip.remove(OBJECT_NAME_TAG);
+                iTooltip.add(new TextComponent(String.format(Waila.CONFIG.get().getFormatting().getBlockName(), grave.getName().getString())).withStyle(ChatFormatting.WHITE));
+            }
         }
     }
 
     @Override
-    public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
-        if (!(accessor.getTileEntity() instanceof GraveStoneTileEntity)) {
-            return;
+    public void appendServerData(CompoundTag compoundTag, ServerPlayer serverPlayer, Level level, BlockEntity blockEntity, boolean b) {
+        if (blockEntity instanceof GraveStoneTileEntity grave) {
+            compoundTag.putInt("ItemCount", (int) grave.getDeath().getAllItems().stream().filter(itemStack -> !itemStack.isEmpty()).count());
         }
 
-        GraveStoneTileEntity grave = (GraveStoneTileEntity) accessor.getTileEntity();
-
-        ITextComponent time = GraveUtils.getDate(grave.getDeath().getTimestamp());
-        if (time != null) {
-            tooltip.add(new TranslationTextComponent("message.gravestone.date_of_death", time));
-        }
-
-        CompoundNBT data = accessor.getServerData();
-        if (data.contains("ItemCount")) {
-            tooltip.add(new TranslationTextComponent("message.gravestone.item_count", data.getInt("ItemCount")));
-        }
     }
-
-    @Override
-    public void appendServerData(CompoundNBT compoundNBT, ServerPlayerEntity serverPlayerEntity, World world, TileEntity grave) {
-        Death death = ((GraveStoneTileEntity) grave).getDeath();
-        compoundNBT.putInt("ItemCount", (int) death.getAllItems().stream().filter(itemStack -> !itemStack.isEmpty()).count());
-    }
-
-}*/
+}
