@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.12', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.14', changing: true
         classpath group: 'de.maxhenkel.forge-update', name: 'forge-update', version: '1.0.4'
     }
 }
@@ -101,50 +101,17 @@ repositories {
     }
 }
 
-configurations {
-    runtimeMod { transitive = false }
-}
-
 dependencies {
     minecraft "net.minecraftforge:forge:${mod_minecraft_version}-${forge_version}"
 
 //    compileOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}:${jei_version}:api")
 //    runtimeOnly fg.deobf("mezz.jei:jei-${jei_minecraft_version}:${jei_version}")
 
-    compileOnly fg.deobf("curse.maven:jade-324717:${jade_id}")
-    runtimeMod fg.deobf("curse.maven:jade-324717:${jade_id}")
+    implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
 
-    runtimeMod fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
     shadow fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:api")
-    compileOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
-    compileOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:javadoc")
-}
-
-// https://github.com/Crimix/ServerTabInfo/blob/a297661ae5d40e082aecf3598d8467cfbef8e6d6/build.gradle
-project.afterEvaluate {
-    task copyMods {
-        doLast {
-            delete fileTree('run/mods') {
-                include '*.jar'
-            }
-            delete fileTree('run/server/mods') {
-                include '*.jar'
-            }
-            copy {
-                from configurations.runtimeMod.files
-                into file("run/mods")
-            }
-            copy {
-                from configurations.runtimeMod.files
-                into file("run/server/mods")
-            }
-        }
-    }
-
-    tasks.forEach {
-        if (it.name.startsWith("prepareRun"))
-            it.dependsOn copyMods
-    }
+    runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
+    runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:javadoc")
 }
 
 jar {
