@@ -1,1 +1,1 @@
-- Added Jade support
+- Fixed graves not working with custom world heights
