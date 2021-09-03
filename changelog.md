@@ -1,1 +1,1 @@
-- Fixed graves not working with custom world heights
+- Fixed crash with epic fight mod
