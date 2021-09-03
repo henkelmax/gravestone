@@ -1,1 +1,1 @@
-- Fixed grave names
+- Fixed freeze with epic fight mod
