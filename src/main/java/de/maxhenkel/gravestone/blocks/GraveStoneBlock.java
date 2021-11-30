@@ -116,7 +116,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
     @Override
     public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
         if (state.getValue(WATERLOGGED)) {
-            world.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+            world.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
 
         return super.updateShape(state, facing, facingState, world, currentPos, facingPos);
@@ -206,7 +206,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
     }
 
     @Override
-    public boolean removedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
         if (!GraveUtils.canBreakGrave(world, player, pos)) {
             return false;
         }
@@ -221,7 +221,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
                 sortItems(world, pos, player, grave);
             }
         }
-        return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
+        return super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid);
     }
 
     protected void spawnGhost(Level world, BlockPos pos, GraveStoneTileEntity grave) {

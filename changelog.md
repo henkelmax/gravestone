@@ -1,1 +1,1 @@
-- Fixed crash with epic fight mod
+- Updated to 1.18
