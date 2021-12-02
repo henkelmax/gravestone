@@ -156,6 +156,9 @@ curseforge {
         addGameVersion 'Java 17'
         mainArtifact(jar) {
             displayName = "[${mod_minecraft_version}] ${mod_name} ${mod_version}"
+            relations {
+                optionalDependency 'jade'
+            }
         }
     }
 }
