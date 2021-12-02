@@ -7,10 +7,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.item.ItemStack;
@@ -32,12 +33,13 @@ public class GraveStoneTileEntity extends BlockEntity implements Nameable {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    protected void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
+
         compound.put("Death", death.toNBT());
         if (customName != null) {
             compound.putString("CustomName", Component.Serializer.toJson(customName));
         }
-        return super.save(compound);
     }
 
     @Override
@@ -73,21 +75,15 @@ public class GraveStoneTileEntity extends BlockEntity implements Nameable {
     }
 
     @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this, BlockEntity::getUpdateTag);
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.load(pkt.getTag());
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag compound = new CompoundTag();
-        compound.put("Death", death.toNBT(false));
-        compound.putString("CustomName", Component.Serializer.toJson(customName));
-        return super.save(compound);
+        saveAdditional(compound);
+        return compound;
     }
 
     public Death getDeath() {
