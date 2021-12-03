@@ -1,2 +1,1 @@
-- Fixed grave not saving data
-- Re added Jade support
+- Fixed mod not loading correctly
