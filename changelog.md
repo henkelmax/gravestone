@@ -1,1 +1,1 @@
-- Fixed mod not loading correctly
+- Fixed loader version requirement
