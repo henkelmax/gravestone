@@ -1,1 +1,1 @@
-- Fixed loader version requirement
+- Updated to 1.18.1
