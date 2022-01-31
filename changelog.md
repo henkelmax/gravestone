@@ -1,1 +1,1 @@
-- Added gravestone block to dragon immune tag
+- Added Brazilian Portuguese language
