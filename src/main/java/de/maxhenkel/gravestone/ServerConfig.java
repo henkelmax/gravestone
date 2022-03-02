@@ -1,8 +1,8 @@
 package de.maxhenkel.gravestone;
 
 import de.maxhenkel.corelib.config.ConfigBase;
+import de.maxhenkel.corelib.tag.Tag;
 import de.maxhenkel.corelib.tag.TagUtils;
-import net.minecraft.tags.Tag;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
