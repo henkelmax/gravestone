@@ -59,7 +59,7 @@ There are several things you can change in the configs:
 - The color of the text on the grave
 - If the skull on the grave should be rendered
 - Whether you want to get the obituary on death
-- The plocks that can get replaced by a grave
+- The blocks that can get replaced by a grave
 - If the death note should get removed form the players inventory when breaking a grave
 - If only the owners of the grave should be able to break it
 - If a ghost of the player should spawn when breaking the grave
