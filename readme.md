@@ -85,4 +85,4 @@ You can also get a pre made restore command by sneaking and right-clicking the o
 ## Edge Cases
 If you die inside a block, the grave is placed at the next empty space above your location. If there is no free block above your position, or you are above the build limit, your items drop as usual.
 
-If you fall into the void, the grave is placed at Y=1. If there is no free space it will get placed at the next free spot above.
+If you fall into the void, the grave is placed at the lowest point in the world where blocks can be placed. If there is no free space it will get placed at the next free spot above.
