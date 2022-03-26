@@ -1,1 +1,1 @@
-- Re added Jade integration
+- Fixed ukrainian locale code
