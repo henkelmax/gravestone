@@ -36,7 +36,7 @@ public class GhostPlayerEntity extends Monster {
     }
 
     public GhostPlayerEntity(Level world, UUID playerUUID, Component name, NonNullList<ItemStack> equipment, byte model) {
-        this(Main.GHOST, world);
+        this(Main.GHOST.get(), world);
         setPlayerUUID(playerUUID);
         setCustomName(name);
         setModel(model);

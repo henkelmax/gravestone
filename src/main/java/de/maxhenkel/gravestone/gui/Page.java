@@ -2,8 +2,7 @@ package de.maxhenkel.gravestone.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Arrays;
@@ -28,8 +27,8 @@ public class Page {
     }
 
     public void drawPage(PoseStack matrixStack, int page, int pageCount, int mouseX, int mouseY) {
-        gui.drawCentered(matrixStack, gui.getFontRenderer(), new TranslatableComponent("gui.obituary.title.items").withStyle(ChatFormatting.UNDERLINE), gui.width / 2, 30, ChatFormatting.BLACK.getColor());
-        gui.drawCentered(matrixStack, gui.getFontRenderer(), new TranslatableComponent("gui.obituary.page", page, pageCount), gui.width / 2, 43, ChatFormatting.DARK_GRAY.getColor());
+        gui.drawCentered(matrixStack, gui.getFontRenderer(), Component.translatable("gui.obituary.title.items").withStyle(ChatFormatting.UNDERLINE), gui.width / 2, 30, ChatFormatting.BLACK.getColor());
+        gui.drawCentered(matrixStack, gui.getFontRenderer(), Component.translatable("gui.obituary.page", page, pageCount), gui.width / 2, 43, ChatFormatting.DARK_GRAY.getColor());
 
         int y = ITEM_START_Y;
         final int space = 12;
@@ -38,8 +37,8 @@ public class Page {
             if (s == null || s.isEmpty()) {
                 continue;
             }
-            gui.drawItem(matrixStack, new TranslatableComponent(s.getDescriptionId()).withStyle(ChatFormatting.ITALIC), y);
-            gui.drawItemSize(matrixStack, new TextComponent(String.valueOf(s.getCount())), y);
+            gui.drawItem(matrixStack, Component.translatable(s.getDescriptionId()).withStyle(ChatFormatting.ITALIC), y);
+            gui.drawItemSize(matrixStack, Component.literal(String.valueOf(s.getCount())), y);
             y = y + space;
         }
 

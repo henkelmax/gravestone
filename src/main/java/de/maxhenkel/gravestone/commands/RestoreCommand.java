@@ -11,7 +11,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.UuidArgument;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
@@ -27,7 +27,7 @@ public class RestoreCommand {
             ServerPlayer player = EntityArgument.getPlayer(commandSource, "target");
             Death death = DeathManager.getDeath(player.getLevel(), deathID);
             if (death == null) {
-                commandSource.getSource().sendFailure(new TranslatableComponent("message.gravestone.death_id_not_found", deathID.toString()));
+                commandSource.getSource().sendFailure(Component.translatable("message.gravestone.death_id_not_found", deathID.toString()));
                 return 0;
             }
             for (ItemStack stack : death.getAllItems()) {
@@ -35,7 +35,7 @@ public class RestoreCommand {
                     player.drop(stack, false);
                 }
             }
-            commandSource.getSource().sendSuccess(new TranslatableComponent("message.gravestone.restore.success", player.getDisplayName()), true);
+            commandSource.getSource().sendSuccess(Component.translatable("message.gravestone.restore.success", player.getDisplayName()), true);
             return 1;
         };
 
@@ -44,15 +44,15 @@ public class RestoreCommand {
             ServerPlayer player = EntityArgument.getPlayer(commandSource, "target");
             Death death = DeathManager.getDeath(player.getLevel(), deathID);
             if (death == null) {
-                commandSource.getSource().sendFailure(new TranslatableComponent("message.gravestone.death_id_not_found", deathID.toString()));
+                commandSource.getSource().sendFailure(Component.translatable("message.gravestone.death_id_not_found", deathID.toString()));
                 return 0;
             }
             player.getInventory().clearContent();
-            NonNullList<ItemStack> itemStacks = Main.GRAVESTONE.fillPlayerInventory(player, death);
+            NonNullList<ItemStack> itemStacks = Main.GRAVESTONE.get().fillPlayerInventory(player, death);
             for (ItemStack stack : itemStacks) {
                 player.drop(stack, false);
             }
-            commandSource.getSource().sendSuccess(new TranslatableComponent("message.gravestone.restore.success", player.getDisplayName()), true);
+            commandSource.getSource().sendSuccess(Component.translatable("message.gravestone.restore.success", player.getDisplayName()), true);
             return 1;
         };
 

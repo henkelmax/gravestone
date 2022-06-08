@@ -2,9 +2,8 @@ package de.maxhenkel.gravestone;
 
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -25,7 +24,7 @@ public class GraveUtils {
         BlockPos.MutableBlockPos location = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ());
 
         if (world.isOutsideBuildHeight(location) && location.getY() <= world.getMinBuildHeight()) {
-            location.set(location.getX(), world.getMinBuildHeight()+1, location.getZ());
+            location.set(location.getX(), world.getMinBuildHeight() + 1, location.getZ());
         }
 
         while (!world.isOutsideBuildHeight(location)) {
@@ -54,8 +53,8 @@ public class GraveUtils {
         if (timestamp <= 0L) {
             return null;
         }
-        SimpleDateFormat dateFormat = new SimpleDateFormat(new TranslatableComponent("gui.gravestone.date_format").getString());
-        return new TextComponent(dateFormat.format(new Date(timestamp)));
+        SimpleDateFormat dateFormat = new SimpleDateFormat(Component.translatable("gui.gravestone.date_format").getString());
+        return Component.literal(dateFormat.format(new Date(timestamp)));
     }
 
     public static boolean canBreakGrave(Level world, Player player, BlockPos pos) {

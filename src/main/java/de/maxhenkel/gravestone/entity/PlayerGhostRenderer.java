@@ -2,6 +2,7 @@ package de.maxhenkel.gravestone.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxhenkel.corelib.client.PlayerSkins;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -27,9 +28,9 @@ public class PlayerGhostRenderer extends LivingEntityRenderer<GhostPlayerEntity,
         model = playerModel;
 
         addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(renderer.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel<>(renderer.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR))));
-        this.addLayer(new CustomHeadLayer<>(this, renderer.getModelSet(), 1F, 1F, 1F));
+        this.addLayer(new CustomHeadLayer<>(this, renderer.getModelSet(), 1F, 1F, 1F, Minecraft.getInstance().gameRenderer.itemInHandRenderer));
         this.addLayer(new ElytraLayer<>(this, renderer.getModelSet()));
-        this.addLayer(new ItemInHandLayer<>(this));
+        this.addLayer(new ItemInHandLayer<>(this, Minecraft.getInstance().gameRenderer.itemInHandRenderer));
     }
 
     @Override

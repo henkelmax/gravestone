@@ -39,7 +39,7 @@ public class DeathEvents {
         BlockPos graveStoneLocation = GraveUtils.getGraveStoneLocation(world, death.getBlockPos());
 
         if (Main.SERVER_CONFIG.giveObituaries.get()) {
-            player.getInventory().add(Main.OBITUARY.toStack(death));
+            player.getInventory().add(Main.OBITUARY.get().toStack(death));
         }
 
         if (graveStoneLocation == null) {
@@ -48,7 +48,7 @@ public class DeathEvents {
             return;
         }
 
-        world.setBlockAndUpdate(graveStoneLocation, Main.GRAVESTONE.defaultBlockState().setValue(GraveStoneBlock.FACING, player.getDirection().getOpposite()));
+        world.setBlockAndUpdate(graveStoneLocation, Main.GRAVESTONE.get().defaultBlockState().setValue(GraveStoneBlock.FACING, player.getDirection().getOpposite()));
 
         if (GraveUtils.isReplaceable(world, graveStoneLocation.below())) {
             world.setBlockAndUpdate(graveStoneLocation.below(), Blocks.DIRT.defaultBlockState());

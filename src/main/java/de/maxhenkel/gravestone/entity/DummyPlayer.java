@@ -8,6 +8,7 @@ import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.PlayerModelPart;
+import net.minecraft.world.entity.player.ProfilePublicKey;
 import net.minecraft.world.item.ItemStack;
 
 public class DummyPlayer extends RemotePlayer {
@@ -15,7 +16,11 @@ public class DummyPlayer extends RemotePlayer {
     private final byte model;
 
     public DummyPlayer(ClientLevel world, GameProfile gameProfile, NonNullList<ItemStack> equipment, byte model) {
-        super(world, gameProfile);
+        this(world, gameProfile, null, equipment, model);
+    }
+
+    public DummyPlayer(ClientLevel world, GameProfile gameProfile, ProfilePublicKey profilePublicKey, NonNullList<ItemStack> equipment, byte model) {
+        super(world, gameProfile, profilePublicKey);
         this.model = model;
         for (EquipmentSlot type : EquipmentSlot.values()) {
             setItemSlot(type, equipment.get(type.ordinal()));

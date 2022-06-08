@@ -8,13 +8,10 @@ import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.entity.GhostPlayerEntity;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -93,12 +90,11 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
     public GraveStoneBlock() {
         super(Properties.of(GRAVESTONE_MATERIAL, MaterialColor.DIRT).strength(0.3F, Float.MAX_VALUE));
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
-        setRegistryName(Main.MODID, "gravestone");
     }
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().tab(CreativeModeTab.TAB_DECORATIONS)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().tab(CreativeModeTab.TAB_DECORATIONS));
     }
 
     @Override
@@ -179,9 +175,9 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
         if (world.isClientSide) {
             Component time = GraveUtils.getDate(grave.getDeath().getTimestamp());
             if (time == null) {
-                player.sendMessage(name, Util.NIL_UUID);
+                player.sendSystemMessage(name);
             } else {
-                player.sendMessage(new TranslatableComponent("message.gravestone.died", name, time), Util.NIL_UUID);
+                player.sendSystemMessage(Component.translatable("message.gravestone.died", name, time));
             }
         }
 
@@ -238,7 +234,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
             return;
         }
 
-        GhostPlayerEntity ghost = new GhostPlayerEntity(world, uuid, new TextComponent(grave.getDeath().getPlayerName()), grave.getDeath().getEquipment(), grave.getDeath().getModel());
+        GhostPlayerEntity ghost = new GhostPlayerEntity(world, uuid, Component.literal(grave.getDeath().getPlayerName()), grave.getDeath().getEquipment(), grave.getDeath().getModel());
         ghost.setPos(pos.getX() + 0.5D, pos.getY() + 0.1D, pos.getZ() + 0.5D);
         world.addFreshEntity(ghost);
     }
@@ -258,8 +254,8 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
 
         for (NonNullList<ItemStack> i : invs) {
             for (ItemStack stack : i) {
-                if (stack.getItem().equals(Main.OBITUARY)) {
-                    Death death = Main.OBITUARY.fromStack(player, stack);
+                if (stack.getItem().equals(Main.OBITUARY.get())) {
+                    Death death = Main.OBITUARY.get().fromStack(player, stack);
                     if (death != null && !grave.getDeath().getId().equals(GraveUtils.EMPTY_UUID) && grave.getDeath().getId().equals(death.getId())) {
                         inv.removeItem(stack);
                     }

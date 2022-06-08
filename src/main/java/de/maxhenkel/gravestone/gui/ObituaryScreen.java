@@ -8,7 +8,6 @@ import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.entity.DummyPlayer;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -47,7 +46,7 @@ public class ObituaryScreen extends Screen {
     private int guiTop;
 
     public ObituaryScreen(Death death) {
-        super(new TranslatableComponent("gui.obituary.title"));
+        super(Component.translatable("gui.obituary.title"));
         this.death = death;
         this.page = 0;
         this.pageList = new PageList(death.getAllItems(), this);
@@ -61,7 +60,7 @@ public class ObituaryScreen extends Screen {
         guiTop = (height - TEXTURE_Y) / 2;
 
         int left = (width - TEXTURE_X) / 2;
-        buttonPrev = addRenderableWidget(new Button(left, 190, 75, 20, new TranslatableComponent("button.gravestone.prev"), button -> {
+        buttonPrev = addRenderableWidget(new Button(left, 190, 75, 20, Component.translatable("button.gravestone.prev"), button -> {
             page--;
             if (page < 0) {
                 page = 0;
@@ -69,7 +68,7 @@ public class ObituaryScreen extends Screen {
             checkButtons();
         }));
 
-        buttonNext = addRenderableWidget(new Button(left + TEXTURE_X - 75, 190, 75, 20, new TranslatableComponent("button.gravestone.next"), button -> {
+        buttonNext = addRenderableWidget(new Button(left + TEXTURE_X - 75, 190, 75, 20, Component.translatable("button.gravestone.next"), button -> {
             page++;
             if (page > pageList.getPages()) {
                 page = pageList.getPages();
@@ -118,37 +117,37 @@ public class ObituaryScreen extends Screen {
     }
 
     public void drawFirstPage(PoseStack matrixStack, int mouseX, int mouseY) {
-        drawCentered(matrixStack, font, new TranslatableComponent("gui.obituary.title").withStyle(ChatFormatting.UNDERLINE), width / 2, 30, ChatFormatting.BLACK.getColor());
+        drawCentered(matrixStack, font, Component.translatable("gui.obituary.title").withStyle(ChatFormatting.UNDERLINE), width / 2, 30, ChatFormatting.BLACK.getColor());
 
         int height = 50;
 
         if (minecraft.options.advancedItemTooltips) {
-            drawLeft(matrixStack, new TranslatableComponent("gui.obituary.id").append(":").withStyle(ChatFormatting.BLACK), height);
-            drawRight(matrixStack, new TextComponent(death.getId().toString()).withStyle(ChatFormatting.DARK_GRAY), height, 0.5F);
+            drawLeft(matrixStack, Component.translatable("gui.obituary.id").append(":").withStyle(ChatFormatting.BLACK), height);
+            drawRight(matrixStack, Component.literal(death.getId().toString()).withStyle(ChatFormatting.DARK_GRAY), height, 0.5F);
             height += 13;
         }
 
-        drawLeft(matrixStack, new TranslatableComponent("gui.obituary.name").append(":").withStyle(ChatFormatting.BLACK), height);
-        drawRight(matrixStack, new TextComponent(death.getPlayerName()).withStyle(ChatFormatting.DARK_GRAY), height);
+        drawLeft(matrixStack, Component.translatable("gui.obituary.name").append(":").withStyle(ChatFormatting.BLACK), height);
+        drawRight(matrixStack, Component.literal(death.getPlayerName()).withStyle(ChatFormatting.DARK_GRAY), height);
         height += 13;
-        drawLeft(matrixStack, new TranslatableComponent("gui.obituary.dimension").append(":").withStyle(ChatFormatting.BLACK), height);
-        drawRight(matrixStack, new TextComponent(death.getDimension().split(":")[1]).withStyle(ChatFormatting.DARK_GRAY), height);
+        drawLeft(matrixStack, Component.translatable("gui.obituary.dimension").append(":").withStyle(ChatFormatting.BLACK), height);
+        drawRight(matrixStack, Component.literal(death.getDimension().split(":")[1]).withStyle(ChatFormatting.DARK_GRAY), height);
         height += 13;
-        drawLeft(matrixStack, new TranslatableComponent("gui.obituary.time").append(":").withStyle(ChatFormatting.BLACK), height);
+        drawLeft(matrixStack, Component.translatable("gui.obituary.time").append(":").withStyle(ChatFormatting.BLACK), height);
         MutableComponent date = GraveUtils.getDate(death.getTimestamp());
         if (date != null) {
             drawRight(matrixStack, date.withStyle(ChatFormatting.DARK_GRAY), height);
         } else {
-            drawRight(matrixStack, new TextComponent("N/A").withStyle(ChatFormatting.DARK_GRAY), height);
+            drawRight(matrixStack, Component.literal("N/A").withStyle(ChatFormatting.DARK_GRAY), height);
         }
         height += 13;
-        drawLeft(matrixStack, new TranslatableComponent("gui.obituary.location").append(":").withStyle(ChatFormatting.BLACK), height);
+        drawLeft(matrixStack, Component.translatable("gui.obituary.location").append(":").withStyle(ChatFormatting.BLACK), height);
         BlockPos pos = death.getBlockPos();
-        drawRight(matrixStack, new TextComponent("X: " + pos.getX()).withStyle(ChatFormatting.DARK_GRAY), height);
+        drawRight(matrixStack, Component.literal("X: " + pos.getX()).withStyle(ChatFormatting.DARK_GRAY), height);
         height += 13;
-        drawRight(matrixStack, new TextComponent("Y: " + pos.getY()).withStyle(ChatFormatting.DARK_GRAY), height);
+        drawRight(matrixStack, Component.literal("Y: " + pos.getY()).withStyle(ChatFormatting.DARK_GRAY), height);
         height += 13;
-        drawRight(matrixStack, new TextComponent("Z: " + pos.getZ()).withStyle(ChatFormatting.DARK_GRAY), height);
+        drawRight(matrixStack, Component.literal("Z: " + pos.getZ()).withStyle(ChatFormatting.DARK_GRAY), height);
 
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
@@ -160,7 +159,7 @@ public class ObituaryScreen extends Screen {
 
         if (minecraft.options.advancedItemTooltips) {
             if (mouseX >= guiLeft + 7 && mouseX <= guiLeft + TEXTURE_X - 7 && mouseY >= 50 && mouseY <= 50 + font.lineHeight) {
-                renderTooltip(matrixStack, Collections.singletonList(new TranslatableComponent("gui.obituary.copy_id").getVisualOrderText()), mouseX, mouseY);
+                renderTooltip(matrixStack, Collections.singletonList(Component.translatable("gui.obituary.copy_id").getVisualOrderText()), mouseX, mouseY);
             }
         }
     }
@@ -170,13 +169,13 @@ public class ObituaryScreen extends Screen {
         if (minecraft.options.advancedItemTooltips && page == 0) {
             if (x >= guiLeft + 7 && x <= guiLeft + TEXTURE_X - 7 && y >= 50 && y <= 50 + font.lineHeight) {
                 minecraft.keyboardHandler.setClipboard(death.getId().toString());
-                Component deathID = ComponentUtils.wrapInSquareBrackets(new TranslatableComponent("message.gravestone.death_id"))
+                Component deathID = ComponentUtils.wrapInSquareBrackets(Component.translatable("message.gravestone.death_id"))
                         .withStyle((style) -> style
                                 .applyFormat(ChatFormatting.GREEN)
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore @s " + death.getId().toString() + " replace"))
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent(death.getId().toString())))
+                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(death.getId().toString())))
                         );
-                minecraft.player.sendMessage(new TranslatableComponent("message.gravestone.copied", deathID), Util.NIL_UUID);
+                minecraft.player.sendSystemMessage(Component.translatable("message.gravestone.copied", deathID));
                 minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
                 minecraft.setScreen(null);
             }

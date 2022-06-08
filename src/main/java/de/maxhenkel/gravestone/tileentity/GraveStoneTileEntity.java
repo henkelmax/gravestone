@@ -8,8 +8,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -28,7 +26,7 @@ public class GraveStoneTileEntity extends BlockEntity implements Nameable {
     protected Component customName;
 
     public GraveStoneTileEntity(BlockPos pos, BlockState state) {
-        super(Main.GRAVESTONE_TILEENTITY, pos, state);
+        super(Main.GRAVESTONE_TILEENTITY.get(), pos, state);
         death = new Death.Builder(GraveUtils.EMPTY_UUID, GraveUtils.EMPTY_UUID).build();
     }
 
@@ -119,15 +117,15 @@ public class GraveStoneTileEntity extends BlockEntity implements Nameable {
     protected Component getDefaultName() {
         String name = death.getPlayerName();
         if (name == null || name.isEmpty()) {
-            return new TranslatableComponent(Main.GRAVESTONE.getDescriptionId());
+            return Component.translatable(Main.GRAVESTONE.get().getDescriptionId());
         }
-        return new TranslatableComponent("message.gravestone.grave_of", name);
+        return Component.translatable("message.gravestone.grave_of", name);
     }
 
     @Nullable
     public Component getGraveName() {
         if (!death.getPlayerName().isEmpty()) {
-            return new TextComponent(death.getPlayerName());
+            return Component.literal(death.getPlayerName());
         } else if (customName != null) {
             return customName;
         } else {

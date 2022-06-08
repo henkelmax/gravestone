@@ -6,9 +6,11 @@ import de.maxhenkel.corelib.net.NetUtils;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.net.MessageOpenObituary;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -23,7 +25,6 @@ public class ObituaryItem extends Item {
 
     public ObituaryItem() {
         super(new Item.Properties().stacksTo(1));
-        this.setRegistryName("obituary");
     }
 
     @Override
@@ -35,22 +36,22 @@ public class ObituaryItem extends Item {
         Death death = fromStack(player, player.getItemInHand(hand));
 
         if (death == null) {
-            player.displayClientMessage(new TranslatableComponent("message.gravestone.death_not_found"), true);
+            player.displayClientMessage(Component.translatable("message.gravestone.death_not_found"), true);
         } else if (player.isShiftKeyDown()) {
             if (player.hasPermissions(player.server.getOperatorUserPermissionLevel())) {
-                Component replace = ComponentUtils.wrapInSquareBrackets(new TranslatableComponent("message.gravestone.restore.replace"))
+                Component replace = ComponentUtils.wrapInSquareBrackets(Component.translatable("message.gravestone.restore.replace"))
                         .withStyle((style) -> style
                                 .applyFormat(ChatFormatting.GREEN)
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore @s " + death.getId().toString() + " replace"))
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableComponent("message.gravestone.restore.replace.description")))
+                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("message.gravestone.restore.replace.description")))
                         );
-                Component add = ComponentUtils.wrapInSquareBrackets(new TranslatableComponent("message.gravestone.restore.add"))
+                Component add = ComponentUtils.wrapInSquareBrackets(Component.translatable("message.gravestone.restore.add"))
                         .withStyle((style) -> style
                                 .applyFormat(ChatFormatting.GREEN)
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore @s " + death.getId().toString() + " add"))
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableComponent("message.gravestone.restore.add.description")))
+                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("message.gravestone.restore.add.description")))
                         );
-                player.sendMessage(new TranslatableComponent("message.gravestone.restore").append(" ").append(replace).append(" ").append(add), Util.NIL_UUID);
+                player.sendSystemMessage(Component.translatable("message.gravestone.restore").append(" ").append(replace).append(" ").append(add));
             }
         } else {
             NetUtils.sendTo(Main.SIMPLE_CHANNEL, player, new MessageOpenObituary(death));

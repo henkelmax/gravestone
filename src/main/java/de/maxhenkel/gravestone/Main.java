@@ -12,7 +12,6 @@ import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import de.maxhenkel.gravestone.tileentity.render.GravestoneRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
@@ -22,7 +21,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -32,6 +30,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.simple.SimpleChannel;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,19 +46,25 @@ public class Main {
 
     public static SimpleChannel SIMPLE_CHANNEL;
 
-    public static GraveStoneBlock GRAVESTONE;
-    public static Item GRAVESTONE_ITEM;
-    public static BlockEntityType<GraveStoneTileEntity> GRAVESTONE_TILEENTITY;
-    public static ObituaryItem OBITUARY;
-    public static EntityType<GhostPlayerEntity> GHOST;
+    private static final DeferredRegister<Block> BLOCK_REGISTER = DeferredRegister.create(ForgeRegistries.BLOCKS, Main.MODID);
+    public static final RegistryObject<GraveStoneBlock> GRAVESTONE = BLOCK_REGISTER.register("gravestone", GraveStoneBlock::new);
+
+    private static final DeferredRegister<Item> ITEM_REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, Main.MODID);
+    public static final RegistryObject<Item> GRAVESTONE_ITEM = ITEM_REGISTER.register("gravestone", () -> GRAVESTONE.get().toItem());
+    public static final RegistryObject<ObituaryItem> OBITUARY = ITEM_REGISTER.register("obituary", ObituaryItem::new);
+
+    private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_REGISTER = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, Main.MODID);
+    public static final RegistryObject<BlockEntityType<GraveStoneTileEntity>> GRAVESTONE_TILEENTITY = BLOCK_ENTITY_REGISTER.register("gravestone", () -> BlockEntityType.Builder.of(GraveStoneTileEntity::new, GRAVESTONE.get()).build(null));
+
+    private static final DeferredRegister<EntityType<?>> ENTITY_REGISTER = DeferredRegister.create(ForgeRegistries.ENTITIES, Main.MODID);
+    public static final RegistryObject<EntityType<GhostPlayerEntity>> GHOST = ENTITY_REGISTER.register("player_ghost", () ->
+            CommonRegistry.registerEntity(Main.MODID, "player_ghost", MobCategory.MONSTER, GhostPlayerEntity.class, builder -> builder.sized(0.6F, 1.95F))
+    );
+
     public static ServerConfig SERVER_CONFIG;
     public static ClientConfig CLIENT_CONFIG;
 
     public Main() {
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, this::registerBlocks);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, this::registerItems);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(BlockEntityType.class, this::registerTileEntities);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(EntityType.class, this::registerEntities);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerAttributes);
 
@@ -65,6 +72,11 @@ public class Main {
         CLIENT_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.CLIENT, ClientConfig.class, true);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup));
+
+        BLOCK_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ITEM_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
+        BLOCK_ENTITY_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
+        ENTITY_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     @SubscribeEvent
@@ -79,11 +91,11 @@ public class Main {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public void clientSetup(FMLClientSetupEvent event) {
-        BlockEntityRenderers.register(GRAVESTONE_TILEENTITY, GravestoneRenderer::new);
+        BlockEntityRenderers.register(GRAVESTONE_TILEENTITY.get(), GravestoneRenderer::new);
 
         // TODO
         // RenderingRegistry.registerEntityRenderingHandler(GHOST, PlayerGhostRenderer::new);
-        EntityRenderers.register(GHOST, PlayerGhostRenderer::new);
+        EntityRenderers.register(GHOST.get(), PlayerGhostRenderer::new);
     }
 
     @SubscribeEvent
@@ -92,36 +104,8 @@ public class Main {
     }
 
     @SubscribeEvent
-    public void registerBlocks(RegistryEvent.Register<Block> event) {
-        event.getRegistry().registerAll(
-                GRAVESTONE = new GraveStoneBlock()
-        );
-    }
-
-    @SubscribeEvent
-    public void registerItems(RegistryEvent.Register<Item> event) {
-        event.getRegistry().registerAll(
-                GRAVESTONE_ITEM = GRAVESTONE.toItem(),
-                OBITUARY = new ObituaryItem()
-        );
-    }
-
-    @SubscribeEvent
-    public void registerTileEntities(RegistryEvent.Register<BlockEntityType<?>> event) {
-        GRAVESTONE_TILEENTITY = BlockEntityType.Builder.of(GraveStoneTileEntity::new, GRAVESTONE).build(null);
-        GRAVESTONE_TILEENTITY.setRegistryName(new ResourceLocation(MODID, "gravestone"));
-        event.getRegistry().register(GRAVESTONE_TILEENTITY);
-    }
-
-    @SubscribeEvent
-    public void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
-        GHOST = CommonRegistry.registerEntity(Main.MODID, "player_ghost", MobCategory.MONSTER, GhostPlayerEntity.class, builder -> builder.sized(0.6F, 1.95F));
-        event.getRegistry().register(GHOST);
-    }
-
-    @SubscribeEvent
     public void registerAttributes(EntityAttributeCreationEvent event) {
-        event.put(Main.GHOST, GhostPlayerEntity.getGhostAttributes());
+        event.put(Main.GHOST.get(), GhostPlayerEntity.getGhostAttributes());
     }
 
 }

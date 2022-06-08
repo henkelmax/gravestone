@@ -1,1 +1,1 @@
-- Fixed ukrainian locale code
+- Updated to 1.19
