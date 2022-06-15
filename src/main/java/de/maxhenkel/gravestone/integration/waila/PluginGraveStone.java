@@ -2,19 +2,21 @@ package de.maxhenkel.gravestone.integration.waila;
 
 import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
-import mcp.mobius.waila.api.IRegistrar;
-import mcp.mobius.waila.api.IWailaPlugin;
-import mcp.mobius.waila.api.TooltipPosition;
-import mcp.mobius.waila.api.WailaPlugin;
+import snownee.jade.api.IWailaClientRegistration;
+import snownee.jade.api.IWailaCommonRegistration;
+import snownee.jade.api.IWailaPlugin;
+import snownee.jade.api.WailaPlugin;
 
 @WailaPlugin
 public class PluginGraveStone implements IWailaPlugin {
 
     @Override
-    public void register(IRegistrar registrar) {
-        registrar.registerComponentProvider(HUDHandlerGraveStone.INSTANCE, TooltipPosition.HEAD, GraveStoneBlock.class);
-        registrar.registerComponentProvider(HUDHandlerGraveStone.INSTANCE, TooltipPosition.BODY, GraveStoneBlock.class);
-        registrar.registerBlockDataProvider(HUDHandlerGraveStone.INSTANCE, GraveStoneTileEntity.class);
+    public void registerClient(IWailaClientRegistration registration) {
+        registration.registerBlockComponent(HUDHandlerGraveStone.INSTANCE, GraveStoneBlock.class);
     }
 
+    @Override
+    public void register(IWailaCommonRegistration registration) {
+        registration.registerBlockDataProvider(HUDHandlerGraveStone.INSTANCE, GraveStoneTileEntity.class);
+    }
 }
