@@ -1,3 +1,5 @@
+<!-- modrinth_exclude.start -->
+
 # GraveStone Mod ![](http://cf.way2muchnoise.eu/full_238551_downloads.svg) ![](http://cf.way2muchnoise.eu/versions/238551.svg)
 
 ## Links
@@ -8,6 +10,8 @@
 - [Credits](https://modrepo.de/minecraft/gravestone/credits)
 
 ---
+
+<!-- modrinth_exclude.end -->
 
 ## Basic Functionality
 Every time you die, a grave is placed at your position.
