@@ -7,10 +7,12 @@ import java.util.Random;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.maxhenkel.gravestone.Config;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.ModItems;
 import de.maxhenkel.gravestone.tileentity.TileEntityGraveStone;
 import de.maxhenkel.gravestone.util.BlockPos;
+import de.maxhenkel.gravestone.util.GraveUtils;
 import de.maxhenkel.gravestone.util.Tools;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -202,5 +204,36 @@ public class BlockGraveStone extends BlockContainer {
 	public boolean canBeReplacedByLeaves(IBlockAccess world, int x, int y, int z) {
 		return false;
 	}
+	
+	@Override
+	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
+		super.onEntityCollidedWithBlock(world, x, y, z, entity);
+		if (world.isRemote) {
+			return;
+		}
 
+		if (!(entity instanceof EntityPlayer) || !entity.isEntityAlive() || !Config.instance().sneakPickup) {
+			return;
+		}
+
+		EntityPlayer player = (EntityPlayer) entity;
+		if (!player.isSneaking() || player.capabilities.isCreativeMode) {
+			return;
+		}
+		
+		TileEntity te = world.getTileEntity(x, y, z);
+		if (!(te instanceof TileEntityGraveStone)) {
+		return;
+		}
+		
+		TileEntityGraveStone tileentity = (TileEntityGraveStone) te;
+		if (!GraveUtils.canBreakGrave(player, tileentity)) {
+			return;
+		}
+		
+		GraveUtils.removeDeathNote(player, x, y, z);
+		
+		breakBlock(world, x, y, z, world.getBlock(x, y, z), world.getBlockMetadata(x, y, z));
+		world.setBlockToAir(x, y, z);
+	}
 }

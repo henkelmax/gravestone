@@ -24,6 +24,7 @@ public class Config {
 	public final List<Block> replaceableBlocks;
 	public final boolean removeDeathNote;
 	public final boolean onlyPlayersCanBreak;
+	public final boolean sneakPickup;
 	
 
 	public Config(Configuration config) {
@@ -39,6 +40,7 @@ public class Config {
 		this.replaceableBlocks=Collections.unmodifiableList(getReplaceableBlocks());
 		this.removeDeathNote=removeDeathNote();
 		this.onlyPlayersCanBreak=onlyOwnersCanBreak();
+		this.sneakPickup=sneakPickup();
 		
 		this.config.save();
 		
@@ -165,6 +167,10 @@ public class Config {
 	
 	private boolean onlyOwnersCanBreak(){
 		return getBoolean("only_owners_can_break", "gravestone", false, "If this is set to true only the player that owns the gravestone and the admins can break the gravestone");
+	}
+	
+	private boolean sneakPickup(){
+		return getBoolean("sneak_pickup", "gravestone", false, "If this is set to true you get your items back into your inventory by sneaking on the grave");
 	}
 
 	public void setInstance() {
