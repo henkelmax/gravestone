@@ -105,17 +105,12 @@ public class Tools {
 
 	public static Block getBlock(String name) {
 		try {
-			String[] split = name.split(":");
-			if (split.length == 2) {
-				Block b = (Block) Block.blockRegistry.getObject(new ResourceLocation(split[0], split[1]));
+				Block b = (Block) Block.blockRegistry.getObject(name);
 				if (b.equals(Blocks.air)) {
 					return null;
 				} else {
 					return b;
 				}
-			} else {
-				return null;
-			}
 		} catch (Exception e) {
 			return null;
 		}
