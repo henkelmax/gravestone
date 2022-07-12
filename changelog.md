@@ -1,1 +1,1 @@
-- Re added Jade integration
+- Updated Forge version

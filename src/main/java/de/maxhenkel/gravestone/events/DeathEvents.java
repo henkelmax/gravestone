@@ -83,13 +83,13 @@ public class DeathEvents {
             return;
         }
 
-        if (keepInventory(event.getPlayer())) {
+        if (keepInventory(event.getEntity())) {
             return;
         }
 
         for (ItemStack stack : event.getOriginal().getInventory().items) {
             if (stack.getItem() instanceof ObituaryItem) {
-                event.getPlayer().getInventory().add(stack);
+                event.getEntity().getInventory().add(stack);
             }
         }
     }
