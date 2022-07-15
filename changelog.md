@@ -1,1 +1,1 @@
-- Updated Forge version
+- Fixed crash when opening the obituary
