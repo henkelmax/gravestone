@@ -1,1 +1,1 @@
-- Fixed crash when opening the obituary
+- Updated to 1.19.1
