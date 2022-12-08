@@ -22,10 +22,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
@@ -94,7 +91,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().tab(CreativeModeTab.TAB_DECORATIONS));
+        return new BlockItem(this, new Item.Properties()/*.tab(CreativeModeTabs.FUNCTIONAL_BLOCKS)*/); //TODO Fix creative mode tabs
     }
 
     @Override

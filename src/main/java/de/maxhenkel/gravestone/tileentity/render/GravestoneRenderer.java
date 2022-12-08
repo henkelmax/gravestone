@@ -2,7 +2,7 @@ package de.maxhenkel.gravestone.tileentity.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import de.maxhenkel.corelib.client.PlayerSkins;
 import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
@@ -41,8 +41,8 @@ public class GravestoneRenderer implements BlockEntityRenderer<GraveStoneTileEnt
 
         matrixStack.pushPose();
         matrixStack.translate(0.5D, 1D, 0.5D);
-        matrixStack.mulPose(Vector3f.XP.rotationDegrees(180F));
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(180F + direction.toYRot()));
+        matrixStack.mulPose(Axis.XP.rotationDegrees(180F));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(180F + direction.toYRot()));
 
         Font font = renderer.getFont();
 
@@ -72,11 +72,11 @@ public class GravestoneRenderer implements BlockEntityRenderer<GraveStoneTileEnt
 
         matrixStack.translate(0.5D, 0D, 0.5D);
 
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(180F - rotation.toYRot()));
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-26F));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(180F - rotation.toYRot()));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(-26F));
         matrixStack.translate(0D, -0.14D, 0.18D);
-        matrixStack.mulPose(Vector3f.XP.rotationDegrees(180F));
-        matrixStack.mulPose(Vector3f.XP.rotationDegrees(-61F));
+        matrixStack.mulPose(Axis.XP.rotationDegrees(180F));
+        matrixStack.mulPose(Axis.XP.rotationDegrees(-61F));
 
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         model.renderToBuffer(matrixStack, buffer.getBuffer(model.renderType(resourcelocation)), combinedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);

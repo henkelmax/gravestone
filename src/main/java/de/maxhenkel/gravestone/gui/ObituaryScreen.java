@@ -60,21 +60,21 @@ public class ObituaryScreen extends Screen {
         guiTop = (height - TEXTURE_Y) / 2;
 
         int left = (width - TEXTURE_X) / 2;
-        buttonPrev = addRenderableWidget(new Button(left, 190, 75, 20, Component.translatable("button.gravestone.prev"), button -> {
+        buttonPrev = addRenderableWidget(Button.builder(Component.translatable("button.gravestone.prev"), button -> {
             page--;
             if (page < 0) {
                 page = 0;
             }
             checkButtons();
-        }));
+        }).bounds(left, 190, 75, 20).build());
 
-        buttonNext = addRenderableWidget(new Button(left + TEXTURE_X - 75, 190, 75, 20, Component.translatable("button.gravestone.next"), button -> {
+        buttonNext = addRenderableWidget(Button.builder(Component.translatable("button.gravestone.next"), button -> {
             page++;
             if (page > pageList.getPages()) {
                 page = pageList.getPages();
             }
             checkButtons();
-        }));
+        }).bounds(left + TEXTURE_X - 75, 190, 75, 20).build());
         buttonPrev.active = false;
         if (pageList.getPages() <= 0) {
             buttonNext.active = false;
