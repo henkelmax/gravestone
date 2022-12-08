@@ -91,7 +91,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties()/*.tab(CreativeModeTabs.FUNCTIONAL_BLOCKS)*/); //TODO Fix creative mode tabs
+        return new BlockItem(this, new Item.Properties());
     }
 
     @Override

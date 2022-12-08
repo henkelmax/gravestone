@@ -5,6 +5,7 @@ import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
 import de.maxhenkel.gravestone.commands.RestoreCommand;
 import de.maxhenkel.gravestone.entity.GhostPlayerEntity;
 import de.maxhenkel.gravestone.entity.PlayerGhostRenderer;
+import de.maxhenkel.gravestone.events.CreativeTabEvents;
 import de.maxhenkel.gravestone.events.DeathEvents;
 import de.maxhenkel.gravestone.items.ObituaryItem;
 import de.maxhenkel.gravestone.net.MessageOpenObituary;
@@ -67,6 +68,7 @@ public class Main {
     public Main() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerAttributes);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(CreativeTabEvents::onCreativeModeTabBuildContents);
 
         SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class, true);
         CLIENT_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.CLIENT, ClientConfig.class, true);
