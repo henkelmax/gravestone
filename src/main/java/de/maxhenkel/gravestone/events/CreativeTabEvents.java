@@ -10,11 +10,8 @@ public class CreativeTabEvents {
 
     @SubscribeEvent
     public static void onCreativeModeTabBuildContents(CreativeModeTabEvent.BuildContents event) {
-        if (event.getTab() == CreativeModeTabs.FUNCTIONAL_BLOCKS)
-        {
-            event.register((flags, builder, hasPermissions) -> {
-                builder.accept(new ItemStack(Main.GRAVESTONE.get()));
-            });
+        if (event.getTab() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
+            event.accept(new ItemStack(Main.GRAVESTONE.get()));
         }
     }
 
