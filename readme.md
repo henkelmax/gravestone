@@ -4,9 +4,6 @@
 
 ## Links
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/gravestone-mod)
-- [ModRepo](https://modrepo.de/minecraft/gravestone/overview)
-- [GitHub](https://github.com/henkelmax/gravestone)
-- [FAQ](https://modrepo.de/minecraft/gravestone/faq)
 - [Credits](https://modrepo.de/minecraft/gravestone/credits)
 
 ---
