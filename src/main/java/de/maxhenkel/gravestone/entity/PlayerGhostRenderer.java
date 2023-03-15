@@ -27,7 +27,7 @@ public class PlayerGhostRenderer extends LivingEntityRenderer<GhostPlayerEntity,
         playerModelSmallArms = new PlayerModel<>(renderer.bakeLayer(ModelLayers.PLAYER_SLIM), true);
         model = playerModel;
 
-        addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(renderer.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel<>(renderer.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR))));
+        addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel<>(renderer.bakeLayer(ModelLayers.PLAYER_INNER_ARMOR)), new HumanoidModel<>(renderer.bakeLayer(ModelLayers.PLAYER_OUTER_ARMOR)), Minecraft.getInstance().getModelManager()));
         this.addLayer(new CustomHeadLayer<>(this, renderer.getModelSet(), 1F, 1F, 1F, Minecraft.getInstance().gameRenderer.itemInHandRenderer));
         this.addLayer(new ElytraLayer<>(this, renderer.getModelSet()));
         this.addLayer(new ItemInHandLayer<>(this, Minecraft.getInstance().gameRenderer.itemInHandRenderer));

@@ -19,6 +19,7 @@ import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Quaternionf;
 
 import java.util.Collections;
 
@@ -155,7 +156,7 @@ public class ObituaryScreen extends Screen {
             player = new DummyPlayer(minecraft.level, new GameProfile(death.getPlayerUUID(), death.getPlayerName()), death.getEquipment(), death.getModel());
         }
 
-        InventoryScreen.renderEntityInInventory(width / 2, 170, 30, (width / 2) - mouseX, 100 - mouseY, player);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(matrixStack, width / 2, 170, 30, (width / 2) - mouseX, 100 - mouseY, player);
 
         if (minecraft.options.advancedItemTooltips) {
             if (mouseX >= guiLeft + 7 && mouseX <= guiLeft + TEXTURE_X - 7 && mouseY >= 50 && mouseY <= 50 + font.lineHeight) {

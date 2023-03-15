@@ -52,7 +52,7 @@ public class GravestoneRenderer implements BlockEntityRenderer<GraveStoneTileEnt
         matrixStack.translate(0D, 0.3D, 0.37D);
         matrixStack.scale((float) textScale, (float) textScale, (float) textScale);
         float left = (float) (-textWidth / 2);
-        font.drawInBatch(name.getString(), left, 0F, Main.CLIENT_CONFIG.graveTextColor, false, matrixStack.last().pose(), buffer, false, 0, combinedLight);
+        font.drawInBatch(name.getString(), left, 0F, Main.CLIENT_CONFIG.graveTextColor, false, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, combinedLight);
         matrixStack.popPose();
 
         BlockState state = grave.getLevel().getBlockState(grave.getBlockPos().below());
