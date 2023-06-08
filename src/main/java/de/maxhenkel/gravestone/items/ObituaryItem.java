@@ -66,7 +66,7 @@ public class ObituaryItem extends Item {
             return null;
         }
         CompoundTag death = compound.getCompound("Death");
-        return DeathManager.getDeath(player.getLevel(), death.getUUID("PlayerUUID"), death.getUUID("DeathID"));
+        return DeathManager.getDeath(player.serverLevel(), death.getUUID("PlayerUUID"), death.getUUID("DeathID"));
     }
 
     public ItemStack toStack(Death death) {

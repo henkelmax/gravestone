@@ -9,6 +9,7 @@ import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.entity.DummyPlayer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -97,58 +98,57 @@ public class ObituaryScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
         int left = (width - TEXTURE_X) / 2;
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        RenderSystem.setShaderTexture(0, GUI_TEXTURE);
-        blit(matrixStack, left, 20, 0, 0, TEXTURE_X, TEXTURE_Y);
+        guiGraphics.blit(GUI_TEXTURE, left, 20, 0, 0, TEXTURE_X, TEXTURE_Y);
 
         if (page == 0) {
-            drawFirstPage(matrixStack, mouseX, mouseY);
+            drawFirstPage(guiGraphics, mouseX, mouseY);
         } else if (page > 0) {
             if (pageList.getPages() < page - 1) {
 
             } else {
-                pageList.drawPage(matrixStack, page - 1, mouseX, mouseY);
+                pageList.drawPage(guiGraphics, page - 1, mouseX, mouseY);
             }
         }
     }
 
-    public void drawFirstPage(PoseStack matrixStack, int mouseX, int mouseY) {
-        drawCentered(matrixStack, font, Component.translatable("gui.obituary.title").withStyle(ChatFormatting.UNDERLINE), width / 2, 30, ChatFormatting.BLACK.getColor());
+    public void drawFirstPage(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        drawCentered(guiGraphics, font, Component.translatable("gui.obituary.title").withStyle(ChatFormatting.UNDERLINE), width / 2, 30, ChatFormatting.BLACK.getColor());
 
         int height = 50;
 
         if (minecraft.options.advancedItemTooltips) {
-            drawLeft(matrixStack, Component.translatable("gui.obituary.id").append(":").withStyle(ChatFormatting.BLACK), height);
-            drawRight(matrixStack, Component.literal(death.getId().toString()).withStyle(ChatFormatting.DARK_GRAY), height, 0.5F);
+            drawLeft(guiGraphics, Component.translatable("gui.obituary.id").append(":").withStyle(ChatFormatting.BLACK), height);
+            drawRight(guiGraphics, Component.literal(death.getId().toString()).withStyle(ChatFormatting.DARK_GRAY), height, 0.5F);
             height += 13;
         }
 
-        drawLeft(matrixStack, Component.translatable("gui.obituary.name").append(":").withStyle(ChatFormatting.BLACK), height);
-        drawRight(matrixStack, Component.literal(death.getPlayerName()).withStyle(ChatFormatting.DARK_GRAY), height);
+        drawLeft(guiGraphics, Component.translatable("gui.obituary.name").append(":").withStyle(ChatFormatting.BLACK), height);
+        drawRight(guiGraphics, Component.literal(death.getPlayerName()).withStyle(ChatFormatting.DARK_GRAY), height);
         height += 13;
-        drawLeft(matrixStack, Component.translatable("gui.obituary.dimension").append(":").withStyle(ChatFormatting.BLACK), height);
-        drawRight(matrixStack, Component.literal(death.getDimension().split(":")[1]).withStyle(ChatFormatting.DARK_GRAY), height);
+        drawLeft(guiGraphics, Component.translatable("gui.obituary.dimension").append(":").withStyle(ChatFormatting.BLACK), height);
+        drawRight(guiGraphics, Component.literal(death.getDimension().split(":")[1]).withStyle(ChatFormatting.DARK_GRAY), height);
         height += 13;
-        drawLeft(matrixStack, Component.translatable("gui.obituary.time").append(":").withStyle(ChatFormatting.BLACK), height);
+        drawLeft(guiGraphics, Component.translatable("gui.obituary.time").append(":").withStyle(ChatFormatting.BLACK), height);
         MutableComponent date = GraveUtils.getDate(death.getTimestamp());
         if (date != null) {
-            drawRight(matrixStack, date.withStyle(ChatFormatting.DARK_GRAY), height);
+            drawRight(guiGraphics, date.withStyle(ChatFormatting.DARK_GRAY), height);
         } else {
-            drawRight(matrixStack, Component.literal("N/A").withStyle(ChatFormatting.DARK_GRAY), height);
+            drawRight(guiGraphics, Component.literal("N/A").withStyle(ChatFormatting.DARK_GRAY), height);
         }
         height += 13;
-        drawLeft(matrixStack, Component.translatable("gui.obituary.location").append(":").withStyle(ChatFormatting.BLACK), height);
+        drawLeft(guiGraphics, Component.translatable("gui.obituary.location").append(":").withStyle(ChatFormatting.BLACK), height);
         BlockPos pos = death.getBlockPos();
-        drawRight(matrixStack, Component.literal("X: " + pos.getX()).withStyle(ChatFormatting.DARK_GRAY), height);
+        drawRight(guiGraphics, Component.literal("X: " + pos.getX()).withStyle(ChatFormatting.DARK_GRAY), height);
         height += 13;
-        drawRight(matrixStack, Component.literal("Y: " + pos.getY()).withStyle(ChatFormatting.DARK_GRAY), height);
+        drawRight(guiGraphics, Component.literal("Y: " + pos.getY()).withStyle(ChatFormatting.DARK_GRAY), height);
         height += 13;
-        drawRight(matrixStack, Component.literal("Z: " + pos.getZ()).withStyle(ChatFormatting.DARK_GRAY), height);
+        drawRight(guiGraphics, Component.literal("Z: " + pos.getZ()).withStyle(ChatFormatting.DARK_GRAY), height);
 
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
 
@@ -156,11 +156,11 @@ public class ObituaryScreen extends Screen {
             player = new DummyPlayer(minecraft.level, new GameProfile(death.getPlayerUUID(), death.getPlayerName()), death.getEquipment(), death.getModel());
         }
 
-        InventoryScreen.renderEntityInInventoryFollowsMouse(matrixStack, width / 2, 170, 30, (width / 2) - mouseX, 100 - mouseY, player);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, width / 2, 170, 30, (width / 2) - mouseX, 100 - mouseY, player);
 
         if (minecraft.options.advancedItemTooltips) {
             if (mouseX >= guiLeft + 7 && mouseX <= guiLeft + TEXTURE_X - 7 && mouseY >= 50 && mouseY <= 50 + font.lineHeight) {
-                renderTooltip(matrixStack, Collections.singletonList(Component.translatable("gui.obituary.copy_id").getVisualOrderText()), mouseX, mouseY);
+                guiGraphics.renderTooltip(font, Collections.singletonList(Component.translatable("gui.obituary.copy_id").getVisualOrderText()), mouseX, mouseY);
             }
         }
     }
@@ -185,34 +185,34 @@ public class ObituaryScreen extends Screen {
         return super.mouseClicked(x, y, clickType);
     }
 
-    public void drawCentered(PoseStack matrixStack, Font fontRenderer, MutableComponent text, int x, int y, int color) {
-        fontRenderer.draw(matrixStack, text.getVisualOrderText(), (float) (x - fontRenderer.width(text) / 2), (float) y, color);
+    public void drawCentered(GuiGraphics guiGraphics, Font fontRenderer, MutableComponent text, int x, int y, int color) {
+        guiGraphics.drawString(fontRenderer, text.getVisualOrderText(), (float) (x - fontRenderer.width(text) / 2), (float) y, color, false);
     }
 
-    public void drawItem(PoseStack matrixStack, MutableComponent string, int height) {
-        font.draw(matrixStack, string.getVisualOrderText(), guiLeft + ITEM_OFFSET_LEFT, height, ChatFormatting.BLACK.getColor());
+    public void drawItem(GuiGraphics guiGraphics, MutableComponent string, int height) {
+        guiGraphics.drawString(font, string.getVisualOrderText(), guiLeft + ITEM_OFFSET_LEFT, height, ChatFormatting.BLACK.getColor(), false);
     }
 
-    public void drawItemSize(PoseStack matrixStack, MutableComponent string, int height) {
-        font.draw(matrixStack, string.getVisualOrderText(), guiLeft + ITEM_SIZE_OFFSET_LEFT, height, ChatFormatting.BLACK.getColor());
+    public void drawItemSize(GuiGraphics guiGraphics, MutableComponent string, int height) {
+        guiGraphics.drawString(font, string.getVisualOrderText(), guiLeft + ITEM_SIZE_OFFSET_LEFT, height, ChatFormatting.BLACK.getColor(), false);
     }
 
-    public void drawLeft(PoseStack matrixStack, MutableComponent string, int height) {
-        font.draw(matrixStack, string.getVisualOrderText(), guiLeft + OFFSET_LEFT, height, ChatFormatting.BLACK.getColor());
+    public void drawLeft(GuiGraphics guiGraphics, MutableComponent string, int height) {
+        guiGraphics.drawString(font, string.getVisualOrderText(), guiLeft + OFFSET_LEFT, height, ChatFormatting.BLACK.getColor(), false);
     }
 
-    public void drawRight(PoseStack matrixStack, MutableComponent string, int height) {
-        drawRight(matrixStack, string, height, 1F);
+    public void drawRight(GuiGraphics guiGraphics, MutableComponent string, int height) {
+        drawRight(guiGraphics, string, height, 1F);
     }
 
-    public void drawRight(PoseStack matrixStack, MutableComponent string, int height, float scale) {
-        matrixStack.pushPose();
-        matrixStack.scale(scale, scale, 1F);
+    public void drawRight(GuiGraphics guiGraphics, MutableComponent string, int height, float scale) {
+        guiGraphics.pose().pushPose();
+        guiGraphics.pose().scale(scale, scale, 1F);
         float f = 1F / scale;
         int strWidth = font.width(string);
         float spacing = (font.lineHeight * f - font.lineHeight) / 2F;
-        font.draw(matrixStack, string.getVisualOrderText(), (guiLeft + TEXTURE_X - strWidth * scale - OFFSET_RIGHT) * f, height * f + spacing, ChatFormatting.BLACK.getColor());
-        matrixStack.popPose();
+        guiGraphics.drawString(font, string.getVisualOrderText(), (guiLeft + TEXTURE_X - strWidth * scale - OFFSET_RIGHT) * f, height * f + spacing, ChatFormatting.BLACK.getColor(), false);
+        guiGraphics.pose().popPose();
     }
 
     public Font getFontRenderer() {
@@ -225,10 +225,5 @@ public class ObituaryScreen extends Screen {
 
     public int getGuiTop() {
         return guiTop;
-    }
-
-    @Override
-    public void renderTooltip(PoseStack matrixStack, ItemStack itemStack, int mouseX, int mouseY) {
-        super.renderTooltip(matrixStack, itemStack, mouseX, mouseY);
     }
 }

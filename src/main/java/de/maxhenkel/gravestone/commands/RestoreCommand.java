@@ -25,7 +25,7 @@ public class RestoreCommand {
         Command<CommandSourceStack> add = (commandSource) -> {
             UUID deathID = UuidArgument.getUuid(commandSource, "death_id");
             ServerPlayer player = EntityArgument.getPlayer(commandSource, "target");
-            Death death = DeathManager.getDeath(player.getLevel(), deathID);
+            Death death = DeathManager.getDeath(player.serverLevel(), deathID);
             if (death == null) {
                 commandSource.getSource().sendFailure(Component.translatable("message.gravestone.death_id_not_found", deathID.toString()));
                 return 0;
@@ -35,14 +35,14 @@ public class RestoreCommand {
                     player.drop(stack, false);
                 }
             }
-            commandSource.getSource().sendSuccess(Component.translatable("message.gravestone.restore.success", player.getDisplayName()), true);
+            commandSource.getSource().sendSuccess(() -> Component.translatable("message.gravestone.restore.success", player.getDisplayName()), true);
             return 1;
         };
 
         Command<CommandSourceStack> replace = (commandSource) -> {
             UUID deathID = UuidArgument.getUuid(commandSource, "death_id");
             ServerPlayer player = EntityArgument.getPlayer(commandSource, "target");
-            Death death = DeathManager.getDeath(player.getLevel(), deathID);
+            Death death = DeathManager.getDeath(player.serverLevel(), deathID);
             if (death == null) {
                 commandSource.getSource().sendFailure(Component.translatable("message.gravestone.death_id_not_found", deathID.toString()));
                 return 0;
@@ -52,7 +52,7 @@ public class RestoreCommand {
             for (ItemStack stack : itemStacks) {
                 player.drop(stack, false);
             }
-            commandSource.getSource().sendSuccess(Component.translatable("message.gravestone.restore.success", player.getDisplayName()), true);
+            commandSource.getSource().sendSuccess(() -> Component.translatable("message.gravestone.restore.success", player.getDisplayName()), true);
             return 1;
         };
 

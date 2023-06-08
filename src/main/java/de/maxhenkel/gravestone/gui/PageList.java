@@ -1,14 +1,14 @@
 package de.maxhenkel.gravestone.gui;
 
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.ItemStack;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
-
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.item.ItemStack;
 
 public class PageList {
 
@@ -40,13 +40,13 @@ public class PageList {
         return list.size();
     }
 
-    public void drawPage(PoseStack matrixStack, int p, int mouseX, int mouseY) {
+    public void drawPage(GuiGraphics guiGraphics, int p, int mouseX, int mouseY) {
         if (p >= list.size()) {
             p = list.size() - 1;
         }
 
         Page page = list.get(p);
-        page.drawPage(matrixStack, p + 1, list.size(), mouseX, mouseY);
+        page.drawPage(guiGraphics, p + 1, list.size(), mouseX, mouseY);
     }
 
     @Override

@@ -30,7 +30,7 @@ public class DeathEvents {
 
         Death death = event.getDeath();
         Player player = event.getPlayer();
-        Level world = player.level;
+        Level world = player.level();
 
         if (keepInventory(player)) {
             return;

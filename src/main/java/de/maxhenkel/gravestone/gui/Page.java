@@ -2,6 +2,8 @@ package de.maxhenkel.gravestone.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -26,9 +28,9 @@ public class Page {
         }
     }
 
-    public void drawPage(PoseStack matrixStack, int page, int pageCount, int mouseX, int mouseY) {
-        gui.drawCentered(matrixStack, gui.getFontRenderer(), Component.translatable("gui.obituary.title.items").withStyle(ChatFormatting.UNDERLINE), gui.width / 2, 30, ChatFormatting.BLACK.getColor());
-        gui.drawCentered(matrixStack, gui.getFontRenderer(), Component.translatable("gui.obituary.page", page, pageCount), gui.width / 2, 43, ChatFormatting.DARK_GRAY.getColor());
+    public void drawPage(GuiGraphics guiGraphics, int page, int pageCount, int mouseX, int mouseY) {
+        gui.drawCentered(guiGraphics, gui.getFontRenderer(), Component.translatable("gui.obituary.title.items").withStyle(ChatFormatting.UNDERLINE), gui.width / 2, 30, ChatFormatting.BLACK.getColor());
+        gui.drawCentered(guiGraphics, gui.getFontRenderer(), Component.translatable("gui.obituary.page", page, pageCount), gui.width / 2, 43, ChatFormatting.DARK_GRAY.getColor());
 
         int y = ITEM_START_Y;
         final int space = 12;
@@ -37,8 +39,8 @@ public class Page {
             if (s == null || s.isEmpty()) {
                 continue;
             }
-            gui.drawItem(matrixStack, Component.translatable(s.getDescriptionId()).withStyle(ChatFormatting.ITALIC), y);
-            gui.drawItemSize(matrixStack, Component.literal(String.valueOf(s.getCount())), y);
+            gui.drawItem(guiGraphics, Component.translatable(s.getDescriptionId()).withStyle(ChatFormatting.ITALIC), y);
+            gui.drawItemSize(guiGraphics, Component.literal(String.valueOf(s.getCount())), y);
             y = y + space;
         }
 
@@ -47,7 +49,7 @@ public class Page {
                 int index = (mouseY + 3 - ITEM_START_Y) / 12;
                 ItemStack stack = items[Math.max(0, Math.min(items.length - 1, index))];
                 if (stack != null && !stack.isEmpty()) {
-                    gui.renderTooltip(matrixStack, stack, mouseX, mouseY);
+                    guiGraphics.renderTooltip(gui.getFontRenderer(), stack, mouseX, mouseY);
                 }
             }
         }

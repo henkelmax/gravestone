@@ -82,10 +82,8 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
                     Block.box(1D, 14D, 3D, 2D, 15D, 13D)
             ).build();
 
-    public static final Material GRAVESTONE_MATERIAL = new Material(MaterialColor.DIRT, false, true, true, false, false, false, PushReaction.BLOCK);
-
     public GraveStoneBlock() {
-        super(Properties.of(GRAVESTONE_MATERIAL, MaterialColor.DIRT).strength(0.3F, Float.MAX_VALUE));
+        super(Properties.of().mapColor(MapColor.DIRT).strength(0.3F, Float.MAX_VALUE));
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 
