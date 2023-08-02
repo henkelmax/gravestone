@@ -1,10 +1,12 @@
 buildscript {
     repositories {
         maven { url = 'https://maven.maxhenkel.de/repository/public' }
+        maven { url = 'https://repo.spongepowered.org/maven' }
         mavenCentral()
     }
     dependencies {
         classpath group: 'de.maxhenkel.forge-update', name: 'forge-update', version: '1.0.4'
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 }
 
@@ -19,6 +21,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'forge-update'
 apply plugin: 'idea'
+apply plugin: 'org.spongepowered.mixin'
 
 idea {
     module {
@@ -94,9 +97,9 @@ repositories {
         url = 'https://maven.maxhenkel.de/repository/public'
     }
     maven {
-        url "https://www.cursemaven.com"
+        url = 'https://api.modrinth.com/maven'
         content {
-            includeGroup "curse.maven"
+            includeGroup "maven.modrinth"
         }
     }
 }
@@ -104,7 +107,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${mod_minecraft_version}-${forge_version}"
 
-    compileOnly fg.deobf("curse.maven:jade-324717:${jade_id}")
+    implementation fg.deobf("maven.modrinth:jade:${jade_version}")
 
     shadow fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:api")
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")

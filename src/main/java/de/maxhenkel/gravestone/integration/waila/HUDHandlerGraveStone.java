@@ -7,16 +7,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 
-public class HUDHandlerGraveStone implements IBlockComponentProvider, IServerDataProvider<BlockEntity> {
+public class HUDHandlerGraveStone implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
 
     public static final HUDHandlerGraveStone INSTANCE = new HUDHandlerGraveStone();
 
@@ -42,11 +39,10 @@ public class HUDHandlerGraveStone implements IBlockComponentProvider, IServerDat
     }
 
     @Override
-    public void appendServerData(CompoundTag compoundTag, ServerPlayer serverPlayer, Level level, BlockEntity blockEntity, boolean b) {
-        if (blockEntity instanceof GraveStoneTileEntity grave) {
+    public void appendServerData(CompoundTag compoundTag, BlockAccessor blockAccessor) {
+        if (blockAccessor.getBlockEntity() instanceof GraveStoneTileEntity grave) {
             compoundTag.putInt("ItemCount", (int) grave.getDeath().getAllItems().stream().filter(itemStack -> !itemStack.isEmpty()).count());
         }
-
     }
 
     @Override
