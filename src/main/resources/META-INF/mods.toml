@@ -23,3 +23,9 @@ description='''This mod adds a gravestone that stores the items of the player wh
     versionRange="[${mod_minecraft_version}]"
     ordering="NONE"
     side="BOTH"
+[[dependencies.${mod_id}]]
+    modId="jade"
+    mandatory=false
+    versionRange="*"
+    ordering="NONE"
+    side="BOTH"
