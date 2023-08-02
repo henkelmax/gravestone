@@ -56,13 +56,15 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${mod_minecraft_version}-${forge_version}"
+    minecraft "net.neoforged:forge:${mod_minecraft_version}-${forge_version}"
 
     implementation fg.deobf("maven.modrinth:jade:${jade_version}")
 
     shadow fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:api")
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:javadoc")
+
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
 jar {
