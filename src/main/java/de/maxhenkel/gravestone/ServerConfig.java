@@ -30,7 +30,7 @@ public class ServerConfig extends ConfigBase {
         super(builder);
         giveObituaries = builder
                 .comment("If this is set to true you get an obituary after you died")
-                .define("enable_obituary", true);
+                .define("enable_obituary", false);
         replaceableBlocksSpec = builder
                 .comment("The blocks that can be replaced with a grave", "If it starts with '#' it is a tag")
                 .defineList("replaceable_blocks", Collections.singletonList("#gravestone:grave_replaceable"), Objects::nonNull);
