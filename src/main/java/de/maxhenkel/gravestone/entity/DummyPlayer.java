@@ -4,11 +4,11 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.ForgeMod;
 
 public class DummyPlayer extends RemotePlayer {
 
@@ -21,16 +21,15 @@ public class DummyPlayer extends RemotePlayer {
             setItemSlot(type, equipment.get(type.ordinal()));
         }
         refreshDimensions();
+        AttributeInstance attribute = getAttributes().getInstance(ForgeMod.NAMETAG_DISTANCE.get());
+        if (attribute != null) {
+            attribute.setBaseValue(0D);
+        }
     }
 
     @Override
     public boolean isSpectator() {
         return false;
-    }
-
-    @Override
-    public EntityDimensions getDimensions(Pose pose) {
-        return new EntityDimensions(super.getDimensions(pose).width, 1000, true);
     }
 
     @Override

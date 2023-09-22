@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class MessageOpenObituary implements Message {
 
@@ -28,7 +28,7 @@ public class MessageOpenObituary implements Message {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void executeClientSide(NetworkEvent.Context context) {
+    public void executeClientSide(CustomPayloadEvent.Context context) {
         Minecraft.getInstance().setScreen(new ObituaryScreen(death));
     }
 
