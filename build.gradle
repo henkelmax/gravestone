@@ -138,6 +138,7 @@ modUpdate {
     serverURL = 'https://update.maxhenkel.de/'
     modID = mod_id
     gameVersion = minecraft_version
+    modLoader = 'neoforge'
     modVersion = mod_version
     releaseType = release_type
     tags = recommended == 'true' ? ['recommended'] : []
