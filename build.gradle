@@ -140,6 +140,7 @@ modUpdate {
     gameVersion = minecraft_version
     modLoader = 'neoforge'
     modVersion = mod_version
+    changelogFile = file('changelog.md')
     releaseType = release_type
     tags = recommended == 'true' ? ['recommended'] : []
 }
