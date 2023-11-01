@@ -8,7 +8,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.ForgeMod;
+import net.neoforged.neoforge.common.NeoForgeMod;
 
 public class DummyPlayer extends RemotePlayer {
 
@@ -20,7 +20,7 @@ public class DummyPlayer extends RemotePlayer {
         for (EquipmentSlot type : EquipmentSlot.values()) {
             setItemSlot(type, equipment.get(type.ordinal()));
         }
-        AttributeInstance attribute = getAttributes().getInstance(ForgeMod.NAMETAG_DISTANCE.get());
+        AttributeInstance attribute = getAttributes().getInstance(NeoForgeMod.NAMETAG_DISTANCE.get());
         if (attribute != null) {
             attribute.setBaseValue(0D);
         }

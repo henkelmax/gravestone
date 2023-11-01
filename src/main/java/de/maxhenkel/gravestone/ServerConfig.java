@@ -4,9 +4,8 @@ import de.maxhenkel.corelib.config.ConfigBase;
 import de.maxhenkel.corelib.tag.Tag;
 import de.maxhenkel.corelib.tag.TagUtils;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,18 +14,18 @@ import java.util.stream.Collectors;
 
 public class ServerConfig extends ConfigBase {
 
-    public final ForgeConfigSpec.BooleanValue giveObituaries;
-    public final ForgeConfigSpec.ConfigValue<List<? extends String>> replaceableBlocksSpec;
-    public final ForgeConfigSpec.BooleanValue removeObituary;
-    public final ForgeConfigSpec.BooleanValue onlyOwnersCanBreak;
-    public final ForgeConfigSpec.BooleanValue spawnGhost;
-    public final ForgeConfigSpec.BooleanValue friendlyGhost;
-    public final ForgeConfigSpec.BooleanValue sneakPickup;
-    public final ForgeConfigSpec.BooleanValue breakPickup;
+    public final ModConfigSpec.BooleanValue giveObituaries;
+    public final ModConfigSpec.ConfigValue<List<? extends String>> replaceableBlocksSpec;
+    public final ModConfigSpec.BooleanValue removeObituary;
+    public final ModConfigSpec.BooleanValue onlyOwnersCanBreak;
+    public final ModConfigSpec.BooleanValue spawnGhost;
+    public final ModConfigSpec.BooleanValue friendlyGhost;
+    public final ModConfigSpec.BooleanValue sneakPickup;
+    public final ModConfigSpec.BooleanValue breakPickup;
 
     public List<Tag<Block>> replaceableBlocks = new ArrayList<>();
 
-    public ServerConfig(ForgeConfigSpec.Builder builder) {
+    public ServerConfig(ModConfigSpec.Builder builder) {
         super(builder);
         giveObituaries = builder
                 .comment("If this is set to true you get an obituary after you died")

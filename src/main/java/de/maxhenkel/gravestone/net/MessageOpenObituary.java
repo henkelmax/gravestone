@@ -5,9 +5,9 @@ import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.gravestone.gui.ObituaryScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 public class MessageOpenObituary implements Message {
 
@@ -28,7 +28,7 @@ public class MessageOpenObituary implements Message {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void executeClientSide(CustomPayloadEvent.Context context) {
+    public void executeClientSide(NetworkEvent.Context context) {
         Minecraft.getInstance().setScreen(new ObituaryScreen(death));
     }
 

@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="${mod_loader_version}"
+loaderVersion="${loader_version}"
 license="All rights reserved"
 issueTrackerURL="https://github.com/henkelmax/gravestone/issues"
 [[mods]]
@@ -12,15 +12,15 @@ logoFile="gravestone.png"
 authors="${mod_vendor}"
 description='''This mod adds a gravestone that stores the items of the player when he dies'''
 [[dependencies.${mod_id}]]
-    modId="forge"
+    modId="neoforge"
     mandatory=true
-    versionRange="${mod_forge_version}"
+    versionRange="${neoforge_version_range}"
     ordering="NONE"
     side="BOTH"
 [[dependencies.${mod_id}]]
     modId="minecraft"
     mandatory=true
-    versionRange="[${mod_minecraft_version}]"
+    versionRange="[${minecraft_version}]"
     ordering="NONE"
     side="BOTH"
 [[dependencies.${mod_id}]]

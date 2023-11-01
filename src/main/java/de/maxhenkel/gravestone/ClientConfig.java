@@ -1,17 +1,17 @@
 package de.maxhenkel.gravestone;
 
 import de.maxhenkel.corelib.config.ConfigBase;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ClientConfig extends ConfigBase {
 
-    public final ForgeConfigSpec.BooleanValue renderSkull;
-    private final ForgeConfigSpec.ConfigValue<String> graveTextColorSpec;
+    public final ModConfigSpec.BooleanValue renderSkull;
+    private final ModConfigSpec.ConfigValue<String> graveTextColorSpec;
 
     public int graveTextColor = 0xFFFFFF;
 
-    public ClientConfig(ForgeConfigSpec.Builder builder) {
+    public ClientConfig(ModConfigSpec.Builder builder) {
         super(builder);
         renderSkull = builder
                 .comment("If this is set to true the players head will be rendered on the gravestone when there is a full block under it")
