@@ -1,2 +1,1 @@
-- Added Jade to mods.toml
-- Switch to NeoGradle
+- Updated corelib
