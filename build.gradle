@@ -114,7 +114,7 @@ curseforge {
         addGameVersion 'NeoForge'
         addGameVersion "Java ${java_version}"
         mainArtifact(jar) {
-            displayName = "[${mod_minecraft_version}] ${mod_name} ${mod_version}"
+            displayName = "[FORGE][${mod_minecraft_version}] ${mod_name} ${mod_version}"
             relations {
                 optionalDependency 'jade'
             }
