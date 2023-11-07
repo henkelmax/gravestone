@@ -1,1 +1,1 @@
-- Updated corelib
+- Added Czech translation
