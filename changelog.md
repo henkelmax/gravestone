@@ -1,1 +1,1 @@
-- Added Czech translation
+- Improved mod icon
