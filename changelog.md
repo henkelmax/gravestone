@@ -1,1 +1,1 @@
-- Updated Russian translation
+- Improved mod icon
