@@ -8,7 +8,7 @@ version="${mod_version}"
 displayName="${mod_name}"
 updateJSONURL="https://update.maxhenkel.de/neoforge/gravestone"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/gravestone-mod"
-logoFile="gravestone.png"
+logoFile="icon.png"
 authors="${mod_vendor}"
 description='''This mod adds a gravestone that stores the items of the player when he dies'''
 [[dependencies.${mod_id}]]

@@ -1,1 +1,1 @@
-- Fixed grave block position being misaligned
+- Improved mod icon
