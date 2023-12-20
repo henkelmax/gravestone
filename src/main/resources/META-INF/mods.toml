@@ -1,25 +1,31 @@
-modLoader="javafml"
-loaderVersion="${mod_loader_version}"
-license="All rights reserved"
-issueTrackerURL="https://github.com/henkelmax/gravestone/issues"
+modLoader = "javafml"
+loaderVersion = "*"
+license = "All rights reserved"
+issueTrackerURL = "https://github.com/henkelmax/gravestone/issues"
 [[mods]]
-modId="${mod_id}"
-version="${mod_version}"
-displayName="${mod_name}"
-updateJSONURL="https://maxhenkel.de/update/gravestone.json"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/gravestone-mod"
-logoFile="icon.png"
-authors="${mod_vendor}"
-description='''This mod adds a gravestone that stores the items of the player when he dies'''
-[[dependencies.${mod_id}]]
-    modId="forge"
-    mandatory=true
-    versionRange="${mod_forge_version}"
-    ordering="NONE"
-    side="BOTH"
-[[dependencies.${mod_id}]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[${mod_minecraft_version}]"
-    ordering="NONE"
-    side="BOTH"
+modId = "gravestone"
+version = "${mod_version}"
+displayName = "Gravestone Mod"
+updateJSONURL = "https://update.maxhenkel.de/forge/gravestone"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/gravestone-mod"
+logoFile = "icon.png"
+authors = "Max Henkel"
+description = '''Places a gravestone with your inventory items inside when you die'''
+[[dependencies.gravestone]]
+modId = "forge"
+mandatory = true
+versionRange = "${forge_dependency}"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.gravestone]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[${minecraft_version}]"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.gravestone]]
+modId = "jade"
+mandatory = false
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
