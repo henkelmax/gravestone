@@ -1,6 +1,6 @@
 plugins {
-    id 'net.neoforged.gradle.userdev' version "${neogradle_version}"
-    id 'net.neoforged.gradle.mixin' version "${neogradle_mixin_version}"
+    id 'net.minecraftforge.gradle' version "${forgegradle_version}"
+    id 'org.spongepowered.mixin' version "${mixingradle_version}"
     id 'com.matthewprenger.cursegradle' version "${cursegradle_version}"
     id 'com.modrinth.minotaur' version "${minotaur_version}"
     id 'com.github.johnrengelman.shadow' version "${shadow_version}"
@@ -10,11 +10,11 @@ plugins {
 apply from: "https://raw.githubusercontent.com/henkelmax/mod-gradle-scripts/${mod_gradle_script_version}/mod.gradle"
 
 dependencies {
-    shadow "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:api"
-    runtimeOnly "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}"
-    compileOnly "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:javadoc"
+    shadow fg.deobf("de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:api")
+    runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}")
+    compileOnly fg.deobf("de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:javadoc")
 
-    compileOnly "maven.modrinth:jade:${jade_version}"
+    implementation fg.deobf("maven.modrinth:jade:${jade_version}")
 }
 
 processResources {
