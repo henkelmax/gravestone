@@ -1,1 +1,1 @@
-- Updated dependencies
+- Added Mexican Spanish translation
