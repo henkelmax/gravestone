@@ -2,8 +2,6 @@ package de.maxhenkel.gravestone.items;
 
 import de.maxhenkel.corelib.death.Death;
 import de.maxhenkel.corelib.death.DeathManager;
-import de.maxhenkel.corelib.net.NetUtils;
-import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.net.MessageOpenObituary;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -18,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 
@@ -54,7 +53,7 @@ public class ObituaryItem extends Item {
                 player.sendSystemMessage(Component.translatable("message.gravestone.restore").append(" ").append(replace).append(" ").append(add));
             }
         } else {
-            NetUtils.sendTo(Main.SIMPLE_CHANNEL, player, new MessageOpenObituary(death));
+            PacketDistributor.PLAYER.with(player).send(new MessageOpenObituary(death));
         }
         return InteractionResultHolder.success(player.getItemInHand(hand));
     }

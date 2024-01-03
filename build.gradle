@@ -9,6 +9,10 @@ plugins {
 
 apply from: "https://raw.githubusercontent.com/henkelmax/mod-gradle-scripts/${mod_gradle_script_version}/mod.gradle"
 
+repositories {
+    mavenLocal()
+}
+
 dependencies {
     shadow "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:api"
     runtimeOnly "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}"

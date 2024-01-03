@@ -21,17 +21,18 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
-import net.neoforged.neoforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.apache.logging.log4j.LogManager;
@@ -44,8 +45,6 @@ public class Main {
     public static final String MODID = "gravestone";
 
     public static final Logger LOGGER = LogManager.getLogger(Main.MODID);
-
-    public static SimpleChannel SIMPLE_CHANNEL;
 
     private static final DeferredRegister<Block> BLOCK_REGISTER = DeferredRegister.create(BuiltInRegistries.BLOCK, Main.MODID);
     public static final DeferredHolder<Block, GraveStoneBlock> GRAVESTONE = BLOCK_REGISTER.register("gravestone", GraveStoneBlock::new);
@@ -65,29 +64,27 @@ public class Main {
     public static ServerConfig SERVER_CONFIG;
     public static ClientConfig CLIENT_CONFIG;
 
-    public Main() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerAttributes);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(CreativeTabEvents::onCreativeModeTabBuildContents);
+    public Main(IEventBus eventBus) {
+        eventBus.addListener(this::commonSetup);
+        eventBus.addListener(this::registerAttributes);
+        eventBus.addListener(this::onRegisterPayloadHandler);
+        eventBus.addListener(CreativeTabEvents::onCreativeModeTabBuildContents);
 
         SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class, true);
         CLIENT_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.CLIENT, ClientConfig.class, true);
 
         if (FMLEnvironment.dist.isClient()) {
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup);
+            eventBus.addListener(Main.this::clientSetup);
         }
 
-        BLOCK_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ITEM_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
-        BLOCK_ENTITY_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
-        ENTITY_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
+        BLOCK_REGISTER.register(eventBus);
+        ITEM_REGISTER.register(eventBus);
+        BLOCK_ENTITY_REGISTER.register(eventBus);
+        ENTITY_REGISTER.register(eventBus);
     }
 
     public void commonSetup(FMLCommonSetupEvent event) {
         NeoForge.EVENT_BUS.register(new DeathEvents());
-
-        SIMPLE_CHANNEL = CommonRegistry.registerChannel(Main.MODID, "default");
-        CommonRegistry.registerMessage(SIMPLE_CHANNEL, 0, MessageOpenObituary.class);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -102,6 +99,11 @@ public class Main {
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
         RestoreCommand.register(event.getDispatcher());
+    }
+
+    public void onRegisterPayloadHandler(RegisterPayloadHandlerEvent event) {
+        IPayloadRegistrar registrar = event.registrar(MODID).versioned("0");
+        CommonRegistry.registerMessage(registrar, MessageOpenObituary.class);
     }
 
     public void registerAttributes(EntityAttributeCreationEvent event) {
