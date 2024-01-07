@@ -3,6 +3,7 @@ package de.maxhenkel.gravestone.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.maxhenkel.corelib.death.Death;
 import de.maxhenkel.corelib.death.DeathManager;
 import de.maxhenkel.gravestone.Main;
@@ -63,7 +64,9 @@ public class RestoreCommand {
                                 .then(Commands.literal("add").executes(add))
                         ));
 
-        dispatcher.register(literalBuilder);
+        LiteralCommandNode<CommandSourceStack> register = dispatcher.register(literalBuilder);
+        LiteralArgumentBuilder<CommandSourceStack> alias = Commands.literal("restoreinventory").redirect(register);
+        dispatcher.register(alias);
     }
 
 }

@@ -1,1 +1,1 @@
-- Updated to NeoForges new networking system
+- Added "/restoreinventory" command that is an alias of "/restore"
