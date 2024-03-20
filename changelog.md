@@ -1,1 +1,1 @@
-- Added "/restoreinventory" command that is an alias of "/restore"
+- Added Chilean Spanish translation
