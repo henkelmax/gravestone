@@ -1,0 +1,18 @@
+{
+  "block.gravestone.gravestone": "Lápida",
+  "item.gravestone.obituary": "Obituario",
+  "entity.gravestone.player_ghost": "Fantasma del jugador",
+  "message.gravestone.died": "%s murió el %s",
+  "message.gravestone.deathlocation": "Lugar de fallecimiento",
+  "message.gravestone.no_deathlocation": "No está disponible el lugar de fallecimiento",
+  "message.gravestone.create_grave_failed": "La lápida no se pudo situar",
+  "gui.obituary.name": "Nombre",
+  "gui.obituary.title": "Información de la muerte del jugador",
+  "gui.obituary.location": "Lugar",
+  "gui.obituary.dimension": "Dimensión",
+  "gui.obituary.title.items": "Objetos portados",
+  "gui.obituary.page": "Página %s",
+  "gui.obituary.time": "Fecha",
+  "button.gravestone.next": "Siguiente",
+  "button.gravestone.prev": "Atrás"
+}
