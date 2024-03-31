@@ -299,10 +299,11 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
 
     public NonNullList<ItemStack> fillPlayerInventory(Player player, Death death) {
         NonNullList<ItemStack> additionalItems = NonNullList.create();
-        fillInventory(additionalItems, death.getMainInventory(), player.getInventory().items);
-        fillInventory(additionalItems, death.getArmorInventory(), player.getInventory().armor);
-        fillInventory(additionalItems, death.getOffHandInventory(), player.getInventory().offhand);
-
+        if (!Main.SERVER_CONFIG.sortOwnerOnly.get() || death.getPlayerUUID().equals(player.getUUID())) {
+        	fillInventory(additionalItems, death.getMainInventory(), player.getInventory().items);
+        	fillInventory(additionalItems, death.getArmorInventory(), player.getInventory().armor);
+        	fillInventory(additionalItems, death.getOffHandInventory(), player.getInventory().offhand);
+        }
         additionalItems.addAll(death.getAdditionalItems());
         NonNullList<ItemStack> restItems = NonNullList.create();
         for (ItemStack stack : additionalItems) {
@@ -315,9 +316,9 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
         return restItems;
     }
 
-    public void fillInventory(List<ItemStack> additionalItems, NonNullList<ItemStack> inventory, NonNullList<ItemStack> playerInv) {
-        for (int i = 0; i < inventory.size(); i++) {
-            ItemStack stack = inventory.get(i);
+    public void fillInventory(List<ItemStack> additionalItems, NonNullList<ItemStack> deathInv, NonNullList<ItemStack> playerInv) {
+        for (int i = 0; i < deathInv.size(); i++) {
+            ItemStack stack = deathInv.get(i);
             if (stack.isEmpty()) {
                 continue;
             }
@@ -325,7 +326,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
             if (!playerStack.isEmpty()) {
                 additionalItems.add(playerStack);
             }
-            inventory.set(i, ItemStack.EMPTY);
+            deathInv.set(i, ItemStack.EMPTY);
             playerInv.set(i, stack);
         }
     }

@@ -23,6 +23,7 @@ public class ServerConfig extends ConfigBase {
     public final ForgeConfigSpec.BooleanValue friendlyGhost;
     public final ForgeConfigSpec.BooleanValue sneakPickup;
     public final ForgeConfigSpec.BooleanValue breakPickup;
+    public final ForgeConfigSpec.BooleanValue sortOwnerOnly;
 
     public List<Tag<Block>> replaceableBlocks = new ArrayList<>();
 
@@ -52,6 +53,9 @@ public class ServerConfig extends ConfigBase {
         breakPickup = builder
                 .comment("If this is set to true you get your items sorted back into your inventory by breaking the grave")
                 .define("break_pickup", true);
+        sortOwnerOnly = builder
+                .comment("If this is set to true the items from the grave only get sorted if you own that grave")
+                .define("sort_owner_only", true);
     }
 
     @Override
