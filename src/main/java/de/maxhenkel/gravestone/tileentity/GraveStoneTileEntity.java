@@ -4,6 +4,7 @@ import de.maxhenkel.corelib.death.Death;
 import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 import java.util.UUID;
 
 public class GraveStoneTileEntity extends BlockEntity implements Nameable {
@@ -31,21 +33,20 @@ public class GraveStoneTileEntity extends BlockEntity implements Nameable {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
-
-        compound.put("Death", death.toNBT());
+    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider provider) {
+        super.saveAdditional(compound, provider);
+        compound.put("Death", death.toNBT(provider));
         if (customName != null) {
-            compound.putString("CustomName", Component.Serializer.toJson(customName));
+            compound.putString("CustomName", Component.Serializer.toJson(customName, provider));
         }
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
+        super.loadAdditional(compound, provider);
 
         if (compound.contains("Death")) {
-            death = Death.fromNBT(compound.getCompound("Death"));
+            death = Death.fromNBT(provider, compound.getCompound("Death"));
         } else { // Compatibility
             UUID playerUUID = GraveUtils.EMPTY_UUID;
             try {
@@ -58,7 +59,8 @@ public class GraveStoneTileEntity extends BlockEntity implements Nameable {
             NonNullList<ItemStack> items = NonNullList.create();
             ListTag list = compound.getList("ItemStacks", 10);
             for (int i = 0; i < list.size(); i++) {
-                items.add(ItemStack.of(list.getCompound(i)));
+                Optional<ItemStack> parse = ItemStack.parse(provider, list.getCompound(i));
+                parse.ifPresent(items::add);
             }
 
             builder.additionalItems(items);
@@ -68,7 +70,7 @@ public class GraveStoneTileEntity extends BlockEntity implements Nameable {
         }
 
         if (compound.contains("CustomName")) {
-            customName = Component.Serializer.fromJson(compound.getString("CustomName"));
+            customName = Component.Serializer.fromJson(compound.getString("CustomName"), provider);
         }
     }
 
@@ -78,9 +80,9 @@ public class GraveStoneTileEntity extends BlockEntity implements Nameable {
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
         CompoundTag compound = new CompoundTag();
-        saveAdditional(compound);
+        saveAdditional(compound, provider);
         return compound;
     }
 

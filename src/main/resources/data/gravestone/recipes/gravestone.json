@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "gravestone:gravestone",
+    "id": "gravestone:gravestone",
     "count": 1
   },
   "mirrored": true

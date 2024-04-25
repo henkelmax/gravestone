@@ -11,12 +11,12 @@ import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -115,7 +115,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
 
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        if (stack.hasCustomHoverName()) {
+        if (stack.has(DataComponents.CUSTOM_NAME)) {
             BlockEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof GraveStoneTileEntity) {
                 GraveStoneTileEntity grave = (GraveStoneTileEntity) tileentity;
@@ -152,8 +152,8 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
-        BlockEntity tileentity = world.getBlockEntity(pos);
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult result) {
+        BlockEntity tileentity = level.getBlockEntity(pos);
 
         if (!(tileentity instanceof GraveStoneTileEntity)) {
             return InteractionResult.FAIL;
@@ -167,7 +167,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
             return InteractionResult.FAIL;
         }
 
-        if (world.isClientSide) {
+        if (level.isClientSide) {
             Component time = GraveUtils.getDate(grave.getDeath().getTimestamp());
             if (time == null) {
                 player.sendSystemMessage(name);

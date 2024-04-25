@@ -5,16 +5,17 @@ import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.gui.ObituaryScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class MessageOpenObituary implements Message {
+public class MessageOpenObituary implements Message<MessageOpenObituary> {
 
-    public static ResourceLocation ID = new ResourceLocation(Main.MODID, "open_obituary");
+    public static final CustomPacketPayload.Type<MessageOpenObituary> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(Main.MODID, "open_obituary"));
 
     private Death death;
 
@@ -33,24 +34,24 @@ public class MessageOpenObituary implements Message {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void executeClientSide(PlayPayloadContext context) {
+    public void executeClientSide(IPayloadContext context) {
         Minecraft.getInstance().setScreen(new ObituaryScreen(death));
     }
 
     @Override
-    public MessageOpenObituary fromBytes(FriendlyByteBuf buf) {
-        death = Death.fromNBT(buf.readNbt());
+    public MessageOpenObituary fromBytes(RegistryFriendlyByteBuf buf) {
+        death = Death.fromNBT(buf.registryAccess(), buf.readNbt());
         return this;
     }
 
     @Override
-    public void toBytes(FriendlyByteBuf buf) {
-        buf.writeNbt(death.toNBT());
+    public void toBytes(RegistryFriendlyByteBuf buf) {
+        buf.writeNbt(death.toNBT(buf.registryAccess()));
     }
 
     @Override
-    public ResourceLocation id() {
-        return ID;
+    public Type<MessageOpenObituary> type() {
+        return TYPE;
     }
 
 }

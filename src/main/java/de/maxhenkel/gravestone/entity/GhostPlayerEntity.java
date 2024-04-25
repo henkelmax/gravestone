@@ -49,10 +49,10 @@ public class GhostPlayerEntity extends Monster {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        getEntityData().define(PLAYER_UUID, Optional.empty());
-        getEntityData().define(PLAYER_MODEL, (byte) 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(PLAYER_UUID, Optional.empty());
+        builder.define(PLAYER_MODEL, (byte) 0);
     }
 
     public static AttributeSupplier getGhostAttributes() {
@@ -94,11 +94,6 @@ public class GhostPlayerEntity extends Monster {
     @Override
     public boolean isInvertedHealAndHarm() {
         return true;
-    }
-
-    @Override
-    public MobType getMobType() {
-        return MobType.UNDEAD;
     }
 
     public void setPlayerUUID(UUID uuid) {

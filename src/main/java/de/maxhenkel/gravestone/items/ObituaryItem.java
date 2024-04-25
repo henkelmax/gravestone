@@ -2,9 +2,10 @@ package de.maxhenkel.gravestone.items;
 
 import de.maxhenkel.corelib.death.Death;
 import de.maxhenkel.corelib.death.DeathManager;
+import de.maxhenkel.gravestone.DeathInfo;
+import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.net.MessageOpenObituary;
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -53,26 +54,23 @@ public class ObituaryItem extends Item {
                 player.sendSystemMessage(Component.translatable("message.gravestone.restore").append(" ").append(replace).append(" ").append(add));
             }
         } else {
-            PacketDistributor.PLAYER.with(player).send(new MessageOpenObituary(death));
+            PacketDistributor.sendToPlayer(player, new MessageOpenObituary(death));
         }
         return InteractionResultHolder.success(player.getItemInHand(hand));
     }
 
     @Nullable
     public Death fromStack(ServerPlayer player, ItemStack stack) {
-        CompoundTag compound = stack.getTag();
-        if (compound == null || !compound.contains("Death")) {
+        DeathInfo deathInfo = stack.get(Main.DEATH_DATA_COMPONENT);
+        if (deathInfo == null) {
             return null;
         }
-        CompoundTag death = compound.getCompound("Death");
-        return DeathManager.getDeath(player.serverLevel(), death.getUUID("PlayerUUID"), death.getUUID("DeathID"));
+        return DeathManager.getDeath(player.serverLevel(), deathInfo.getPlayerId(), deathInfo.getDeathId());
     }
 
     public ItemStack toStack(Death death) {
         ItemStack stack = new ItemStack(this);
-        CompoundTag d = stack.getOrCreateTagElement("Death");
-        d.putUUID("PlayerUUID", death.getPlayerUUID());
-        d.putUUID("DeathID", death.getId());
+        stack.set(Main.DEATH_DATA_COMPONENT, new DeathInfo(death.getPlayerUUID(), death.getId()));
         return stack;
     }
 }

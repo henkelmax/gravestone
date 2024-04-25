@@ -1,1 +1,1 @@
-- Added Chilean Spanish translation
+- Updated to 1.20.5

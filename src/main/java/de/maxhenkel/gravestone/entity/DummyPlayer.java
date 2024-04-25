@@ -20,7 +20,7 @@ public class DummyPlayer extends RemotePlayer {
         for (EquipmentSlot type : EquipmentSlot.values()) {
             setItemSlot(type, equipment.get(type.ordinal()));
         }
-        AttributeInstance attribute = getAttributes().getInstance(NeoForgeMod.NAMETAG_DISTANCE.value());
+        AttributeInstance attribute = getAttributes().getInstance(NeoForgeMod.NAMETAG_DISTANCE);
         if (attribute != null) {
             attribute.setBaseValue(0D);
         }
