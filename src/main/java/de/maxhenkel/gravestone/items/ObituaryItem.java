@@ -6,6 +6,9 @@ import de.maxhenkel.gravestone.DeathInfo;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.net.MessageOpenObituary;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -16,6 +19,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -29,11 +33,13 @@ public class ObituaryItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player p, InteractionHand hand) {
-        if (!(p instanceof ServerPlayer)) {
+        if (!(p instanceof ServerPlayer player)) {
             return InteractionResultHolder.success(p.getItemInHand(hand));
         }
-        ServerPlayer player = (ServerPlayer) p;
-        Death death = fromStack(player, player.getItemInHand(hand));
+
+        ItemStack itemInHand = player.getItemInHand(hand);
+        convert(itemInHand);
+        Death death = fromStack(player, itemInHand);
 
         if (death == null) {
             player.displayClientMessage(Component.translatable("message.gravestone.death_not_found"), true);
@@ -56,7 +62,7 @@ public class ObituaryItem extends Item {
         } else {
             PacketDistributor.sendToPlayer(player, new MessageOpenObituary(death));
         }
-        return InteractionResultHolder.success(player.getItemInHand(hand));
+        return InteractionResultHolder.success(itemInHand);
     }
 
     @Nullable
@@ -72,5 +78,31 @@ public class ObituaryItem extends Item {
         ItemStack stack = new ItemStack(this);
         stack.set(Main.DEATH_DATA_COMPONENT, new DeathInfo(death.getPlayerUUID(), death.getId()));
         return stack;
+    }
+
+    public static void convert(ItemStack stack) {
+        if (!(stack.getItem() instanceof ObituaryItem)) {
+            return;
+        }
+        if (stack.has(Main.DEATH_DATA_COMPONENT)) {
+            return;
+        }
+        CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
+        if (customData == null) {
+            return;
+        }
+        CompoundTag compoundTag = customData.copyTag();
+        if (!compoundTag.contains("Death", Tag.TAG_COMPOUND)) {
+            return;
+        }
+        CompoundTag death = compoundTag.getCompound("Death");
+        DeathInfo info = new DeathInfo(death.getUUID("PlayerUUID"), death.getUUID("DeathID"));
+        compoundTag.remove("Death");
+        if (compoundTag.isEmpty()) {
+            stack.remove(DataComponents.CUSTOM_DATA);
+        } else {
+            stack.set(DataComponents.CUSTOM_DATA, CustomData.of(compoundTag));
+        }
+        stack.set(Main.DEATH_DATA_COMPONENT, info);
     }
 }
