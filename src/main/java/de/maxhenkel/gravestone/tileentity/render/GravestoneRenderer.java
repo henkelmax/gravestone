@@ -79,7 +79,7 @@ public class GravestoneRenderer implements BlockEntityRenderer<GraveStoneTileEnt
         matrixStack.mulPose(Axis.XP.rotationDegrees(-61F));
 
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        model.renderToBuffer(matrixStack, buffer.getBuffer(model.renderType(resourcelocation)), combinedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+        model.renderToBuffer(matrixStack, buffer.getBuffer(model.renderType(resourcelocation)), combinedLight, OverlayTexture.NO_OVERLAY);
 
         matrixStack.popPose();
     }

@@ -17,9 +17,9 @@ public class HUDHandlerGraveStone implements IBlockComponentProvider, IServerDat
 
     public static final HUDHandlerGraveStone INSTANCE = new HUDHandlerGraveStone();
 
-    private static final ResourceLocation OBJECT_NAME_TAG = new ResourceLocation("jade", "object_name");
+    private static final ResourceLocation OBJECT_NAME_TAG = ResourceLocation.fromNamespaceAndPath("jade", "object_name");
 
-    private static final ResourceLocation UID = new ResourceLocation(Main.MODID, "grave");
+    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Main.MODID, "grave");
 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {

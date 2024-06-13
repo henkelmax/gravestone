@@ -23,7 +23,7 @@ import java.util.Collections;
 
 public class ObituaryScreen extends Screen {
 
-    private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(Main.MODID, "textures/gui/info.png");
+    private static final ResourceLocation GUI_TEXTURE = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/info.png");
     protected static final int TEXTURE_X = 163;
     protected static final int TEXTURE_Y = 165;
     protected static final int ITEM_OFFSET_LEFT = 40;

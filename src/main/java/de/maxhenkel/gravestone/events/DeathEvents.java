@@ -76,10 +76,6 @@ public class DeathEvents {
             return;
         }
 
-        if (event.getResult().equals(Event.Result.DENY)) {
-            return;
-        }
-
         if (!event.isWasDeath()) {
             return;
         }
