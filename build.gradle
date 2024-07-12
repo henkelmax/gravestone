@@ -14,9 +14,7 @@ dependencies {
     runtimeOnly "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}"
     compileOnly "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:javadoc"
 
-    // TODO Add back once Jade is updated
-    // implementation "maven.modrinth:jade:${jade_version}"
-    compileOnly "maven.modrinth:jade:${jade_version}"
+    implementation "maven.modrinth:jade:${jade_version}"
 }
 
 processResources {
