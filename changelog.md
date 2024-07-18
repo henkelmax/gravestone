@@ -1,1 +1,1 @@
-- Updated dependencies
+- Updated Chilean Spanish translation
