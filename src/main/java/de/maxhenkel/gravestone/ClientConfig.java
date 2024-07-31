@@ -24,8 +24,18 @@ public class ClientConfig extends ConfigBase {
     }
 
     @Override
-    public void onReload(ModConfigEvent event) {
+    public void onReload(ModConfigEvent.Reloading event) {
         super.onReload(event);
+        onConfigChange();
+    }
+
+    @Override
+    public void onLoad(ModConfigEvent.Loading event) {
+        super.onLoad(event);
+        onConfigChange();
+    }
+
+    private void onConfigChange() {
         graveTextColor = Integer.parseInt(graveTextColorSpec.get(), 16);
     }
 }

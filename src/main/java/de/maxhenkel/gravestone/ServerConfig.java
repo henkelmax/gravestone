@@ -6,6 +6,7 @@ import de.maxhenkel.corelib.tag.TagUtils;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,8 +55,18 @@ public class ServerConfig extends ConfigBase {
     }
 
     @Override
-    public void onReload(ModConfigEvent event) {
+    public void onReload(ModConfigEvent.Reloading event) {
         super.onReload(event);
+        onConfigChange();
+    }
+
+    @Override
+    public void onLoad(ModConfigEvent.Loading event) {
+        super.onLoad(event);
+        onConfigChange();
+    }
+
+    private void onConfigChange() {
         replaceableBlocks = replaceableBlocksSpec.get().stream().map(TagUtils::getBlock).filter(Objects::nonNull).collect(Collectors.toList());
     }
 }
