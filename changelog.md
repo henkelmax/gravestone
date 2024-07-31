@@ -1,1 +1,1 @@
-- Updated Chilean Spanish translation
+- Fixed graves able to be placed outside the world border

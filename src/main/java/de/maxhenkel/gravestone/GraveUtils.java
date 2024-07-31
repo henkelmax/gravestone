@@ -23,6 +23,8 @@ public class GraveUtils {
     public static BlockPos getGraveStoneLocation(Level world, BlockPos pos) {
         BlockPos.MutableBlockPos location = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ());
 
+        location.set(world.getWorldBorder().clampToBounds(location.getX(), location.getY(), location.getZ()));
+
         if (world.isOutsideBuildHeight(location) && location.getY() <= world.getMinBuildHeight()) {
             location.set(location.getX(), world.getMinBuildHeight() + 1, location.getZ());
         }
