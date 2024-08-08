@@ -1,1 +1,1 @@
-- Fixed error when stopping server
+- Updated to 1.21.1
