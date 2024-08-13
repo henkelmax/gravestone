@@ -1,1 +1,1 @@
-- Fixed graves able to be placed outside the world border
+- Updated Russian translation
