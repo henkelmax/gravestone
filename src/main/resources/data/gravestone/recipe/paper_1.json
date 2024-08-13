@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:stonecutting",
+	"ingredient": [
+		{
+			"item": "gravestone:obituary"
+		}
+	],
+  "result": {
+    "id": "minecraft:paper",
+    "count": 1
+  }
+}
