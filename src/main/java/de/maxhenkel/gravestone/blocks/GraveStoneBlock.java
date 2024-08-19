@@ -202,9 +202,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
             return false;
         }
         BlockEntity te = world.getBlockEntity(pos);
-        if (!world.isClientSide && te instanceof GraveStoneTileEntity) {
-            GraveStoneTileEntity grave = (GraveStoneTileEntity) te;
-
+        if (!world.isClientSide && te instanceof GraveStoneTileEntity grave) {
             removeObituary(player, grave);
             spawnGhost(world, pos, grave);
 
