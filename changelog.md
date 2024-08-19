@@ -1,1 +1,1 @@
-- Updated Russian translation
+- Fixed items being lost when breaking grave and dying at the same time

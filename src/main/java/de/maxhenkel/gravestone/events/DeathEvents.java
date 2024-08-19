@@ -56,16 +56,13 @@ public class DeathEvents {
 
         BlockEntity tileentity = world.getBlockEntity(graveStoneLocation);
 
-        if (!(tileentity instanceof GraveStoneTileEntity)) {
+        if (!(tileentity instanceof GraveStoneTileEntity gravestone)) {
             Main.LOGGER.info("Grave of '{}' can't be filled with loot (No tileentity found)", death.getPlayerName());
             Main.LOGGER.info("The death ID of '{}' is {}", death.getPlayerName(), death.getId().toString());
             return;
         }
 
-        GraveStoneTileEntity gravestone = (GraveStoneTileEntity) tileentity;
-
         gravestone.setDeath(death);
-
         event.removeDrops();
     }
 
