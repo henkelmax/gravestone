@@ -60,20 +60,20 @@ public class GraveUtils {
     }
 
     public static boolean canBreakGrave(Level world, Player player, BlockPos pos) {
+        if (player.isDeadOrDying()) {
+            return false;
+        }
         if (!Main.SERVER_CONFIG.onlyOwnersCanBreak.get()) {
             return true;
         }
 
         BlockEntity te = world.getBlockEntity(pos);
 
-        if (!(te instanceof GraveStoneTileEntity)) {
+        if (!(te instanceof GraveStoneTileEntity grave)) {
             return true;
         }
 
-        GraveStoneTileEntity grave = (GraveStoneTileEntity) te;
-
-        if (player instanceof ServerPlayer) {
-            ServerPlayer p = (ServerPlayer) player;
+        if (player instanceof ServerPlayer p) {
             if (p.hasPermissions(p.server.getOperatorUserPermissionLevel())) {
                 return true;
             }
