@@ -1,1 +1,1 @@
-- Fixed tags
+- Updated Traditional Chinese translation
