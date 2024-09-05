@@ -1,1 +1,1 @@
-- Fixed items being lost when breaking grave and dying at the same time
+- Updated Traditional Chinese translation
