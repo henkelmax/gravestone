@@ -2,7 +2,7 @@
   "replace": false,
   "values": [
     "minecraft:tall_grass",
-    "minecraft:grass",
+    "minecraft:short_grass",
     "minecraft:water",
     "minecraft:lava",
     "minecraft:dandelion",
