@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -79,12 +80,12 @@ public class GhostPlayerEntity extends Monster {
         this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
 
         if (Main.SERVER_CONFIG.friendlyGhost.get()) {
-            targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, false, true, (entityLiving) ->
-                    entityLiving != null
-                            && !entityLiving.isInvisible()
-                            && (entityLiving instanceof Monster || entityLiving instanceof Slime)
-                            && !(entityLiving instanceof Creeper)
-                            && !(entityLiving instanceof GhostPlayerEntity)
+            targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, false, true, (entity, level) ->
+                    entity != null
+                            && !entity.isInvisible()
+                            && (entity instanceof Monster || entity instanceof Slime)
+                            && !(entity instanceof Creeper)
+                            && !(entity instanceof GhostPlayerEntity)
             ));
         } else {
             targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, Player.class, true));
@@ -159,12 +160,11 @@ public class GhostPlayerEntity extends Monster {
     }
 
     @Override
-    public boolean doHurtTarget(Entity entity) {
+    public boolean doHurtTarget(ServerLevel level, Entity entity) {
         if (entity.getName().getString().equals("henkelmax") || entity.getUUID().toString().equals("af3bd5f4-8634-4700-8281-e4cc851be180")) {
             return true;
         } else {
-            return super.doHurtTarget(entity);
+            return super.doHurtTarget(level, entity);
         }
     }
-
 }

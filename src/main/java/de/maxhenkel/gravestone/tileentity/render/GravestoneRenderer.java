@@ -66,7 +66,7 @@ public class GravestoneRenderer implements BlockEntityRenderer<GraveStoneTileEnt
 
     public void renderSkull(UUID uuid, String name, Direction rotation, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight) {
         SkullModel model = new SkullModel(renderer.bakeLayer(ModelLayers.PLAYER_HEAD));
-        ResourceLocation resourcelocation = PlayerSkins.getSkin(uuid, name);
+        ResourceLocation resourcelocation = PlayerSkins.getSkin(uuid, name).texture();
 
         matrixStack.pushPose();
 

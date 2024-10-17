@@ -13,6 +13,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.*;
@@ -99,9 +100,8 @@ public class ObituaryScreen extends Screen {
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
         int left = (width - TEXTURE_X) / 2;
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        guiGraphics.blit(GUI_TEXTURE, left, 20, 0, 0, TEXTURE_X, TEXTURE_Y);
+        guiGraphics.blit(RenderType::guiTextured, GUI_TEXTURE, left, 20, 0, 0, TEXTURE_X, TEXTURE_Y, 256, 256);
 
         if (page == 0) {
             drawFirstPage(guiGraphics, mouseX, mouseY);
@@ -173,7 +173,7 @@ public class ObituaryScreen extends Screen {
                                 .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore @s " + death.getId().toString() + " replace"))
                                 .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(death.getId().toString())))
                         );
-                minecraft.player.sendSystemMessage(Component.translatable("message.gravestone.copied", deathID));
+                minecraft.gui.getChat().addMessage(Component.translatable("message.gravestone.copied", deathID));
                 minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
                 minecraft.setScreen(null);
             }

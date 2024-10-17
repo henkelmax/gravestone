@@ -8,13 +8,13 @@ import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
 import de.maxhenkel.gravestone.items.ObituaryItem;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -90,7 +90,11 @@ public class DeathEvents {
 
     public static boolean keepInventory(Player player) {
         try {
-            return player.getCommandSenderWorld().getLevelData().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY);
+            MinecraftServer server = player.getCommandSenderWorld().getServer();
+            if (server == null) {
+                return false;
+            }
+            return server.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY);
         } catch (Exception e) {
             return false;
         }

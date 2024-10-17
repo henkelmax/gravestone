@@ -25,8 +25,8 @@ public class GraveUtils {
 
         location.set(world.getWorldBorder().clampToBounds(location));
 
-        if (world.isOutsideBuildHeight(location) && location.getY() <= world.getMinBuildHeight()) {
-            location.set(location.getX(), world.getMinBuildHeight() + 1, location.getZ());
+        if (world.isOutsideBuildHeight(location) && location.getY() <= world.getMinY()) {
+            location.set(location.getX(), world.getMinY() + 1, location.getZ());
         }
 
         while (!world.isOutsideBuildHeight(location)) {

@@ -15,7 +15,7 @@ import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -32,9 +32,9 @@ public class ObituaryItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player p, InteractionHand hand) {
+    public InteractionResult use(Level world, Player p, InteractionHand hand) {
         if (!(p instanceof ServerPlayer player)) {
-            return InteractionResultHolder.success(p.getItemInHand(hand));
+            return InteractionResult.SUCCESS;
         }
 
         ItemStack itemInHand = player.getItemInHand(hand);
@@ -62,7 +62,7 @@ public class ObituaryItem extends Item {
         } else {
             PacketDistributor.sendToPlayer(player, new MessageOpenObituary(death));
         }
-        return InteractionResultHolder.success(itemInHand);
+        return InteractionResult.SUCCESS;
     }
 
     @Nullable

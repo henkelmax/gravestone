@@ -1,8 +1,6 @@
 package de.maxhenkel.gravestone.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +37,7 @@ public class Page {
             if (s == null || s.isEmpty()) {
                 continue;
             }
-            gui.drawItem(guiGraphics, Component.translatable(s.getDescriptionId()).withStyle(ChatFormatting.ITALIC), y);
+            gui.drawItem(guiGraphics, s.getItemName().copy().withStyle(ChatFormatting.ITALIC), y);
             gui.drawItemSize(guiGraphics, Component.literal(String.valueOf(s.getCount())), y);
             y = y + space;
         }
