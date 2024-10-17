@@ -1,5 +1,6 @@
 {
   "block.gravestone.gravestone": "Hrob",
+  "item.gravestone.gravestone": "Hrob",
   "item.gravestone.obituary": "Parte",
   "entity.gravestone.player_ghost": "Duch Hráče",
   "message.gravestone.grave_of": "Hrob %s",

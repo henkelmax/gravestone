@@ -1,5 +1,6 @@
 {
   "block.gravestone.gravestone": "Могила",
+  "item.gravestone.gravestone": "Могила",
   "item.gravestone.obituary": "Інформація про смерть",
   "entity.gravestone.player_ghost": "Гравець-привид",
   "message.gravestone.grave_of": "Могила %s",

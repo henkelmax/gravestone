@@ -15,11 +15,13 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
@@ -48,12 +50,12 @@ public class Main {
 
     public static final Logger LOGGER = LogManager.getLogger(Main.MODID);
 
-    private static final DeferredRegister<Block> BLOCK_REGISTER = DeferredRegister.create(BuiltInRegistries.BLOCK, Main.MODID);
-    public static final DeferredHolder<Block, GraveStoneBlock> GRAVESTONE = BLOCK_REGISTER.register("gravestone", GraveStoneBlock::new);
+    private static final DeferredRegister.Blocks BLOCK_REGISTER = DeferredRegister.createBlocks(Main.MODID);
+    public static final DeferredHolder<Block, GraveStoneBlock> GRAVESTONE = BLOCK_REGISTER.registerBlock("gravestone", GraveStoneBlock::new, BlockBehaviour.Properties.of());
 
-    private static final DeferredRegister<Item> ITEM_REGISTER = DeferredRegister.create(BuiltInRegistries.ITEM, Main.MODID);
-    public static final DeferredHolder<Item, Item> GRAVESTONE_ITEM = ITEM_REGISTER.register("gravestone", () -> GRAVESTONE.get().toItem());
-    public static final DeferredHolder<Item, ObituaryItem> OBITUARY = ITEM_REGISTER.register("obituary", ObituaryItem::new);
+    private static final DeferredRegister.Items ITEM_REGISTER = DeferredRegister.createItems(Main.MODID);
+    public static final DeferredHolder<Item, Item> GRAVESTONE_ITEM = ITEM_REGISTER.registerItem("gravestone", properties -> GRAVESTONE.get().toItem(properties));
+    public static final DeferredHolder<Item, ObituaryItem> OBITUARY = ITEM_REGISTER.registerItem("obituary", ObituaryItem::new);
 
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_REGISTER = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, Main.MODID);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GraveStoneTileEntity>> GRAVESTONE_TILEENTITY = BLOCK_ENTITY_REGISTER.register("gravestone", () -> new BlockEntityType<>(GraveStoneTileEntity::new, GRAVESTONE.get()));
@@ -63,8 +65,8 @@ public class Main {
             CommonRegistry.registerEntity(Main.MODID, "player_ghost", MobCategory.MONSTER, GhostPlayerEntity.class, builder -> builder.sized(0.6F, 1.95F))
     );
 
-    private static final DeferredRegister<DataComponentType<?>> DATA_COMPONENT_TYPE_REGISTER = DeferredRegister.create(BuiltInRegistries.DATA_COMPONENT_TYPE, Main.MODID);
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<DeathInfo>> DEATH_DATA_COMPONENT = DATA_COMPONENT_TYPE_REGISTER.register("death", () -> DataComponentType.<DeathInfo>builder().persistent(DeathInfo.CODEC).networkSynchronized(DeathInfo.STREAM_CODEC).build());
+    private static final DeferredRegister.DataComponents DATA_COMPONENT_TYPE_REGISTER = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, Main.MODID);
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<DeathInfo>> DEATH_DATA_COMPONENT = DATA_COMPONENT_TYPE_REGISTER.registerComponentType("death", (b) -> b.persistent(DeathInfo.CODEC).networkSynchronized(DeathInfo.STREAM_CODEC));
 
     public static ServerConfig SERVER_CONFIG;
     public static ClientConfig CLIENT_CONFIG;

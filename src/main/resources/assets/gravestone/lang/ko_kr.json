@@ -1,5 +1,6 @@
 {
   "block.gravestone.gravestone": "무덤",
+  "item.gravestone.gravestone": "무덤",
   "item.gravestone.obituary": "사망 기사",
   "entity.gravestone.player_ghost": "플레이어의 유령",
   "message.gravestone.grave_of": "%s의 무덤",

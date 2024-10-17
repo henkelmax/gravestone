@@ -27,8 +27,8 @@ import javax.annotation.Nullable;
 
 public class ObituaryItem extends Item {
 
-    public ObituaryItem() {
-        super(new Item.Properties().stacksTo(1));
+    public ObituaryItem(Item.Properties properties) {
+        super(properties.stacksTo(1));
     }
 
     @Override

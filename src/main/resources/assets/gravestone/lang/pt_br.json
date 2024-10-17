@@ -1,5 +1,6 @@
 {
   "block.gravestone.gravestone": "Lápide",
+  "item.gravestone.gravestone": "Lápide",
   "item.gravestone.obituary": "Obituário",
   "entity.gravestone.player_ghost": "Fantasma do jogador",
   "message.gravestone.grave_of": "Lápide de %s",

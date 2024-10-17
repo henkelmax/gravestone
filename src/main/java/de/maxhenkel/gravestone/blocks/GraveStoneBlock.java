@@ -84,14 +84,14 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
                     Block.box(1D, 14D, 3D, 2D, 15D, 13D)
             ).build();
 
-    public GraveStoneBlock() {
-        super(Properties.of().mapColor(MapColor.DIRT).strength(0.3F, Float.MAX_VALUE));
+    public GraveStoneBlock(Properties properties) {
+        super(properties.mapColor(MapColor.DIRT).strength(0.3F, Float.MAX_VALUE));
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 
     @Override
-    public Item toItem() {
-        return new BlockItem(this, new Item.Properties());
+    public Item toItem(Item.Properties properties) {
+        return new BlockItem(this, properties);
     }
 
     @Override

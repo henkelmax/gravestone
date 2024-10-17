@@ -1,5 +1,6 @@
 {
   "block.gravestone.gravestone": "Grabstein",
+  "item.gravestone.gravestone": "Grabstein",
   "item.gravestone.obituary": "Nachruf",
   "entity.gravestone.player_ghost": "Geisterspieler",
   "message.gravestone.grave_of": "Grab von %s",

@@ -47,6 +47,11 @@ public class PlayerGhostRenderer extends LivingEntityRenderer<GhostPlayerEntity,
     }
 
     @Override
+    protected boolean shouldShowName(GhostPlayerEntity entity, double d) {
+        return false;
+    }
+
+    @Override
     public PlayerRenderState createRenderState() {
         return new PlayerRenderState();
     }
