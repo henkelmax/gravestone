@@ -1,6 +1,5 @@
 {
   "block.gravestone.gravestone": "Gravsten",
-  "item.gravestone.gravestone": "Gravsten",
   "item.gravestone.obituary": "Dödsruna",
   "entity.gravestone.player_ghost": "Spökspelare",
   "message.gravestone.grave_of": "%ss grav",

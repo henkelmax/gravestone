@@ -18,6 +18,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -54,7 +55,7 @@ public class Main {
     public static final DeferredHolder<Block, GraveStoneBlock> GRAVESTONE = BLOCK_REGISTER.registerBlock("gravestone", GraveStoneBlock::new, BlockBehaviour.Properties.of());
 
     private static final DeferredRegister.Items ITEM_REGISTER = DeferredRegister.createItems(Main.MODID);
-    public static final DeferredHolder<Item, Item> GRAVESTONE_ITEM = ITEM_REGISTER.registerItem("gravestone", properties -> GRAVESTONE.get().toItem(properties));
+    public static final DeferredHolder<Item, BlockItem> GRAVESTONE_ITEM = ITEM_REGISTER.registerSimpleBlockItem(GRAVESTONE);
     public static final DeferredHolder<Item, ObituaryItem> OBITUARY = ITEM_REGISTER.registerItem("obituary", ObituaryItem::new);
 
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_REGISTER = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, Main.MODID);

@@ -1,6 +1,5 @@
 {
   "block.gravestone.gravestone": "Mezar",
-  "item.gravestone.gravestone": "Mezar",
   "item.gravestone.obituary": "Ölüm Belgesi",
   "entity.gravestone.player_ghost": "Oyuncunun Hayaleti",
   "message.gravestone.grave_of": "%s Mezarı",

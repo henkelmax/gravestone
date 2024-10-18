@@ -1,6 +1,5 @@
 {
   "block.gravestone.gravestone": "墓",
-  "item.gravestone.gravestone": "墓",
   "item.gravestone.obituary": "死亡記録",
   "entity.gravestone.player_ghost": "プレイヤーの幽霊",
   "message.gravestone.grave_of": "%sの墓",

@@ -1,6 +1,5 @@
 {
   "block.gravestone.gravestone": "墓碑",
-  "item.gravestone.gravestone": "墓碑",
   "item.gravestone.obituary": "死亡笔记",
   "entity.gravestone.player_ghost": "幽灵玩家",
   "message.gravestone.grave_of": "%s的墓碑",

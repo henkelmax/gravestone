@@ -2,7 +2,6 @@ package de.maxhenkel.gravestone.blocks;
 
 import com.google.common.collect.ImmutableList;
 import de.maxhenkel.corelib.block.DirectionalVoxelShape;
-import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.corelib.death.Death;
 import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
@@ -49,7 +48,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, SimpleWaterloggedBlock {
+public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterloggedBlock {
 
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -87,11 +86,6 @@ public class GraveStoneBlock extends Block implements EntityBlock, IItemBlock, S
     public GraveStoneBlock(Properties properties) {
         super(properties.mapColor(MapColor.DIRT).strength(0.3F, Float.MAX_VALUE));
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
-    }
-
-    @Override
-    public Item toItem(Item.Properties properties) {
-        return new BlockItem(this, properties);
     }
 
     @Override
