@@ -6,12 +6,8 @@
     "DDD"
   ],
   "key": {
-    "C": {
-      "item": "minecraft:cobblestone"
-    },
-    "D": {
-      "item": "minecraft:dirt"
-    }
+    "C": "minecraft:cobblestone",
+    "D": "minecraft:dirt"
   },
   "result": {
     "id": "gravestone:gravestone",
