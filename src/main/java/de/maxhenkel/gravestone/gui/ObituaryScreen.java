@@ -153,7 +153,8 @@ public class ObituaryScreen extends Screen {
             player = new DummyPlayer(minecraft.level, new GameProfile(death.getPlayerUUID(), death.getPlayerName()), death.getEquipment(), death.getModel());
         }
 
-        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, guiLeft + TEXTURE_X / 2 - 25, guiTop + 70, guiLeft + TEXTURE_X / 2 + 25, guiTop + 140, 30, 0.0625F, mouseX, mouseY, player);
+        //TODO Re-add and fix name tag and position
+        //InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, guiLeft + TEXTURE_X / 2 - 25, guiTop + 70, guiLeft + TEXTURE_X / 2 + 25, guiTop + 140, 30, 0.0625F, mouseX, mouseY, player);
 
         if (minecraft.options.advancedItemTooltips) {
             if (mouseX >= guiLeft + 7 && mouseX <= guiLeft + TEXTURE_X - 7 && mouseY >= 50 && mouseY <= 50 + font.lineHeight) {
