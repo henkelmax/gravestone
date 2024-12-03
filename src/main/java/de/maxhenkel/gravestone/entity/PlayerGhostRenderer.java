@@ -25,11 +25,11 @@ public class PlayerGhostRenderer extends LivingEntityRenderer<GhostPlayerEntity,
         playerModelSlim = new PlayerModel(context.bakeLayer(ModelLayers.PLAYER_SLIM), true);
         model = playerModel;
 
-        addLayer(new PlayerItemInHandLayer<>(this, context.getItemRenderer()));
+        addLayer(new PlayerItemInHandLayer<>(this));
         addLayer(new ArrowLayer<>(this, context));
         addLayer(new Deadmau5EarsLayer(this, context.getModelSet()));
-        addLayer(new CapeLayer(this, context.getModelSet(), context.getEquipmentModels()));
-        addLayer(new CustomHeadLayer<>(this, context.getModelSet(), context.getItemRenderer()));
+        addLayer(new CapeLayer(this, context.getModelSet(), context.getEquipmentAssets()));
+        addLayer(new CustomHeadLayer<>(this, context.getModelSet(), CustomHeadLayer.Transforms.DEFAULT));
         addLayer(new WingsLayer<>(this, context.getModelSet(), context.getEquipmentRenderer()));
         addLayer(new ParrotOnShoulderLayer(this, context.getModelSet()));
         addLayer(new SpinAttackEffectLayer(this, context.getModelSet()));
@@ -59,7 +59,7 @@ public class PlayerGhostRenderer extends LivingEntityRenderer<GhostPlayerEntity,
     @Override
     public void extractRenderState(GhostPlayerEntity entity, PlayerRenderState state, float partialTicks) {
         super.extractRenderState(entity, state, partialTicks);
-        HumanoidMobRenderer.extractHumanoidRenderState(entity, state, partialTicks);
+        HumanoidMobRenderer.extractHumanoidRenderState(entity, state, partialTicks, itemModelResolver);
         state.skin = PlayerSkins.getSkin(entity.getPlayerUUID(), entity.getName().getString());
         state.showHat = entity.isWearing(PlayerModelPart.HAT);
         state.showJacket = entity.isWearing(PlayerModelPart.JACKET);
