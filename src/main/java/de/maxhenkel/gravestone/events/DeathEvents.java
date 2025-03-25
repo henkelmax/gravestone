@@ -81,7 +81,8 @@ public class DeathEvents {
             return;
         }
 
-        for (ItemStack stack : event.getOriginal().getInventory().items) {
+        for (int i = 0; i < event.getOriginal().getInventory().getContainerSize(); i++) {
+            ItemStack stack = event.getOriginal().getInventory().getItem(i);
             if (stack.getItem() instanceof ObituaryItem) {
                 event.getEntity().getInventory().add(stack);
             }

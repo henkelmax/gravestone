@@ -21,6 +21,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -179,14 +181,11 @@ public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterlo
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (state.getBlock() != newState.getBlock()) {
-            BlockEntity tileentity = world.getBlockEntity(pos);
-            if (tileentity instanceof GraveStoneTileEntity) {
-                dropItems(world, pos, ((GraveStoneTileEntity) tileentity).getDeath().getAllItems());
-            }
-            super.onRemove(state, world, pos, newState, isMoving);
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean moving) {
+        if (level.getBlockEntity(pos) instanceof GraveStoneTileEntity grave) {
+            dropItems(level, pos, grave.getDeath().getAllItems());
         }
+        super.affectNeighborsAfterRemoval(state, level, pos, moving);
     }
 
     public void dropItems(Level world, BlockPos pos, NonNullList<ItemStack> items) {
@@ -242,23 +241,20 @@ public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterlo
 
         Inventory inv = player.getInventory();
 
-        List<NonNullList<ItemStack>> invs = ImmutableList.of(player.getInventory().items, player.getInventory().armor, player.getInventory().offhand);
-
-        for (NonNullList<ItemStack> i : invs) {
-            for (ItemStack stack : i) {
-                if (stack.getItem().equals(Main.OBITUARY.get())) {
-                    Death death = Main.OBITUARY.get().fromStack(player, stack);
-                    if (death != null && !grave.getDeath().getId().equals(GraveUtils.EMPTY_UUID) && grave.getDeath().getId().equals(death.getId())) {
-                        inv.removeItem(stack);
-                    }
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            ItemStack stack = player.getInventory().getItem(i);
+            if (stack.getItem().equals(Main.OBITUARY.get())) {
+                Death death = Main.OBITUARY.get().fromStack(player, stack);
+                if (death != null && !grave.getDeath().getId().equals(GraveUtils.EMPTY_UUID) && grave.getDeath().getId().equals(death.getId())) {
+                    inv.removeItem(stack);
                 }
             }
         }
     }
 
     @Override
-    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
-        super.entityInside(state, world, pos, entity);
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier applier) {
+        super.entityInside(state, world, pos, entity, applier);
         if (!(entity instanceof ServerPlayer) || !entity.isAlive() || !Main.SERVER_CONFIG.sneakPickup.get()) {
             return;
         }
@@ -291,9 +287,14 @@ public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterlo
 
     public NonNullList<ItemStack> fillPlayerInventory(Player player, Death death) {
         NonNullList<ItemStack> additionalItems = NonNullList.create();
-        fillInventory(additionalItems, death.getMainInventory(), player.getInventory().items);
-        fillInventory(additionalItems, death.getArmorInventory(), player.getInventory().armor);
-        fillInventory(additionalItems, death.getOffHandInventory(), player.getInventory().offhand);
+        fillInventory(additionalItems, death.getMainInventory(), player.getInventory().getNonEquipmentItems());
+
+        fillInventoryEquipment(player, additionalItems, death.getArmorInventory().get(EquipmentSlot.FEET.getIndex()), EquipmentSlot.FEET);
+        fillInventoryEquipment(player, additionalItems, death.getArmorInventory().get(EquipmentSlot.LEGS.getIndex()), EquipmentSlot.LEGS);
+        fillInventoryEquipment(player, additionalItems, death.getArmorInventory().get(EquipmentSlot.CHEST.getIndex()), EquipmentSlot.CHEST);
+        fillInventoryEquipment(player, additionalItems, death.getArmorInventory().get(EquipmentSlot.HEAD.getIndex()), EquipmentSlot.HEAD);
+
+        fillInventoryEquipment(player, additionalItems, death.getOffHandInventory().getFirst(), EquipmentSlot.OFFHAND);
 
         additionalItems.addAll(death.getAdditionalItems());
         NonNullList<ItemStack> restItems = NonNullList.create();
@@ -305,6 +306,17 @@ public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterlo
 
         death.getAdditionalItems().clear();
         return restItems;
+    }
+
+    public void fillInventoryEquipment(Player player, List<ItemStack> additionalItems, ItemStack item, EquipmentSlot slot) {
+        if (item.isEmpty()) {
+            return;
+        }
+        ItemStack oldPlayerItem = player.getItemBySlot(slot);
+        if (!oldPlayerItem.isEmpty()) {
+            additionalItems.add(oldPlayerItem);
+        }
+        player.setItemSlot(slot, item);
     }
 
     public void fillInventory(List<ItemStack> additionalItems, NonNullList<ItemStack> inventory, NonNullList<ItemStack> playerInv) {

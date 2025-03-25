@@ -3,6 +3,7 @@ package de.maxhenkel.gravestone.entity;
 import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -23,13 +24,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
 public class GhostPlayerEntity extends Monster {
 
-    private static final EntityDataAccessor<Optional<UUID>> PLAYER_UUID = SynchedEntityData.defineId(GhostPlayerEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Optional<EntityReference<LivingEntity>>> PLAYER_UUID = SynchedEntityData.defineId(GhostPlayerEntity.class, EntityDataSerializers.OPTIONAL_LIVING_ENTITY_REFERENCE);
     private static final EntityDataAccessor<Byte> PLAYER_MODEL = SynchedEntityData.defineId(GhostPlayerEntity.class, EntityDataSerializers.BYTE);
 
     public GhostPlayerEntity(EntityType type, Level world) {
@@ -41,8 +41,9 @@ public class GhostPlayerEntity extends Monster {
         setPlayerUUID(playerUUID);
         setCustomName(name);
         setModel(model);
-        Arrays.fill(armorDropChances, 0F);
-        Arrays.fill(handDropChances, 0F);
+        //TODO Check
+        //Arrays.fill(armorDropChances, 0F);
+        //Arrays.fill(handDropChances, 0F);
 
         for (int i = 0; i < EquipmentSlot.values().length; i++) {
             setItemSlot(EquipmentSlot.values()[i], equipment.get(i));
@@ -98,7 +99,7 @@ public class GhostPlayerEntity extends Monster {
     }
 
     public void setPlayerUUID(UUID uuid) {
-        this.getEntityData().set(PLAYER_UUID, Optional.of(uuid));
+        this.getEntityData().set(PLAYER_UUID, Optional.of(new EntityReference<>(uuid)));
         if (uuid.toString().equals("af3bd5f4-8634-4700-8281-e4cc851be180")) {
             setOverpowered();
         }
@@ -119,7 +120,7 @@ public class GhostPlayerEntity extends Monster {
     }
 
     public UUID getPlayerUUID() {
-        return getEntityData().get(PLAYER_UUID).orElse(GraveUtils.EMPTY_UUID);
+        return getEntityData().get(PLAYER_UUID).map(EntityReference::getUUID).orElse(GraveUtils.EMPTY_UUID);
     }
 
     public void setModel(byte model) {
@@ -138,7 +139,7 @@ public class GhostPlayerEntity extends Monster {
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         getEntityData().get(PLAYER_UUID).ifPresent(uuid -> {
-            compound.putUUID("PlayerUUID", uuid);
+            compound.store("PlayerUUID", UUIDUtil.CODEC, uuid.getUUID());
         });
         compound.putByte("Model", getModel());
     }
@@ -147,16 +148,16 @@ public class GhostPlayerEntity extends Monster {
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         if (compound.contains("player_uuid")) { // Compatibility
-            String uuidStr = compound.getString("player_uuid");
+            String uuidStr = compound.getStringOr("player_uuid", "");
             try {
                 UUID uuid = UUID.fromString(uuidStr);
                 setPlayerUUID(uuid);
             } catch (Exception e) {
             }
-        } else if (compound.contains("PlayerUUID")) {
-            setPlayerUUID(compound.getUUID("PlayerUUID"));
+        } else {
+            compound.read("PlayerUUID", UUIDUtil.CODEC).ifPresent(this::setPlayerUUID);
         }
-        setModel(compound.getByte("Model"));
+        setModel(compound.getByteOr("Model", (byte) 0));
     }
 
     @Override

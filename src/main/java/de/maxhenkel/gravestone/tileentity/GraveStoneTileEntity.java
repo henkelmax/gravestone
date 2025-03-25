@@ -25,6 +25,7 @@ public class GraveStoneTileEntity extends BlockEntity implements Nameable {
 
     protected Death death;
 
+    @Nullable
     protected Component customName;
 
     public GraveStoneTileEntity(BlockPos pos, BlockState state) {
@@ -46,32 +47,30 @@ public class GraveStoneTileEntity extends BlockEntity implements Nameable {
         super.loadAdditional(compound, provider);
 
         if (compound.contains("Death")) {
-            death = Death.fromNBT(provider, compound.getCompound("Death"));
+            death = Death.fromNBT(provider, compound.getCompoundOrEmpty("Death"));
         } else { // Compatibility
             UUID playerUUID = GraveUtils.EMPTY_UUID;
             try {
-                playerUUID = UUID.fromString(compound.getString("PlayerUUID"));
+                playerUUID = UUID.fromString(compound.getStringOr("PlayerUUID", ""));
             } catch (Exception e) {
             }
 
             Death.Builder builder = new Death.Builder(playerUUID, UUID.randomUUID());
 
             NonNullList<ItemStack> items = NonNullList.create();
-            ListTag list = compound.getList("ItemStacks", 10);
+            ListTag list = compound.getListOrEmpty("ItemStacks");
             for (int i = 0; i < list.size(); i++) {
-                Optional<ItemStack> parse = ItemStack.parse(provider, list.getCompound(i));
+                Optional<ItemStack> parse = ItemStack.parse(provider, list.getCompoundOrEmpty(i));
                 parse.ifPresent(items::add);
             }
 
             builder.additionalItems(items);
-            builder.playerName(compound.getString("PlayerName"));
-            builder.timestamp(compound.getLong("DeathTime"));
+            builder.playerName(compound.getStringOr("PlayerName", ""));
+            builder.timestamp(compound.getLongOr("DeathTime", 0L));
             death = builder.build();
         }
 
-        if (compound.contains("CustomName")) {
-            customName = Component.Serializer.fromJson(compound.getString("CustomName"), provider);
-        }
+        customName = compound.getString("CustomName").map(s -> Component.Serializer.fromJson(s, provider)).orElse(null);
     }
 
     @Override

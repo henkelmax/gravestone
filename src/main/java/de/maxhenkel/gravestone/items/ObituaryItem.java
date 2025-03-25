@@ -6,9 +6,10 @@ import de.maxhenkel.gravestone.DeathInfo;
 import de.maxhenkel.gravestone.Main;
 import de.maxhenkel.gravestone.net.MessageOpenObituary;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class ObituaryItem extends Item {
 
@@ -48,14 +50,14 @@ public class ObituaryItem extends Item {
                 Component replace = ComponentUtils.wrapInSquareBrackets(Component.translatable("message.gravestone.restore.replace"))
                         .withStyle((style) -> style
                                 .applyFormat(ChatFormatting.GREEN)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore @s " + death.getId().toString() + " replace"))
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("message.gravestone.restore.replace.description")))
+                                .withClickEvent(new ClickEvent.SuggestCommand("/restore @s " + death.getId().toString() + " replace"))
+                                .withHoverEvent(new HoverEvent.ShowText(Component.translatable("message.gravestone.restore.replace.description")))
                         );
                 Component add = ComponentUtils.wrapInSquareBrackets(Component.translatable("message.gravestone.restore.add"))
                         .withStyle((style) -> style
                                 .applyFormat(ChatFormatting.GREEN)
-                                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/restore @s " + death.getId().toString() + " add"))
-                                .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("message.gravestone.restore.add.description")))
+                                .withClickEvent(new ClickEvent.SuggestCommand("/restore @s " + death.getId().toString() + " add"))
+                                .withHoverEvent(new HoverEvent.ShowText(Component.translatable("message.gravestone.restore.add.description")))
                         );
                 player.sendSystemMessage(Component.translatable("message.gravestone.restore").append(" ").append(replace).append(" ").append(add));
             }
@@ -92,11 +94,12 @@ public class ObituaryItem extends Item {
             return;
         }
         CompoundTag compoundTag = customData.copyTag();
-        if (!compoundTag.contains("Death", Tag.TAG_COMPOUND)) {
+        Optional<CompoundTag> deathOptional = compoundTag.getCompound("Death");
+        if (deathOptional.isEmpty()) {
             return;
         }
-        CompoundTag death = compoundTag.getCompound("Death");
-        DeathInfo info = new DeathInfo(death.getUUID("PlayerUUID"), death.getUUID("DeathID"));
+        CompoundTag death = deathOptional.get();
+        DeathInfo info = new DeathInfo(death.read("PlayerUUID", UUIDUtil.CODEC).orElse(Util.NIL_UUID), death.read("DeathID", UUIDUtil.CODEC).orElse(Util.NIL_UUID));
         compoundTag.remove("Death");
         if (compoundTag.isEmpty()) {
             stack.remove(DataComponents.CUSTOM_DATA);
