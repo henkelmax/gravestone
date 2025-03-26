@@ -2,7 +2,6 @@ package de.maxhenkel.gravestone.entity;
 
 import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -24,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+import java.util.EnumMap;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,7 +36,7 @@ public class GhostPlayerEntity extends Monster {
         super(type, world);
     }
 
-    public GhostPlayerEntity(Level world, UUID playerUUID, Component name, NonNullList<ItemStack> equipment, byte model) {
+    public GhostPlayerEntity(Level world, UUID playerUUID, Component name, EnumMap<EquipmentSlot, ItemStack> equipment, byte model) {
         this(Main.GHOST.get(), world);
         setPlayerUUID(playerUUID);
         setCustomName(name);
@@ -45,8 +45,8 @@ public class GhostPlayerEntity extends Monster {
         //Arrays.fill(armorDropChances, 0F);
         //Arrays.fill(handDropChances, 0F);
 
-        for (int i = 0; i < EquipmentSlot.values().length; i++) {
-            setItemSlot(EquipmentSlot.values()[i], equipment.get(i));
+        for (EnumMap.Entry<EquipmentSlot, ItemStack> entry : equipment.entrySet()) {
+            setItemSlot(entry.getKey(), entry.getValue());
         }
     }
 
