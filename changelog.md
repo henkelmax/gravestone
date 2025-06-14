@@ -1,1 +1,1 @@
-- Reworked player equipment
+- Updated to 1.21.6

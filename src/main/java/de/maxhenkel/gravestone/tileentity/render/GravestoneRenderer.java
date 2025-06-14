@@ -1,8 +1,8 @@
 package de.maxhenkel.gravestone.tileentity.render;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import de.maxhenkel.corelib.FontColorUtils;
 import de.maxhenkel.corelib.client.PlayerSkins;
 import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
@@ -53,7 +53,7 @@ public class GravestoneRenderer implements BlockEntityRenderer<GraveStoneTileEnt
         matrixStack.translate(0D, 0.3D, 0.37D);
         matrixStack.scale((float) textScale, (float) textScale, (float) textScale);
         float left = (float) (-textWidth / 2);
-        font.drawInBatch(name.getString(), left, 0F, Main.CLIENT_CONFIG.graveTextColor, false, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, combinedLight);
+        font.drawInBatch(name.getString(), left, 0F, FontColorUtils.rgbToArgb(Main.CLIENT_CONFIG.graveTextColor), false, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, combinedLight);
         matrixStack.popPose();
 
         BlockState state = grave.getLevel().getBlockState(grave.getBlockPos().below());
@@ -79,7 +79,6 @@ public class GravestoneRenderer implements BlockEntityRenderer<GraveStoneTileEnt
         matrixStack.mulPose(Axis.XP.rotationDegrees(180F));
         matrixStack.mulPose(Axis.XP.rotationDegrees(-61F));
 
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         model.renderToBuffer(matrixStack, buffer.getBuffer(model.renderType(resourcelocation)), combinedLight, OverlayTexture.NO_OVERLAY);
 
         matrixStack.popPose();

@@ -46,7 +46,7 @@ public class ObituaryItem extends Item {
         if (death == null) {
             player.displayClientMessage(Component.translatable("message.gravestone.death_not_found"), true);
         } else if (player.isShiftKeyDown()) {
-            if (player.hasPermissions(player.server.getOperatorUserPermissionLevel())) {
+            if (player.hasPermissions(player.getServer().getOperatorUserPermissionLevel())) {
                 Component replace = ComponentUtils.wrapInSquareBrackets(Component.translatable("message.gravestone.restore.replace"))
                         .withStyle((style) -> style
                                 .applyFormat(ChatFormatting.GREEN)
@@ -73,7 +73,7 @@ public class ObituaryItem extends Item {
         if (deathInfo == null) {
             return null;
         }
-        return DeathManager.getDeath(player.serverLevel(), deathInfo.getPlayerId(), deathInfo.getDeathId());
+        return DeathManager.getDeath(player.level(), deathInfo.getPlayerId(), deathInfo.getDeathId());
     }
 
     public ItemStack toStack(Death death) {

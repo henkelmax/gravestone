@@ -91,7 +91,7 @@ public class DeathEvents {
 
     public static boolean keepInventory(Player player) {
         try {
-            MinecraftServer server = player.getCommandSenderWorld().getServer();
+            MinecraftServer server = player.getServer();
             if (server == null) {
                 return false;
             }

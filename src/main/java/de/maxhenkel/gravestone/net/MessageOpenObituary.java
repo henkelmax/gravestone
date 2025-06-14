@@ -40,13 +40,13 @@ public class MessageOpenObituary implements Message<MessageOpenObituary> {
 
     @Override
     public MessageOpenObituary fromBytes(RegistryFriendlyByteBuf buf) {
-        death = Death.fromNBT(buf.registryAccess(), buf.readNbt());
+        death = Death.fromNBT(buf.readNbt());
         return this;
     }
 
     @Override
     public void toBytes(RegistryFriendlyByteBuf buf) {
-        buf.writeNbt(death.toNBT(buf.registryAccess()));
+        buf.writeNbt(death.toNBT());
     }
 
     @Override

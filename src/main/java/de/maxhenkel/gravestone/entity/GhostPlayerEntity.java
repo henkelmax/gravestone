@@ -3,7 +3,6 @@ package de.maxhenkel.gravestone.entity;
 import de.maxhenkel.gravestone.GraveUtils;
 import de.maxhenkel.gravestone.Main;
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -21,6 +20,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import javax.annotation.Nullable;
 import java.util.EnumMap;
@@ -136,28 +137,19 @@ public class GhostPlayerEntity extends Monster {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
+    protected void addAdditionalSaveData(ValueOutput valueOutput) {
+        super.addAdditionalSaveData(valueOutput);
         getEntityData().get(PLAYER_UUID).ifPresent(uuid -> {
-            compound.store("PlayerUUID", UUIDUtil.CODEC, uuid.getUUID());
+            valueOutput.store("PlayerUUID", UUIDUtil.CODEC, uuid.getUUID());
         });
-        compound.putByte("Model", getModel());
+        valueOutput.putByte("Model", getModel());
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
-        if (compound.contains("player_uuid")) { // Compatibility
-            String uuidStr = compound.getStringOr("player_uuid", "");
-            try {
-                UUID uuid = UUID.fromString(uuidStr);
-                setPlayerUUID(uuid);
-            } catch (Exception e) {
-            }
-        } else {
-            compound.read("PlayerUUID", UUIDUtil.CODEC).ifPresent(this::setPlayerUUID);
-        }
-        setModel(compound.getByteOr("Model", (byte) 0));
+    protected void readAdditionalSaveData(ValueInput valueInput) {
+        super.readAdditionalSaveData(valueInput);
+        valueInput.read("PlayerUUID", UUIDUtil.CODEC).ifPresent(this::setPlayerUUID);
+        setModel(valueInput.getByteOr("Model", (byte) 0));
     }
 
     @Override

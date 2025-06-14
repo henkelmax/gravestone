@@ -1,5 +1,6 @@
 package de.maxhenkel.gravestone.gui;
 
+import de.maxhenkel.corelib.FontColorUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -27,8 +28,8 @@ public class Page {
     }
 
     public void drawPage(GuiGraphics guiGraphics, int page, int pageCount, int mouseX, int mouseY) {
-        gui.drawCentered(guiGraphics, gui.getFontRenderer(), Component.translatable("gui.obituary.title.items").withStyle(ChatFormatting.UNDERLINE), gui.width / 2, 30, ChatFormatting.BLACK.getColor());
-        gui.drawCentered(guiGraphics, gui.getFontRenderer(), Component.translatable("gui.obituary.page", page, pageCount), gui.width / 2, 43, ChatFormatting.DARK_GRAY.getColor());
+        gui.drawCentered(guiGraphics, gui.getFontRenderer(), Component.translatable("gui.obituary.title.items").withStyle(ChatFormatting.UNDERLINE), gui.width / 2, 30, FontColorUtils.getFontColor(ChatFormatting.BLACK));
+        gui.drawCentered(guiGraphics, gui.getFontRenderer(), Component.translatable("gui.obituary.page", page, pageCount), gui.width / 2, 43, FontColorUtils.getFontColor(ChatFormatting.BLACK));
 
         int y = ITEM_START_Y;
         final int space = 12;
@@ -47,7 +48,7 @@ public class Page {
                 int index = (mouseY + 3 - ITEM_START_Y) / 12;
                 ItemStack stack = items[Math.max(0, Math.min(items.length - 1, index))];
                 if (stack != null && !stack.isEmpty()) {
-                    guiGraphics.renderTooltip(gui.getFontRenderer(), stack, mouseX, mouseY);
+                    guiGraphics.setTooltipForNextFrame(gui.getFontRenderer(), stack, mouseX, mouseY);
                 }
             }
         }
