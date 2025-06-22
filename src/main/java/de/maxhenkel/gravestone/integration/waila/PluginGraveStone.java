@@ -17,6 +17,6 @@ public class PluginGraveStone implements IWailaPlugin {
 
     @Override
     public void register(IWailaCommonRegistration registration) {
-        registration.registerBlockDataProvider(HUDHandlerGraveStone.INSTANCE, GraveStoneTileEntity.class);
+        registration.registerBlockDataProvider(GravestoneDataProvider.INSTANCE, GraveStoneTileEntity.class);
     }
 }

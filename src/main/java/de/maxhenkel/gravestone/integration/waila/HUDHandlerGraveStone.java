@@ -9,11 +9,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
-import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 
-public class HUDHandlerGraveStone implements IBlockComponentProvider, IServerDataProvider<BlockAccessor> {
+public class HUDHandlerGraveStone implements IBlockComponentProvider {
 
     public static final HUDHandlerGraveStone INSTANCE = new HUDHandlerGraveStone();
 
@@ -33,15 +32,8 @@ public class HUDHandlerGraveStone implements IBlockComponentProvider, IServerDat
 
             CompoundTag data = blockAccessor.getServerData();
             if (data.contains("ItemCount")) {
-                iTooltip.add(Component.translatable("message.gravestone.item_count", data.getInt("ItemCount")));
+                iTooltip.add(Component.translatable("message.gravestone.item_count", data.getIntOr("ItemCount", 0)));
             }
-        }
-    }
-
-    @Override
-    public void appendServerData(CompoundTag compoundTag, BlockAccessor blockAccessor) {
-        if (blockAccessor.getBlockEntity() instanceof GraveStoneTileEntity grave) {
-            compoundTag.putInt("ItemCount", (int) grave.getDeath().getAllItems().stream().filter(itemStack -> !itemStack.isEmpty()).count());
         }
     }
 

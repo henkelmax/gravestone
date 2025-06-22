@@ -1,1 +1,1 @@
-- Fixed player head skin not being fetched
+- Fixed Jade integration
