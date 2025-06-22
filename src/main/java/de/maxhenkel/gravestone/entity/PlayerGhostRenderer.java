@@ -60,7 +60,7 @@ public class PlayerGhostRenderer extends LivingEntityRenderer<GhostPlayerEntity,
     public void extractRenderState(GhostPlayerEntity entity, PlayerRenderState state, float partialTicks) {
         super.extractRenderState(entity, state, partialTicks);
         HumanoidMobRenderer.extractHumanoidRenderState(entity, state, partialTicks, itemModelResolver);
-        state.skin = PlayerSkins.getSkin(entity.getPlayerUUID(), entity.getName().getString());
+        state.skin = PlayerSkins.getSkin(entity.getPlayerUUID());
         state.showHat = entity.isWearing(PlayerModelPart.HAT);
         state.showJacket = entity.isWearing(PlayerModelPart.JACKET);
         state.showLeftPants = entity.isWearing(PlayerModelPart.LEFT_PANTS_LEG);

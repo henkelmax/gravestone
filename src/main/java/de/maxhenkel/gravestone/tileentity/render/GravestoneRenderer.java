@@ -61,13 +61,13 @@ public class GravestoneRenderer implements BlockEntityRenderer<GraveStoneTileEnt
         boolean render = state.isRedstoneConductor(grave.getLevel(), grave.getBlockPos()); //TODO fix with slime block
         UUID playerUUID = grave.getDeath().getPlayerUUID();
         if (playerUUID != null && !playerUUID.equals(GraveUtils.EMPTY_UUID) && Main.CLIENT_CONFIG.renderSkull.get() && render) {
-            renderSkull(playerUUID, name.getString(), direction, matrixStack, buffer, combinedLight);
+            renderSkull(playerUUID, direction, matrixStack, buffer, combinedLight);
         }
     }
 
-    public void renderSkull(UUID uuid, String name, Direction rotation, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight) {
+    public void renderSkull(UUID uuid, Direction rotation, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight) {
         SkullModel model = new SkullModel(renderer.bakeLayer(ModelLayers.PLAYER_HEAD));
-        ResourceLocation resourcelocation = PlayerSkins.getSkin(uuid, name).texture();
+        ResourceLocation resourcelocation = PlayerSkins.getSkin(uuid).texture();
 
         matrixStack.pushPose();
 
