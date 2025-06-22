@@ -22,7 +22,6 @@ import net.minecraft.world.level.storage.ValueOutput;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
-import java.util.UUID;
 
 public class GraveStoneTileEntity extends BlockEntity implements Nameable {
 
@@ -39,18 +38,18 @@ public class GraveStoneTileEntity extends BlockEntity implements Nameable {
     @Override
     protected void saveAdditional(ValueOutput valueOutput) {
         super.saveAdditional(valueOutput);
-        CompoundTag tag = new CompoundTag();
-        tag.put("Death", death.toNBT());
+        death.write(valueOutput, "Death");
         if (customName != null) {
+            CompoundTag tag = new CompoundTag();
             CodecUtils.toJsonString(ComponentSerialization.CODEC, customName).ifPresent(s -> tag.putString("CustomName", s));
+            valueOutput.store(tag);
         }
-        valueOutput.store(tag);
     }
 
     @Override
     protected void loadAdditional(ValueInput valueInput) {
         super.loadAdditional(valueInput);
-        death = ValueInputOutputUtils.getTag(valueInput, "Death").map(Death::fromNBT).orElseGet(() -> new Death.Builder(GraveUtils.EMPTY_UUID, UUID.randomUUID()).build());
+        death = Death.read(valueInput, "Death");
         Optional<String> optionalName = valueInput.getString("CustomName");
         optionalName.ifPresent(s -> customName = CodecUtils.fromJson(ComponentSerialization.CODEC, s).orElse(null));
     }
