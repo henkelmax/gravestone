@@ -1,1 +1,1 @@
-- Fixed Jade integration
+- Fixed death items not being saved
