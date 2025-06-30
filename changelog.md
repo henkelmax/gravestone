@@ -1,1 +1,1 @@
-- Fixed death items not being saved
+- Updated to 1.21.7
