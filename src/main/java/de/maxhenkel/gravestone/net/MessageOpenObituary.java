@@ -2,20 +2,16 @@ package de.maxhenkel.gravestone.net;
 
 import de.maxhenkel.corelib.death.Death;
 import de.maxhenkel.corelib.net.Message;
-import de.maxhenkel.gravestone.Main;
-import de.maxhenkel.gravestone.gui.ObituaryScreen;
-import net.minecraft.client.Minecraft;
+import de.maxhenkel.gravestone.GravestoneMod;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MessageOpenObituary implements Message<MessageOpenObituary> {
 
-    public static final CustomPacketPayload.Type<MessageOpenObituary> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Main.MODID, "open_obituary"));
+    public static final CustomPacketPayload.Type<MessageOpenObituary> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(GravestoneMod.MODID, "open_obituary"));
 
     private Death death;
 
@@ -32,10 +28,9 @@ public class MessageOpenObituary implements Message<MessageOpenObituary> {
         return PacketFlow.CLIENTBOUND;
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public void executeClientSide(IPayloadContext context) {
-        Minecraft.getInstance().setScreen(new ObituaryScreen(death));
+        ClientNetworking.openObituary(death);
     }
 
     @Override

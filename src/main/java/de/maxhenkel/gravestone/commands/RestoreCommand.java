@@ -6,7 +6,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import de.maxhenkel.corelib.death.Death;
 import de.maxhenkel.corelib.death.DeathManager;
-import de.maxhenkel.gravestone.Main;
+import de.maxhenkel.gravestone.GravestoneMod;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -49,7 +49,7 @@ public class RestoreCommand {
                 return 0;
             }
             player.getInventory().clearContent();
-            NonNullList<ItemStack> itemStacks = Main.GRAVESTONE.get().fillPlayerInventory(player, death);
+            NonNullList<ItemStack> itemStacks = GravestoneMod.GRAVESTONE.get().fillPlayerInventory(player, death);
             for (ItemStack stack : itemStacks) {
                 player.drop(stack, false);
             }

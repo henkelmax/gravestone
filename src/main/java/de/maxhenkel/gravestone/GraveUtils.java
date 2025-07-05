@@ -47,7 +47,7 @@ public class GraveUtils {
             return true;
         }
 
-        return Main.SERVER_CONFIG.replaceableBlocks.stream().anyMatch(blockTag -> blockTag.contains(b));
+        return GravestoneMod.SERVER_CONFIG.replaceableBlocks.stream().anyMatch(blockTag -> blockTag.contains(b));
     }
 
     @Nullable
@@ -63,7 +63,7 @@ public class GraveUtils {
         if (player.isDeadOrDying()) {
             return false;
         }
-        if (!Main.SERVER_CONFIG.onlyOwnersCanBreak.get()) {
+        if (!GravestoneMod.SERVER_CONFIG.onlyOwnersCanBreak.get()) {
             return true;
         }
 

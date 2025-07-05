@@ -1,13 +1,12 @@
 package de.maxhenkel.gravestone.blocks;
 
-import com.google.common.collect.ImmutableList;
 import de.maxhenkel.corelib.block.DirectionalVoxelShape;
 import de.maxhenkel.corelib.death.Death;
+import de.maxhenkel.gravestone.ClientUtils;
 import de.maxhenkel.gravestone.GraveUtils;
-import de.maxhenkel.gravestone.Main;
+import de.maxhenkel.gravestone.GravestoneMod;
 import de.maxhenkel.gravestone.entity.GhostPlayerEntity;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -43,8 +42,6 @@ import net.minecraft.world.level.material.*;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -166,19 +163,15 @@ public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterlo
         if (level.isClientSide) {
             Component time = GraveUtils.getDate(grave.getDeath().getTimestamp());
             if (time == null) {
-                sendClientMessage(name);
+                ClientUtils.sendMessage(name);
             } else {
-                sendClientMessage(Component.translatable("message.gravestone.died", name, time));
+                ClientUtils.sendMessage(Component.translatable("message.gravestone.died", name, time));
             }
         }
 
         return InteractionResult.SUCCESS;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    private void sendClientMessage(Component message) {
-        Minecraft.getInstance().gui.getChat().addMessage(message);
-    }
 
     @Override
     protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean moving) {
@@ -204,7 +197,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterlo
             removeObituary(player, grave);
             spawnGhost(world, pos, grave);
 
-            if (!grave.getDeath().getId().equals(GraveUtils.EMPTY_UUID) && Main.SERVER_CONFIG.breakPickup.get()) {
+            if (!grave.getDeath().getId().equals(GraveUtils.EMPTY_UUID) && GravestoneMod.SERVER_CONFIG.breakPickup.get()) {
                 sortItems(world, pos, player, grave);
             }
         }
@@ -212,7 +205,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterlo
     }
 
     protected void spawnGhost(Level world, BlockPos pos, GraveStoneTileEntity grave) {
-        if (!Main.SERVER_CONFIG.spawnGhost.get()) {
+        if (!GravestoneMod.SERVER_CONFIG.spawnGhost.get()) {
             return;
         }
         if (!world.isEmptyBlock(pos.above())) {
@@ -231,7 +224,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterlo
     }
 
     protected void removeObituary(Player p, GraveStoneTileEntity grave) {
-        if (!Main.SERVER_CONFIG.removeObituary.get()) {
+        if (!GravestoneMod.SERVER_CONFIG.removeObituary.get()) {
             return;
         }
         if (!(p instanceof ServerPlayer)) {
@@ -243,8 +236,8 @@ public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterlo
 
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);
-            if (stack.getItem().equals(Main.OBITUARY.get())) {
-                Death death = Main.OBITUARY.get().fromStack(player, stack);
+            if (stack.getItem().equals(GravestoneMod.OBITUARY.get())) {
+                Death death = GravestoneMod.OBITUARY.get().fromStack(player, stack);
                 if (death != null && !grave.getDeath().getId().equals(GraveUtils.EMPTY_UUID) && grave.getDeath().getId().equals(death.getId())) {
                     inv.removeItem(stack);
                 }
@@ -255,7 +248,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterlo
     @Override
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier applier) {
         super.entityInside(state, world, pos, entity, applier);
-        if (!(entity instanceof ServerPlayer) || !entity.isAlive() || !Main.SERVER_CONFIG.sneakPickup.get()) {
+        if (!(entity instanceof ServerPlayer) || !entity.isAlive() || !GravestoneMod.SERVER_CONFIG.sneakPickup.get()) {
             return;
         }
         ServerPlayer player = (ServerPlayer) entity;

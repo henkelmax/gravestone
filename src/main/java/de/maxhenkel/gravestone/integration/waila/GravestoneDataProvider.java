@@ -1,6 +1,6 @@
 package de.maxhenkel.gravestone.integration.waila;
 
-import de.maxhenkel.gravestone.Main;
+import de.maxhenkel.gravestone.GravestoneMod;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -10,7 +10,7 @@ public class GravestoneDataProvider implements IServerDataProvider<BlockAccessor
 
     public static final GravestoneDataProvider INSTANCE = new GravestoneDataProvider();
 
-    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Main.MODID, "grave_data");
+    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(GravestoneMod.MODID, "grave_data");
 
     @Override
     public void appendServerData(CompoundTag compoundTag, BlockAccessor blockAccessor) {

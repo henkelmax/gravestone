@@ -4,7 +4,7 @@ import de.maxhenkel.corelib.codec.CodecUtils;
 import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.corelib.death.Death;
 import de.maxhenkel.gravestone.GraveUtils;
-import de.maxhenkel.gravestone.Main;
+import de.maxhenkel.gravestone.GravestoneMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -31,7 +31,7 @@ public class GraveStoneTileEntity extends BlockEntity implements Nameable {
     protected Component customName;
 
     public GraveStoneTileEntity(BlockPos pos, BlockState state) {
-        super(Main.GRAVESTONE_TILEENTITY.get(), pos, state);
+        super(GravestoneMod.GRAVESTONE_TILEENTITY.get(), pos, state);
         death = new Death.Builder(GraveUtils.EMPTY_UUID, GraveUtils.EMPTY_UUID).build();
     }
 
@@ -99,7 +99,7 @@ public class GraveStoneTileEntity extends BlockEntity implements Nameable {
     protected Component getDefaultName() {
         String name = death.getPlayerName();
         if (name == null || name.isEmpty()) {
-            return Component.translatable(Main.GRAVESTONE.get().getDescriptionId());
+            return Component.translatable(GravestoneMod.GRAVESTONE.get().getDescriptionId());
         }
         return Component.translatable("message.gravestone.grave_of", name);
     }

@@ -1,7 +1,7 @@
 package de.maxhenkel.gravestone.entity;
 
 import de.maxhenkel.gravestone.GraveUtils;
-import de.maxhenkel.gravestone.Main;
+import de.maxhenkel.gravestone.GravestoneMod;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -38,7 +38,7 @@ public class GhostPlayerEntity extends Monster {
     }
 
     public GhostPlayerEntity(Level world, UUID playerUUID, Component name, EnumMap<EquipmentSlot, ItemStack> equipment, byte model) {
-        this(Main.GHOST.get(), world);
+        this(GravestoneMod.GHOST.get(), world);
         setPlayerUUID(playerUUID);
         setCustomName(name);
         setModel(model);
@@ -81,7 +81,7 @@ public class GhostPlayerEntity extends Monster {
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(9, new RandomLookAroundGoal(this));
 
-        if (Main.SERVER_CONFIG.friendlyGhost.get()) {
+        if (GravestoneMod.SERVER_CONFIG.friendlyGhost.get()) {
             targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, false, true, (entity, level) ->
                     entity != null
                             && !entity.isInvisible()

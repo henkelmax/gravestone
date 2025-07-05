@@ -3,7 +3,7 @@ package de.maxhenkel.gravestone.items;
 import de.maxhenkel.corelib.death.Death;
 import de.maxhenkel.corelib.death.DeathManager;
 import de.maxhenkel.gravestone.DeathInfo;
-import de.maxhenkel.gravestone.Main;
+import de.maxhenkel.gravestone.GravestoneMod;
 import de.maxhenkel.gravestone.net.MessageOpenObituary;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -69,7 +69,7 @@ public class ObituaryItem extends Item {
 
     @Nullable
     public Death fromStack(ServerPlayer player, ItemStack stack) {
-        DeathInfo deathInfo = stack.get(Main.DEATH_DATA_COMPONENT);
+        DeathInfo deathInfo = stack.get(GravestoneMod.DEATH_DATA_COMPONENT);
         if (deathInfo == null) {
             return null;
         }
@@ -78,7 +78,7 @@ public class ObituaryItem extends Item {
 
     public ItemStack toStack(Death death) {
         ItemStack stack = new ItemStack(this);
-        stack.set(Main.DEATH_DATA_COMPONENT, new DeathInfo(death.getPlayerUUID(), death.getId()));
+        stack.set(GravestoneMod.DEATH_DATA_COMPONENT, new DeathInfo(death.getPlayerUUID(), death.getId()));
         return stack;
     }
 
@@ -86,7 +86,7 @@ public class ObituaryItem extends Item {
         if (!(stack.getItem() instanceof ObituaryItem)) {
             return;
         }
-        if (stack.has(Main.DEATH_DATA_COMPONENT)) {
+        if (stack.has(GravestoneMod.DEATH_DATA_COMPONENT)) {
             return;
         }
         CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
@@ -106,6 +106,6 @@ public class ObituaryItem extends Item {
         } else {
             stack.set(DataComponents.CUSTOM_DATA, CustomData.of(compoundTag));
         }
-        stack.set(Main.DEATH_DATA_COMPONENT, info);
+        stack.set(GravestoneMod.DEATH_DATA_COMPONENT, info);
     }
 }

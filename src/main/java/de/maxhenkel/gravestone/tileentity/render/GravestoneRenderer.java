@@ -5,7 +5,7 @@ import com.mojang.math.Axis;
 import de.maxhenkel.corelib.FontColorUtils;
 import de.maxhenkel.corelib.client.PlayerSkins;
 import de.maxhenkel.gravestone.GraveUtils;
-import de.maxhenkel.gravestone.Main;
+import de.maxhenkel.gravestone.GravestoneMod;
 import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import net.minecraft.client.gui.Font;
@@ -53,14 +53,14 @@ public class GravestoneRenderer implements BlockEntityRenderer<GraveStoneTileEnt
         matrixStack.translate(0D, 0.3D, 0.37D);
         matrixStack.scale((float) textScale, (float) textScale, (float) textScale);
         float left = (float) (-textWidth / 2);
-        font.drawInBatch(name.getString(), left, 0F, FontColorUtils.rgbToArgb(Main.CLIENT_CONFIG.graveTextColor), false, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, combinedLight);
+        font.drawInBatch(name.getString(), left, 0F, FontColorUtils.rgbToArgb(GravestoneMod.CLIENT_CONFIG.graveTextColor), false, matrixStack.last().pose(), buffer, Font.DisplayMode.NORMAL, 0, combinedLight);
         matrixStack.popPose();
 
         BlockState state = grave.getLevel().getBlockState(grave.getBlockPos().below());
 
         boolean render = state.isRedstoneConductor(grave.getLevel(), grave.getBlockPos()); //TODO fix with slime block
         UUID playerUUID = grave.getDeath().getPlayerUUID();
-        if (playerUUID != null && !playerUUID.equals(GraveUtils.EMPTY_UUID) && Main.CLIENT_CONFIG.renderSkull.get() && render) {
+        if (playerUUID != null && !playerUUID.equals(GraveUtils.EMPTY_UUID) && GravestoneMod.CLIENT_CONFIG.renderSkull.get() && render) {
             renderSkull(playerUUID, direction, matrixStack, buffer, combinedLight);
         }
     }

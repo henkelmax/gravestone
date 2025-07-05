@@ -1,7 +1,7 @@
 package de.maxhenkel.gravestone.integration.waila;
 
 import de.maxhenkel.gravestone.GraveUtils;
-import de.maxhenkel.gravestone.Main;
+import de.maxhenkel.gravestone.GravestoneMod;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -18,7 +18,7 @@ public class HUDHandlerGraveStone implements IBlockComponentProvider {
 
     private static final ResourceLocation OBJECT_NAME_TAG = ResourceLocation.fromNamespaceAndPath("jade", "object_name");
 
-    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Main.MODID, "grave");
+    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(GravestoneMod.MODID, "grave");
 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
