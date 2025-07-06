@@ -23,7 +23,7 @@ public class ServerConfig extends ConfigBase {
     public final ForgeConfigSpec.BooleanValue friendlyGhost;
     public final ForgeConfigSpec.BooleanValue sneakPickup;
     public final ForgeConfigSpec.BooleanValue breakPickup;
-    public final ModConfigSpec.BooleanValue strictPlacement;
+    public final ForgeConfigSpec.BooleanValue strictPlacement;
 
     public List<Tag<Block>> replaceableBlocks = new ArrayList<>();
 
