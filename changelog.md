@@ -1,1 +1,1 @@
-- Reworked player equipment
+- Added strict placement config option
