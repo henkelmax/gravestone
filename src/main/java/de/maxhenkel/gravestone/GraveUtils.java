@@ -37,6 +37,11 @@ public class GraveUtils {
             location.move(0, 1, 0);
         }
 
+        if (GravestoneMod.SERVER_CONFIG.strictPlacement.get()) {
+            location.set(location.getX(), world.getMaxY(), location.getZ());
+            return location;
+        }
+
         return null;
     }
 

@@ -23,6 +23,7 @@ public class ServerConfig extends ConfigBase {
     public final ModConfigSpec.BooleanValue friendlyGhost;
     public final ModConfigSpec.BooleanValue sneakPickup;
     public final ModConfigSpec.BooleanValue breakPickup;
+    public final ModConfigSpec.BooleanValue strictPlacement;
 
     public List<Tag<Block>> replaceableBlocks = new ArrayList<>();
 
@@ -52,6 +53,12 @@ public class ServerConfig extends ConfigBase {
         breakPickup = builder
                 .comment("If this is set to true you get your items sorted back into your inventory by breaking the grave")
                 .define("break_pickup", true);
+        strictPlacement = builder
+                .comment(
+                        "If this is set to true the grave will replace other blocks if there is no free space above",
+                        "Note that this might cause issues with other mods or multiblock structures - This option is not recommended and subject to change"
+                )
+                .define("strict_placement", false);
     }
 
     @Override

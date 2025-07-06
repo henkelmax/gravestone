@@ -1,1 +1,1 @@
-- Added Turkish translation
+- Added strict placement config option
