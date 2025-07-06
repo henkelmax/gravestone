@@ -1,1 +1,1 @@
-- Updated NeoForge
+- Added strict placement config option
