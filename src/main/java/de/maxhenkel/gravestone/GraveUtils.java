@@ -38,7 +38,7 @@ public class GraveUtils {
         }
 
         if (Main.SERVER_CONFIG.strictPlacement.get()) {
-            location.set(location.getX(), world.getMaxY(), location.getZ());
+            location.set(location.getX(), world.getMaxBuildHeight(), location.getZ());
             return location;
         }
 
