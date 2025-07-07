@@ -1,1 +1,1 @@
-- Added strict placement config option
+- Add Hungarian translation
