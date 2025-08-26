@@ -1,1 +1,1 @@
-- Updated to 1.21.8
+- Log death ID on player death
