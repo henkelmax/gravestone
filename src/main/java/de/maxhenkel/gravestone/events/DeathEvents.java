@@ -36,7 +36,7 @@ public class DeathEvents {
             return;
         }
 
-        GravestoneMod.LOGGER.info("The death ID of player {} is {}", death.getPlayerName(), death.getId());
+        Main.LOGGER.info("The death ID of player {} is {}", death.getPlayerName(), death.getId());
 
         BlockPos graveStoneLocation = GraveUtils.getGraveStoneLocation(world, death.getBlockPos());
 
