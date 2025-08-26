@@ -1,1 +1,1 @@
-- Add Hungarian translation
+- Log death ID on player death
