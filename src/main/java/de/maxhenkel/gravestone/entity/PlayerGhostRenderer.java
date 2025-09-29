@@ -4,17 +4,18 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxhenkel.corelib.client.PlayerSkins;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayers;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.*;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
-import net.minecraft.client.resources.PlayerSkin;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.PlayerModelPart;
+import net.minecraft.world.entity.player.PlayerModelType;
 
-public class PlayerGhostRenderer extends LivingEntityRenderer<GhostPlayerEntity, PlayerRenderState, PlayerModel> {
+public class PlayerGhostRenderer extends LivingEntityRenderer<GhostPlayerEntity, AvatarRenderState, PlayerModel> {
 
     private final PlayerModel playerModel;
     private final PlayerModel playerModelSlim;
@@ -29,7 +30,7 @@ public class PlayerGhostRenderer extends LivingEntityRenderer<GhostPlayerEntity,
         addLayer(new ArrowLayer<>(this, context));
         addLayer(new Deadmau5EarsLayer(this, context.getModelSet()));
         addLayer(new CapeLayer(this, context.getModelSet(), context.getEquipmentAssets()));
-        addLayer(new CustomHeadLayer<>(this, context.getModelSet(), CustomHeadLayer.Transforms.DEFAULT));
+        addLayer(new CustomHeadLayer<>(this, context.getModelSet(), context.getPlayerSkinRenderCache()));
         addLayer(new WingsLayer<>(this, context.getModelSet(), context.getEquipmentRenderer()));
         addLayer(new ParrotOnShoulderLayer(this, context.getModelSet()));
         addLayer(new SpinAttackEffectLayer(this, context.getModelSet()));
@@ -37,13 +38,19 @@ public class PlayerGhostRenderer extends LivingEntityRenderer<GhostPlayerEntity,
     }
 
     @Override
-    public void render(PlayerRenderState state, PoseStack stack, MultiBufferSource source, int light) {
-        if (state.skin.model().equals(PlayerSkin.Model.SLIM)) {
+    public void submit(AvatarRenderState state, PoseStack stack, SubmitNodeCollector collector, CameraRenderState cameraRenderState) {
+        super.submit(state, stack, collector, cameraRenderState);
+
+        if (state.skin.model().equals(PlayerModelType.SLIM)) {
             model = playerModelSlim;
         } else {
             model = playerModel;
         }
-        super.render(state, stack, source, light);
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(AvatarRenderState renderState) {
+        return renderState.skin.body().texturePath();
     }
 
     @Override
@@ -52,12 +59,12 @@ public class PlayerGhostRenderer extends LivingEntityRenderer<GhostPlayerEntity,
     }
 
     @Override
-    public PlayerRenderState createRenderState() {
-        return new PlayerRenderState();
+    public AvatarRenderState createRenderState() {
+        return new AvatarRenderState();
     }
 
     @Override
-    public void extractRenderState(GhostPlayerEntity entity, PlayerRenderState state, float partialTicks) {
+    public void extractRenderState(GhostPlayerEntity entity, AvatarRenderState state, float partialTicks) {
         super.extractRenderState(entity, state, partialTicks);
         HumanoidMobRenderer.extractHumanoidRenderState(entity, state, partialTicks, itemModelResolver);
         state.skin = PlayerSkins.getSkin(entity.getPlayerUUID());
@@ -69,17 +76,11 @@ public class PlayerGhostRenderer extends LivingEntityRenderer<GhostPlayerEntity,
         state.showRightSleeve = entity.isWearing(PlayerModelPart.RIGHT_SLEEVE);
         state.showCape = entity.isWearing(PlayerModelPart.CAPE);
         state.id = entity.getId();
-        state.name = entity.getName().getString();
     }
 
     @Override
-    protected void scale(PlayerRenderState state, PoseStack stack) {
+    protected void scale(AvatarRenderState state, PoseStack stack) {
         float scale = 0.9375F;
         stack.scale(scale, scale, scale);
-    }
-
-    @Override
-    public ResourceLocation getTextureLocation(PlayerRenderState state) {
-        return state.skin.texture();
     }
 }

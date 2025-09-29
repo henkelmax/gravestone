@@ -46,7 +46,7 @@ public class ObituaryItem extends Item {
         if (death == null) {
             player.displayClientMessage(Component.translatable("message.gravestone.death_not_found"), true);
         } else if (player.isShiftKeyDown()) {
-            if (player.hasPermissions(player.getServer().getOperatorUserPermissionLevel())) {
+            if (player.hasPermissions(player.level().getServer().operatorUserPermissionLevel())) {
                 Component replace = ComponentUtils.wrapInSquareBrackets(Component.translatable("message.gravestone.restore.replace"))
                         .withStyle((style) -> style
                                 .applyFormat(ChatFormatting.GREEN)

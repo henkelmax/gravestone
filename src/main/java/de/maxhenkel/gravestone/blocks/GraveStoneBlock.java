@@ -160,7 +160,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterlo
             return InteractionResult.FAIL;
         }
 
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             Component time = GraveUtils.getDate(grave.getDeath().getTimestamp());
             if (time == null) {
                 ClientUtils.sendMessage(name);
@@ -193,7 +193,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterlo
             return false;
         }
         BlockEntity te = world.getBlockEntity(pos);
-        if (!world.isClientSide && te instanceof GraveStoneTileEntity grave) {
+        if (!world.isClientSide() && te instanceof GraveStoneTileEntity grave) {
             removeObituary(player, grave);
             spawnGhost(world, pos, grave);
 

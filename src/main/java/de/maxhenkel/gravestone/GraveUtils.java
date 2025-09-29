@@ -79,7 +79,7 @@ public class GraveUtils {
         }
 
         if (player instanceof ServerPlayer p) {
-            if (p.hasPermissions(p.getServer().getOperatorUserPermissionLevel())) {
+            if (p.hasPermissions(p.level().getServer().operatorUserPermissionLevel())) {
                 return true;
             }
         }

@@ -100,7 +100,7 @@ public class GhostPlayerEntity extends Monster {
     }
 
     public void setPlayerUUID(UUID uuid) {
-        this.getEntityData().set(PLAYER_UUID, Optional.of(new EntityReference<>(uuid)));
+        this.getEntityData().set(PLAYER_UUID, Optional.of(EntityReference.of(uuid)));
         if (uuid.toString().equals("af3bd5f4-8634-4700-8281-e4cc851be180")) {
             setOverpowered();
         }

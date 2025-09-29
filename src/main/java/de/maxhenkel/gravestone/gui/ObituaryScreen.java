@@ -11,6 +11,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
@@ -159,9 +160,9 @@ public class ObituaryScreen extends Screen {
     }
 
     @Override
-    public boolean mouseClicked(double x, double y, int clickType) {
+    public boolean mouseClicked(MouseButtonEvent event, boolean b) {
         if (minecraft.options.advancedItemTooltips && page == 0) {
-            if (x >= guiLeft + 7 && x <= guiLeft + TEXTURE_X - 7 && y >= 50 && y <= 50 + font.lineHeight) {
+            if (event.x() >= guiLeft + 7 && event.x() <= guiLeft + TEXTURE_X - 7 && event.y() >= 50 && event.y() <= 50 + font.lineHeight) {
                 minecraft.keyboardHandler.setClipboard(death.getId().toString());
                 Component deathID = ComponentUtils.wrapInSquareBrackets(Component.translatable("message.gravestone.death_id"))
                         .withStyle((style) -> style
@@ -174,8 +175,7 @@ public class ObituaryScreen extends Screen {
                 minecraft.setScreen(null);
             }
         }
-
-        return super.mouseClicked(x, y, clickType);
+        return super.mouseClicked(event, b);
     }
 
     public void drawCentered(GuiGraphics guiGraphics, Font fontRenderer, MutableComponent text, int x, int y, int color) {
