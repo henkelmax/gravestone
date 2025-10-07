@@ -246,16 +246,16 @@ public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterlo
     }
 
     @Override
-    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity, InsideBlockEffectApplier applier) {
-        super.entityInside(state, world, pos, entity, applier);
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean b) {
+        super.entityInside(state, level, pos, entity, effectApplier, b);
         if (!(entity instanceof ServerPlayer) || !entity.isAlive() || !GravestoneMod.SERVER_CONFIG.sneakPickup.get()) {
             return;
         }
         ServerPlayer player = (ServerPlayer) entity;
-        if (!player.isShiftKeyDown() || player.getAbilities().instabuild || !GraveUtils.canBreakGrave(world, player, pos)) {
+        if (!player.isShiftKeyDown() || player.getAbilities().instabuild || !GraveUtils.canBreakGrave(level, player, pos)) {
             return;
         }
-        BlockEntity te = world.getBlockEntity(pos);
+        BlockEntity te = level.getBlockEntity(pos);
         if (!(te instanceof GraveStoneTileEntity)) {
             return;
         }
@@ -265,10 +265,10 @@ public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterlo
         }
 
         removeObituary(player, grave);
-        spawnGhost(world, pos, grave);
+        spawnGhost(level, pos, grave);
 
-        sortItems(world, pos, player, grave);
-        world.destroyBlock(pos, true);
+        sortItems(level, pos, player, grave);
+        level.destroyBlock(pos, true);
     }
 
     protected void sortItems(Level world, BlockPos pos, Player player, GraveStoneTileEntity grave) {
