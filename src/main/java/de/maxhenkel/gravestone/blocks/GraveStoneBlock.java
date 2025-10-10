@@ -188,7 +188,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterlo
     }
 
     @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+    public boolean onDestroyedByPlayer(BlockState state, Level world, BlockPos pos, Player player, ItemStack toolStack, boolean willHarvest, FluidState fluid) {
         if (!GraveUtils.canBreakGrave(world, player, pos)) {
             return false;
         }
@@ -201,7 +201,7 @@ public class GraveStoneBlock extends Block implements EntityBlock, SimpleWaterlo
                 sortItems(world, pos, player, grave);
             }
         }
-        return super.onDestroyedByPlayer(state, world, pos, player, willHarvest, fluid);
+        return super.onDestroyedByPlayer(state, world, pos, player, toolStack, willHarvest, fluid);
     }
 
     protected void spawnGhost(Level world, BlockPos pos, GraveStoneTileEntity grave) {
