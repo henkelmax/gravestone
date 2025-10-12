@@ -1,1 +1,1 @@
-- Log death ID on player death
+- Fixed restoreinventory command permissions

@@ -65,7 +65,7 @@ public class RestoreCommand {
                         ));
 
         LiteralCommandNode<CommandSourceStack> register = dispatcher.register(literalBuilder);
-        LiteralArgumentBuilder<CommandSourceStack> alias = Commands.literal("restoreinventory").redirect(register);
+        LiteralArgumentBuilder<CommandSourceStack> alias = Commands.literal("restoreinventory").requires((commandSource) -> commandSource.hasPermission(2)).redirect(register);
         dispatcher.register(alias);
     }
 
