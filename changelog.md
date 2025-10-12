@@ -1,1 +1,1 @@
-- Updated to support latest NeoForge version
+- Fixed restoreinventory command permissions
