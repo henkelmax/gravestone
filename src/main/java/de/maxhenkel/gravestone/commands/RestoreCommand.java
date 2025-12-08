@@ -14,6 +14,7 @@ import net.minecraft.commands.arguments.UuidArgument;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.UUID;
@@ -21,7 +22,7 @@ import java.util.UUID;
 public class RestoreCommand {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralArgumentBuilder<CommandSourceStack> literalBuilder = Commands.literal("restore").requires((commandSource) -> commandSource.hasPermission(2));
+        LiteralArgumentBuilder<CommandSourceStack> literalBuilder = Commands.literal("restore").requires((commandSource) -> commandSource.permissions().hasPermission(Permissions.COMMANDS_MODERATOR));
 
         Command<CommandSourceStack> add = (commandSource) -> {
             UUID deathID = UuidArgument.getUuid(commandSource, "death_id");
@@ -65,7 +66,7 @@ public class RestoreCommand {
                         ));
 
         LiteralCommandNode<CommandSourceStack> register = dispatcher.register(literalBuilder);
-        LiteralArgumentBuilder<CommandSourceStack> alias = Commands.literal("restoreinventory").requires((commandSource) -> commandSource.hasPermission(2)).redirect(register);
+        LiteralArgumentBuilder<CommandSourceStack> alias = Commands.literal("restoreinventory").requires((commandSource) -> commandSource.permissions().hasPermission(Permissions.COMMANDS_MODERATOR)).redirect(register);
         dispatcher.register(alias);
     }
 

@@ -2,8 +2,8 @@ package de.maxhenkel.gravestone.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxhenkel.corelib.client.PlayerSkins;
-import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.*;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.entity.player.PlayerModelType;
 
@@ -49,7 +49,7 @@ public class PlayerGhostRenderer extends LivingEntityRenderer<GhostPlayerEntity,
     }
 
     @Override
-    public ResourceLocation getTextureLocation(AvatarRenderState renderState) {
+    public Identifier getTextureLocation(AvatarRenderState renderState) {
         return renderState.skin.body().texturePath();
     }
 

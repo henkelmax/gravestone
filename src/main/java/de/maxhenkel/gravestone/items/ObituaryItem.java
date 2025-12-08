@@ -6,7 +6,6 @@ import de.maxhenkel.gravestone.DeathInfo;
 import de.maxhenkel.gravestone.GravestoneMod;
 import de.maxhenkel.gravestone.net.MessageOpenObituary;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -15,6 +14,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permissions;
+import net.minecraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -46,7 +47,7 @@ public class ObituaryItem extends Item {
         if (death == null) {
             player.displayClientMessage(Component.translatable("message.gravestone.death_not_found"), true);
         } else if (player.isShiftKeyDown()) {
-            if (player.hasPermissions(player.level().getServer().operatorUserPermissionLevel())) {
+            if (player.permissions().hasPermission(Permissions.COMMANDS_MODERATOR)) {
                 Component replace = ComponentUtils.wrapInSquareBrackets(Component.translatable("message.gravestone.restore.replace"))
                         .withStyle((style) -> style
                                 .applyFormat(ChatFormatting.GREEN)

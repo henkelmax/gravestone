@@ -6,7 +6,7 @@ import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
@@ -16,9 +16,9 @@ public class HUDHandlerGraveStone implements IBlockComponentProvider {
 
     public static final HUDHandlerGraveStone INSTANCE = new HUDHandlerGraveStone();
 
-    private static final ResourceLocation OBJECT_NAME_TAG = ResourceLocation.fromNamespaceAndPath("jade", "object_name");
+    private static final Identifier OBJECT_NAME_TAG = Identifier.fromNamespaceAndPath("jade", "object_name");
 
-    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(GravestoneMod.MODID, "grave");
+    private static final Identifier UID = Identifier.fromNamespaceAndPath(GravestoneMod.MODID, "grave");
 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
@@ -38,7 +38,7 @@ public class HUDHandlerGraveStone implements IBlockComponentProvider {
     }
 
     @Override
-    public ResourceLocation getUid() {
+    public Identifier getUid() {
         return UID;
     }
 }

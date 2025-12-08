@@ -6,12 +6,12 @@ import de.maxhenkel.gravestone.GravestoneMod;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MessageOpenObituary implements Message<MessageOpenObituary> {
 
-    public static final CustomPacketPayload.Type<MessageOpenObituary> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(GravestoneMod.MODID, "open_obituary"));
+    public static final CustomPacketPayload.Type<MessageOpenObituary> TYPE = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(GravestoneMod.MODID, "open_obituary"));
 
     private Death death;
 

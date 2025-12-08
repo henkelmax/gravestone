@@ -8,8 +8,8 @@ import de.maxhenkel.gravestone.GravestoneMod;
 import de.maxhenkel.gravestone.blocks.GraveStoneBlock;
 import de.maxhenkel.gravestone.tileentity.GraveStoneTileEntity;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.object.skull.SkullModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -17,7 +17,7 @@ import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -78,7 +78,7 @@ public class GravestoneRenderer implements BlockEntityRenderer<GraveStoneTileEnt
 
     public void renderSkull(SubmitNodeCollector collector, GravestoneRenderState state, PoseStack stack) {
         SkullModel model = new SkullModel(renderer.bakeLayer(ModelLayers.PLAYER_HEAD));
-        ResourceLocation resourcelocation = PlayerSkins.getSkin(state.playerId).body().texturePath();
+        Identifier resourcelocation = PlayerSkins.getSkin(state.playerId).body().texturePath();
 
         stack.pushPose();
 

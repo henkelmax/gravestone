@@ -1,1 +1,1 @@
-- Fixed restoreinventory command permissions
+- Updated to 1.21.11

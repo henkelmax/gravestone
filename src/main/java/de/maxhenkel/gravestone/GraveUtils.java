@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -79,7 +80,7 @@ public class GraveUtils {
         }
 
         if (player instanceof ServerPlayer p) {
-            if (p.hasPermissions(p.level().getServer().operatorUserPermissionLevel())) {
+            if (p.permissions().hasPermission(Permissions.COMMANDS_MODERATOR)) {
                 return true;
             }
         }

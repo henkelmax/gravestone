@@ -16,14 +16,14 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.*;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 
 import java.util.Collections;
 
 public class ObituaryScreen extends Screen {
 
-    private static final ResourceLocation GUI_TEXTURE = ResourceLocation.fromNamespaceAndPath(GravestoneMod.MODID, "textures/gui/info.png");
+    private static final Identifier GUI_TEXTURE = Identifier.fromNamespaceAndPath(GravestoneMod.MODID, "textures/gui/info.png");
     protected static final int TEXTURE_X = 163;
     protected static final int TEXTURE_Y = 165;
     protected static final int ITEM_OFFSET_LEFT = 40;

@@ -44,7 +44,7 @@ public class GravestoneMod {
     public static final Logger LOGGER = LogManager.getLogger(GravestoneMod.MODID);
 
     private static final DeferredRegister.Blocks BLOCK_REGISTER = DeferredRegister.createBlocks(GravestoneMod.MODID);
-    public static final DeferredHolder<Block, GraveStoneBlock> GRAVESTONE = BLOCK_REGISTER.registerBlock("gravestone", GraveStoneBlock::new, BlockBehaviour.Properties.of());
+    public static final DeferredHolder<Block, GraveStoneBlock> GRAVESTONE = BLOCK_REGISTER.registerBlock("gravestone", GraveStoneBlock::new, BlockBehaviour.Properties::of);
 
     private static final DeferredRegister.Items ITEM_REGISTER = DeferredRegister.createItems(GravestoneMod.MODID);
     public static final DeferredHolder<Item, BlockItem> GRAVESTONE_ITEM = ITEM_REGISTER.registerSimpleBlockItem(GRAVESTONE);

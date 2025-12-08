@@ -28,3 +28,11 @@ processResources {
 shadowJar {
     relocate 'de.maxhenkel.corelib', 'de.maxhenkel.gravestone.corelib'
 }
+
+sourceSets {
+    main {
+        java {
+            exclude 'de/maxhenkel/gravestone/integration/*/**'
+        }
+    }
+}
