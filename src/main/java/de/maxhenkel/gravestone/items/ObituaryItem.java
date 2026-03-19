@@ -45,7 +45,7 @@ public class ObituaryItem extends Item {
         Death death = fromStack(player, itemInHand);
 
         if (death == null) {
-            player.displayClientMessage(Component.translatable("message.gravestone.death_not_found"), true);
+            player.sendOverlayMessage(Component.translatable("message.gravestone.death_not_found"));
         } else if (player.isShiftKeyDown()) {
             if (player.permissions().hasPermission(Permissions.COMMANDS_MODERATOR)) {
                 Component replace = ComponentUtils.wrapInSquareBrackets(Component.translatable("message.gravestone.restore.replace"))

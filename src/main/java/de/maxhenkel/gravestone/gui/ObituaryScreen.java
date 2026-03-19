@@ -8,7 +8,7 @@ import de.maxhenkel.gravestone.GravestoneMod;
 import de.maxhenkel.gravestone.entity.DummyPlayer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -95,8 +95,8 @@ public class ObituaryScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
         int left = (width - TEXTURE_X) / 2;
 
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, left, 20, 0, 0, TEXTURE_X, TEXTURE_Y, 256, 256);
@@ -112,7 +112,7 @@ public class ObituaryScreen extends Screen {
         }
     }
 
-    public void drawFirstPage(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    public void drawFirstPage(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         drawCentered(guiGraphics, font, Component.translatable("gui.obituary.title").withStyle(ChatFormatting.UNDERLINE), width / 2, 30, FontColorUtils.getFontColor(ChatFormatting.BLACK));
 
         int height = 50;
@@ -170,7 +170,7 @@ public class ObituaryScreen extends Screen {
                                 .withClickEvent(new ClickEvent.SuggestCommand("/restore @s " + death.getId().toString() + " replace"))
                                 .withHoverEvent(new HoverEvent.ShowText(Component.literal(death.getId().toString())))
                         );
-                minecraft.gui.getChat().addMessage(Component.translatable("message.gravestone.copied", deathID));
+                minecraft.gui.getChat().addClientSystemMessage(Component.translatable("message.gravestone.copied", deathID));
                 minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
                 minecraft.setScreen(null);
             }
@@ -178,33 +178,33 @@ public class ObituaryScreen extends Screen {
         return super.mouseClicked(event, b);
     }
 
-    public void drawCentered(GuiGraphics guiGraphics, Font fontRenderer, MutableComponent text, int x, int y, int color) {
-        guiGraphics.drawString(fontRenderer, text.getVisualOrderText(), x - fontRenderer.width(text) / 2, y, color, false);
+    public void drawCentered(GuiGraphicsExtractor guiGraphics, Font fontRenderer, MutableComponent text, int x, int y, int color) {
+        guiGraphics.text(fontRenderer, text.getVisualOrderText(), x - fontRenderer.width(text) / 2, y, color, false);
     }
 
-    public void drawItem(GuiGraphics guiGraphics, MutableComponent string, int height) {
-        guiGraphics.drawString(font, string.getVisualOrderText(), guiLeft + ITEM_OFFSET_LEFT, height, FontColorUtils.getFontColor(ChatFormatting.BLACK), false);
+    public void drawItem(GuiGraphicsExtractor guiGraphics, MutableComponent string, int height) {
+        guiGraphics.text(font, string.getVisualOrderText(), guiLeft + ITEM_OFFSET_LEFT, height, FontColorUtils.getFontColor(ChatFormatting.BLACK), false);
     }
 
-    public void drawItemSize(GuiGraphics guiGraphics, MutableComponent string, int height) {
-        guiGraphics.drawString(font, string.getVisualOrderText(), guiLeft + ITEM_SIZE_OFFSET_LEFT, height, FontColorUtils.getFontColor(ChatFormatting.BLACK), false);
+    public void drawItemSize(GuiGraphicsExtractor guiGraphics, MutableComponent string, int height) {
+        guiGraphics.text(font, string.getVisualOrderText(), guiLeft + ITEM_SIZE_OFFSET_LEFT, height, FontColorUtils.getFontColor(ChatFormatting.BLACK), false);
     }
 
-    public void drawLeft(GuiGraphics guiGraphics, MutableComponent string, int height) {
-        guiGraphics.drawString(font, string.getVisualOrderText(), guiLeft + OFFSET_LEFT, height, FontColorUtils.getFontColor(ChatFormatting.BLACK), false);
+    public void drawLeft(GuiGraphicsExtractor guiGraphics, MutableComponent string, int height) {
+        guiGraphics.text(font, string.getVisualOrderText(), guiLeft + OFFSET_LEFT, height, FontColorUtils.getFontColor(ChatFormatting.BLACK), false);
     }
 
-    public void drawRight(GuiGraphics guiGraphics, MutableComponent string, int height) {
+    public void drawRight(GuiGraphicsExtractor guiGraphics, MutableComponent string, int height) {
         drawRight(guiGraphics, string, height, 1F);
     }
 
-    public void drawRight(GuiGraphics guiGraphics, MutableComponent string, int height, float scale) {
+    public void drawRight(GuiGraphicsExtractor guiGraphics, MutableComponent string, int height, float scale) {
         guiGraphics.pose().pushMatrix();
         guiGraphics.pose().scale(scale, scale);
         float f = 1F / scale;
         int strWidth = font.width(string);
         float spacing = (font.lineHeight * f - font.lineHeight) / 2F;
-        guiGraphics.drawString(font, string.getVisualOrderText(), (int) ((guiLeft + TEXTURE_X - strWidth * scale - OFFSET_RIGHT) * f), (int) (height * f + spacing), FontColorUtils.getFontColor(ChatFormatting.BLACK), false);
+        guiGraphics.text(font, string.getVisualOrderText(), (int) ((guiLeft + TEXTURE_X - strWidth * scale - OFFSET_RIGHT) * f), (int) (height * f + spacing), FontColorUtils.getFontColor(ChatFormatting.BLACK), false);
         guiGraphics.pose().popMatrix();
     }
 

@@ -1,6 +1,6 @@
 package de.maxhenkel.gravestone.gui;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 
@@ -40,7 +40,7 @@ public class PageList {
         return list.size();
     }
 
-    public void drawPage(GuiGraphics guiGraphics, int p, int mouseX, int mouseY) {
+    public void drawPage(GuiGraphicsExtractor guiGraphics, int p, int mouseX, int mouseY) {
         if (p >= list.size()) {
             p = list.size() - 1;
         }
