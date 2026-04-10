@@ -1,1 +1,1 @@
-- Re-added jade support
+- Added support for 26.1.2
