@@ -13,6 +13,7 @@ import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Clearable;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,7 +24,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class GraveStoneTileEntity extends BlockEntity implements Nameable {
+public class GraveStoneTileEntity extends BlockEntity implements Nameable, Clearable {
 
     protected Death death;
 
@@ -115,4 +116,12 @@ public class GraveStoneTileEntity extends BlockEntity implements Nameable {
         }
     }
 
+    @Override
+    public void clearContent() {
+        this.death.getMainInventory().clear();
+        this.death.getArmorInventory().clear();
+        this.death.getOffHandInventory().clear();
+        this.death.getAdditionalItems().clear();
+        this.death.getEquipment().clear();
+    }
 }
