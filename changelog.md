@@ -1,1 +1,1 @@
-- Fixed restoreinventory command permissions
+- Fixed duplication glitch with Sable
