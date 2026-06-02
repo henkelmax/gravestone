@@ -1,1 +1,1 @@
-- Fixed duplication glitch with Sable
+- Updated to 26.2

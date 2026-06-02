@@ -4,6 +4,7 @@ import de.maxhenkel.corelib.FontColorUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.Arrays;
@@ -28,8 +29,8 @@ public class Page {
     }
 
     public void drawPage(GuiGraphicsExtractor guiGraphics, int page, int pageCount, int mouseX, int mouseY) {
-        gui.drawCentered(guiGraphics, gui.getFontRenderer(), Component.translatable("gui.obituary.title.items").withStyle(ChatFormatting.UNDERLINE), gui.width / 2, 30, FontColorUtils.getFontColor(ChatFormatting.BLACK));
-        gui.drawCentered(guiGraphics, gui.getFontRenderer(), Component.translatable("gui.obituary.page", page, pageCount), gui.width / 2, 43, FontColorUtils.getFontColor(ChatFormatting.BLACK));
+        gui.drawCentered(guiGraphics, gui.getFontRenderer(), Component.translatable("gui.obituary.title.items").withStyle(ChatFormatting.UNDERLINE), gui.width / 2, 30, FontColorUtils.getFontColor(TextColor.BLACK));
+        gui.drawCentered(guiGraphics, gui.getFontRenderer(), Component.translatable("gui.obituary.page", page, pageCount), gui.width / 2, 43, FontColorUtils.getFontColor(TextColor.BLACK));
 
         int y = ITEM_START_Y;
         final int space = 12;

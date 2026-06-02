@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -94,7 +95,7 @@ public class GravestoneRenderer implements BlockEntityRenderer<GraveStoneTileEnt
         collector.submitCustomGeometry(stack, model.renderType(resourcelocation), (pose, vertexConsumer) -> {
             PoseStack s = new PoseStack();
             s.mulPose(pose.pose());
-            model.renderToBuffer(s, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+            model.renderToBuffer(s, vertexConsumer, light, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
         });
 
         stack.popPose();

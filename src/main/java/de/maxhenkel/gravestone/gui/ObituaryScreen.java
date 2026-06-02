@@ -113,7 +113,7 @@ public class ObituaryScreen extends Screen {
     }
 
     public void drawFirstPage(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
-        drawCentered(guiGraphics, font, Component.translatable("gui.obituary.title").withStyle(ChatFormatting.UNDERLINE), width / 2, 30, FontColorUtils.getFontColor(ChatFormatting.BLACK));
+        drawCentered(guiGraphics, font, Component.translatable("gui.obituary.title").withStyle(ChatFormatting.UNDERLINE), width / 2, 30, FontColorUtils.getFontColor(TextColor.BLACK));
 
         int height = 50;
 
@@ -170,9 +170,9 @@ public class ObituaryScreen extends Screen {
                                 .withClickEvent(new ClickEvent.SuggestCommand("/restore @s " + death.getId().toString() + " replace"))
                                 .withHoverEvent(new HoverEvent.ShowText(Component.literal(death.getId().toString())))
                         );
-                minecraft.gui.getChat().addClientSystemMessage(Component.translatable("message.gravestone.copied", deathID));
+                minecraft.gui.hud.getChat().addClientSystemMessage(Component.translatable("message.gravestone.copied", deathID));
                 minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
-                minecraft.setScreen(null);
+                minecraft.setScreenAndShow(null);
             }
         }
         return super.mouseClicked(event, b);
@@ -183,15 +183,15 @@ public class ObituaryScreen extends Screen {
     }
 
     public void drawItem(GuiGraphicsExtractor guiGraphics, MutableComponent string, int height) {
-        guiGraphics.text(font, string.getVisualOrderText(), guiLeft + ITEM_OFFSET_LEFT, height, FontColorUtils.getFontColor(ChatFormatting.BLACK), false);
+        guiGraphics.text(font, string.getVisualOrderText(), guiLeft + ITEM_OFFSET_LEFT, height, FontColorUtils.getFontColor(TextColor.BLACK), false);
     }
 
     public void drawItemSize(GuiGraphicsExtractor guiGraphics, MutableComponent string, int height) {
-        guiGraphics.text(font, string.getVisualOrderText(), guiLeft + ITEM_SIZE_OFFSET_LEFT, height, FontColorUtils.getFontColor(ChatFormatting.BLACK), false);
+        guiGraphics.text(font, string.getVisualOrderText(), guiLeft + ITEM_SIZE_OFFSET_LEFT, height, FontColorUtils.getFontColor(TextColor.BLACK), false);
     }
 
     public void drawLeft(GuiGraphicsExtractor guiGraphics, MutableComponent string, int height) {
-        guiGraphics.text(font, string.getVisualOrderText(), guiLeft + OFFSET_LEFT, height, FontColorUtils.getFontColor(ChatFormatting.BLACK), false);
+        guiGraphics.text(font, string.getVisualOrderText(), guiLeft + OFFSET_LEFT, height, FontColorUtils.getFontColor(TextColor.BLACK), false);
     }
 
     public void drawRight(GuiGraphicsExtractor guiGraphics, MutableComponent string, int height) {
@@ -204,7 +204,7 @@ public class ObituaryScreen extends Screen {
         float f = 1F / scale;
         int strWidth = font.width(string);
         float spacing = (font.lineHeight * f - font.lineHeight) / 2F;
-        guiGraphics.text(font, string.getVisualOrderText(), (int) ((guiLeft + TEXTURE_X - strWidth * scale - OFFSET_RIGHT) * f), (int) (height * f + spacing), FontColorUtils.getFontColor(ChatFormatting.BLACK), false);
+        guiGraphics.text(font, string.getVisualOrderText(), (int) ((guiLeft + TEXTURE_X - strWidth * scale - OFFSET_RIGHT) * f), (int) (height * f + spacing), FontColorUtils.getFontColor(TextColor.BLACK), false);
         guiGraphics.pose().popMatrix();
     }
 
