@@ -7,7 +7,7 @@ import net.minecraft.client.Minecraft;
 public class ClientNetworking {
 
     public static void openObituary(Death death) {
-        Minecraft.getInstance().setScreenAndShow(new ObituaryScreen(death));
+        Minecraft.getInstance().gui.setScreen(new ObituaryScreen(death));
     }
 
 }

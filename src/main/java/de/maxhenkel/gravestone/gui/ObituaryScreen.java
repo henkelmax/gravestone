@@ -172,7 +172,7 @@ public class ObituaryScreen extends Screen {
                         );
                 minecraft.gui.hud.getChat().addClientSystemMessage(Component.translatable("message.gravestone.copied", deathID));
                 minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
-                minecraft.setScreenAndShow(null);
+                minecraft.gui.setScreen(null);
             }
         }
         return super.mouseClicked(event, b);
