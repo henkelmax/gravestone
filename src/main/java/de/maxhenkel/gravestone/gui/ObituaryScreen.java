@@ -11,6 +11,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -30,6 +31,9 @@ public class ObituaryScreen extends Screen {
     protected static final int OFFSET_LEFT = 7;
     protected static final int OFFSET_RIGHT = 14;
     protected static final int ITEM_SIZE_OFFSET_LEFT = 15;
+    protected static final int PLAYER_X = 50;
+    protected static final int PLAYER_Y = 70;
+    protected static final int PLAYER_SCALE = 30;
 
     private DummyPlayer player;
     private Death death;
@@ -58,14 +62,13 @@ public class ObituaryScreen extends Screen {
         guiLeft = (width - TEXTURE_X) / 2;
         guiTop = (height - TEXTURE_Y) / 2;
 
-        int left = (width - TEXTURE_X) / 2;
         buttonPrev = addRenderableWidget(Button.builder(Component.translatable("button.gravestone.prev"), button -> {
             page--;
             if (page < 0) {
                 page = 0;
             }
             checkButtons();
-        }).bounds(left, 190, 75, 20).build());
+        }).bounds(guiLeft, 190, 75, 20).build());
 
         buttonNext = addRenderableWidget(Button.builder(Component.translatable("button.gravestone.next"), button -> {
             page++;
@@ -73,7 +76,7 @@ public class ObituaryScreen extends Screen {
                 page = pageList.getPages();
             }
             checkButtons();
-        }).bounds(left + TEXTURE_X - 75, 190, 75, 20).build());
+        }).bounds(guiLeft + TEXTURE_X - 75, 190, 75, 20).build());
         buttonPrev.active = false;
         if (pageList.getPages() <= 0) {
             buttonNext.active = false;
@@ -97,9 +100,8 @@ public class ObituaryScreen extends Screen {
     @Override
     public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
-        int left = (width - TEXTURE_X) / 2;
 
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, left, 20, 0, 0, TEXTURE_X, TEXTURE_Y, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, GUI_TEXTURE, guiLeft, 20, 0, 0, TEXTURE_X, TEXTURE_Y, 256, 256);
 
         if (page == 0) {
             drawFirstPage(guiGraphics, mouseX, mouseY);
@@ -149,8 +151,9 @@ public class ObituaryScreen extends Screen {
             player = new DummyPlayer(minecraft.level, new GameProfile(death.getPlayerUUID(), death.getPlayerName()), death.getEquipment(), death.getModel());
         }
 
-        //TODO Re-add and fix name tag and position
-        //InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, guiLeft + TEXTURE_X / 2 - 25, guiTop + 70, guiLeft + TEXTURE_X / 2 + 25, guiTop + 140, 30, 0.0625F, mouseX, mouseY, player);
+        int playerLeft = guiLeft + (TEXTURE_X - PLAYER_X) / 2;
+        int playerTop = 20 + TEXTURE_Y - PLAYER_Y;
+        InventoryScreen.extractEntityInInventoryFollowsMouse(guiGraphics, playerLeft, playerTop, playerLeft + PLAYER_X, playerTop + PLAYER_Y, PLAYER_SCALE, 0.0625F, mouseX, mouseY, player);
 
         if (minecraft.options.advancedItemTooltips) {
             if (mouseX >= guiLeft + 7 && mouseX <= guiLeft + TEXTURE_X - 7 && mouseY >= 50 && mouseY <= 50 + font.lineHeight) {
