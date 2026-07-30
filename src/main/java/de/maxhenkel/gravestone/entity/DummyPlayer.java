@@ -28,6 +28,11 @@ public class DummyPlayer extends RemotePlayer {
     }
 
     @Override
+    public int getId() {
+        return Integer.MIN_VALUE;
+    }
+
+    @Override
     public boolean isSpectator() {
         return false;
     }
