@@ -5,9 +5,9 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.PlayerModelPart;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.NeoForgeMod;
 
 import java.util.EnumMap;
 
@@ -21,7 +21,7 @@ public class DummyPlayer extends RemotePlayer {
         for (EnumMap.Entry<EquipmentSlot, ItemStack> entry : equipment.entrySet()) {
             setItemSlot(entry.getKey(), entry.getValue());
         }
-        AttributeInstance attribute = getAttributes().getInstance(NeoForgeMod.NAMETAG_DISTANCE);
+        AttributeInstance attribute = getAttributes().getInstance(Attributes.NAME_TAG_DISTANCE);
         if (attribute != null) {
             attribute.setBaseValue(0D);
         }
