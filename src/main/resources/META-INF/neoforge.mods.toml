@@ -8,7 +8,7 @@ version = "${mod_version}"
 displayName = "Gravestone Mod"
 updateJSONURL = "https://update.maxhenkel.de/neoforge/gravestone"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/gravestone-mod"
-logoFile = "icon.png"
+iconFile = "icon.png"
 authors = "Max Henkel"
 description = '''Places a gravestone with your inventory items inside when you die'''
 [[dependencies.gravestone]]

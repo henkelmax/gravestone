@@ -1,2 +1,1 @@
-- Fixed crash on newer NeoForge versions
-- Re-added player rendering to the obituary screen
+- Updated to latest NeoForge version
