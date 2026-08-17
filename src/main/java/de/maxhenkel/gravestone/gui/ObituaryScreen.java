@@ -30,6 +30,14 @@ public class ObituaryScreen extends Screen {
     protected static final int OFFSET_LEFT = 7;
     protected static final int OFFSET_RIGHT = 14;
     protected static final int ITEM_SIZE_OFFSET_LEFT = 15;
+    protected static final int PLAYER_X = 50;
+    protected static final int PLAYER_Y = 70;
+    protected static final int PLAYER_SCALE = 30;
+    protected static final int TITLE_OFFSET_TOP = 10;
+    protected static final int CONTENT_OFFSET_TOP = 30;
+    protected static final int BUTTON_WIDTH = 75;
+    protected static final int BUTTON_HEIGHT = 20;
+    protected static final int BUTTON_SPACING = 5;
 
     private DummyPlayer player;
     private Death death;
@@ -56,16 +64,17 @@ public class ObituaryScreen extends Screen {
         super.init();
 
         guiLeft = (width - TEXTURE_X) / 2;
-        guiTop = (height - TEXTURE_Y) / 2;
+        guiTop = (height - (TEXTURE_Y + BUTTON_SPACING + BUTTON_HEIGHT)) / 2;
 
-        int left = (width - TEXTURE_X) / 2;
+        int buttonTop = guiTop + TEXTURE_Y + BUTTON_SPACING;
+
         buttonPrev = addRenderableWidget(Button.builder(Component.translatable("button.gravestone.prev"), button -> {
             page--;
             if (page < 0) {
                 page = 0;
             }
             checkButtons();
-        }).bounds(left, 190, 75, 20).build());
+        }).bounds(guiLeft, buttonTop, BUTTON_WIDTH, BUTTON_HEIGHT).build());
 
         buttonNext = addRenderableWidget(Button.builder(Component.translatable("button.gravestone.next"), button -> {
             page++;
@@ -73,7 +82,7 @@ public class ObituaryScreen extends Screen {
                 page = pageList.getPages();
             }
             checkButtons();
-        }).bounds(left + TEXTURE_X - 75, 190, 75, 20).build());
+        }).bounds(guiLeft + TEXTURE_X - BUTTON_WIDTH, buttonTop, BUTTON_WIDTH, BUTTON_HEIGHT).build());
         buttonPrev.active = false;
         if (pageList.getPages() <= 0) {
             buttonNext.active = false;
@@ -97,11 +106,10 @@ public class ObituaryScreen extends Screen {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         super.render(guiGraphics, mouseX, mouseY, partialTicks);
-        int left = (width - TEXTURE_X) / 2;
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        guiGraphics.blit(GUI_TEXTURE, left, 20, 0, 0, TEXTURE_X, TEXTURE_Y);
+        guiGraphics.blit(GUI_TEXTURE, guiLeft, guiTop, 0, 0, TEXTURE_X, TEXTURE_Y);
 
         if (page == 0) {
             drawFirstPage(guiGraphics, mouseX, mouseY);
@@ -115,9 +123,9 @@ public class ObituaryScreen extends Screen {
     }
 
     public void drawFirstPage(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        drawCentered(guiGraphics, font, Component.translatable("gui.obituary.title").withStyle(ChatFormatting.UNDERLINE), width / 2, 30, ChatFormatting.BLACK.getColor());
+        drawCentered(guiGraphics, font, Component.translatable("gui.obituary.title").withStyle(ChatFormatting.UNDERLINE), width / 2, guiTop + TITLE_OFFSET_TOP, ChatFormatting.BLACK.getColor());
 
-        int height = 50;
+        int height = guiTop + CONTENT_OFFSET_TOP;
 
         if (minecraft.options.advancedItemTooltips) {
             drawLeft(guiGraphics, Component.translatable("gui.obituary.id").append(":").withStyle(ChatFormatting.BLACK), height);
@@ -153,10 +161,12 @@ public class ObituaryScreen extends Screen {
             player = new DummyPlayer(minecraft.level, new GameProfile(death.getPlayerUUID(), death.getPlayerName()), death.getEquipment(), death.getModel());
         }
 
-        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, guiLeft + TEXTURE_X / 2 - 25, guiTop + 70, guiLeft + TEXTURE_X / 2 + 25, guiTop + 140, 30, 0.0625F, mouseX, mouseY, player);
+        int playerLeft = guiLeft + (TEXTURE_X - PLAYER_X) / 2;
+        int playerTop = guiTop + TEXTURE_Y - PLAYER_Y;
+        InventoryScreen.renderEntityInInventoryFollowsMouse(guiGraphics, playerLeft, playerTop, playerLeft + PLAYER_X, playerTop + PLAYER_Y, PLAYER_SCALE, 0.0625F, mouseX, mouseY, player);
 
         if (minecraft.options.advancedItemTooltips) {
-            if (mouseX >= guiLeft + 7 && mouseX <= guiLeft + TEXTURE_X - 7 && mouseY >= 50 && mouseY <= 50 + font.lineHeight) {
+            if (mouseX >= guiLeft + 7 && mouseX <= guiLeft + TEXTURE_X - 7 && mouseY >= guiTop + CONTENT_OFFSET_TOP && mouseY <= guiTop + CONTENT_OFFSET_TOP + font.lineHeight) {
                 guiGraphics.renderTooltip(font, Collections.singletonList(Component.translatable("gui.obituary.copy_id").getVisualOrderText()), mouseX, mouseY);
             }
         }
@@ -165,7 +175,7 @@ public class ObituaryScreen extends Screen {
     @Override
     public boolean mouseClicked(double x, double y, int clickType) {
         if (minecraft.options.advancedItemTooltips && page == 0) {
-            if (x >= guiLeft + 7 && x <= guiLeft + TEXTURE_X - 7 && y >= 50 && y <= 50 + font.lineHeight) {
+            if (x >= guiLeft + 7 && x <= guiLeft + TEXTURE_X - 7 && y >= guiTop + CONTENT_OFFSET_TOP && y <= guiTop + CONTENT_OFFSET_TOP + font.lineHeight) {
                 minecraft.keyboardHandler.setClipboard(death.getId().toString());
                 Component deathID = ComponentUtils.wrapInSquareBrackets(Component.translatable("message.gravestone.death_id"))
                         .withStyle((style) -> style

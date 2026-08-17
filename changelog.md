@@ -1,0 +1,1 @@
+- Fixed obituary screen alignment
