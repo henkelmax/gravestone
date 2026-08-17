@@ -1,1 +1,1 @@
-- Updated to latest NeoForge version
+- Fixed obituary screen alignment
