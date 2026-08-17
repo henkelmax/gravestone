@@ -10,7 +10,8 @@ import java.util.Arrays;
 
 public class Page {
 
-    private static final int ITEM_START_Y = 60;
+    private static final int ITEM_OFFSET_TOP = 40;
+    private static final int PAGE_NUMBER_OFFSET_TOP = 23;
 
     private ItemStack[] items;
     private ObituaryScreen gui;
@@ -28,10 +29,11 @@ public class Page {
     }
 
     public void drawPage(GuiGraphics guiGraphics, int page, int pageCount, int mouseX, int mouseY) {
-        gui.drawCentered(guiGraphics, gui.getFontRenderer(), Component.translatable("gui.obituary.title.items").withStyle(ChatFormatting.UNDERLINE), gui.width / 2, 30, FontColorUtils.getFontColor(ChatFormatting.BLACK));
-        gui.drawCentered(guiGraphics, gui.getFontRenderer(), Component.translatable("gui.obituary.page", page, pageCount), gui.width / 2, 43, FontColorUtils.getFontColor(ChatFormatting.BLACK));
+        gui.drawCentered(guiGraphics, gui.getFontRenderer(), Component.translatable("gui.obituary.title.items").withStyle(ChatFormatting.UNDERLINE), gui.width / 2, gui.getGuiTop() + ObituaryScreen.TITLE_OFFSET_TOP, FontColorUtils.getFontColor(ChatFormatting.BLACK));
+        gui.drawCentered(guiGraphics, gui.getFontRenderer(), Component.translatable("gui.obituary.page", page, pageCount), gui.width / 2, gui.getGuiTop() + PAGE_NUMBER_OFFSET_TOP, FontColorUtils.getFontColor(ChatFormatting.BLACK));
 
-        int y = ITEM_START_Y;
+        int itemStartY = gui.getGuiTop() + ITEM_OFFSET_TOP;
+        int y = itemStartY;
         final int space = 12;
 
         for (ItemStack s : items) {
@@ -44,8 +46,8 @@ public class Page {
         }
 
         if (mouseX >= gui.getGuiLeft() + ObituaryScreen.ITEM_SIZE_OFFSET_LEFT && mouseX <= gui.getGuiLeft() + ObituaryScreen.TEXTURE_X - ObituaryScreen.OFFSET_RIGHT) {
-            if (mouseY >= ITEM_START_Y && mouseY <= ITEM_START_Y + 10 * space) {
-                int index = (mouseY + 3 - ITEM_START_Y) / 12;
+            if (mouseY >= itemStartY && mouseY <= itemStartY + 10 * space) {
+                int index = (mouseY + 3 - itemStartY) / 12;
                 ItemStack stack = items[Math.max(0, Math.min(items.length - 1, index))];
                 if (stack != null && !stack.isEmpty()) {
                     guiGraphics.setTooltipForNextFrame(gui.getFontRenderer(), stack, mouseX, mouseY);

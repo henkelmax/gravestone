@@ -1,1 +1,1 @@
-- Re-added player rendering to the obituary screen
+- Fixed obituary screen alignment
