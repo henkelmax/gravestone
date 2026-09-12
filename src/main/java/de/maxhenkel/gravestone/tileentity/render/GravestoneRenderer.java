@@ -58,8 +58,8 @@ public class GravestoneRenderer implements BlockEntityRenderer<GraveStoneTileEnt
 
         stack.pushPose();
         stack.translate(0.5D, 1D, 0.5D);
-        stack.mulPose(Axis.XP.rotationDegrees(180F));
-        stack.mulPose(Axis.YP.rotationDegrees(180F + state.direction.toYRot()));
+        stack.rotate(Axis.XP.rotationDegrees(180F));
+        stack.rotate(Axis.YP.rotationDegrees(180F + state.direction.toYRot()));
 
         Font font = renderer.font();
 
@@ -85,11 +85,11 @@ public class GravestoneRenderer implements BlockEntityRenderer<GraveStoneTileEnt
 
         stack.translate(0.5D, 0D, 0.5D);
 
-        stack.mulPose(Axis.YP.rotationDegrees(180F - state.direction.toYRot()));
-        stack.mulPose(Axis.YP.rotationDegrees(-26F));
+        stack.rotate(Axis.YP.rotationDegrees(180F - state.direction.toYRot()));
+        stack.rotate(Axis.YP.rotationDegrees(-26F));
         stack.translate(0D, -0.14D, 0.18D);
-        stack.mulPose(Axis.XP.rotationDegrees(180F));
-        stack.mulPose(Axis.XP.rotationDegrees(-61F));
+        stack.rotate(Axis.XP.rotationDegrees(180F));
+        stack.rotate(Axis.XP.rotationDegrees(-61F));
 
         int light = state.lightCoords;
         collector.submitCustomGeometry(stack, model.renderType(resourcelocation), (pose, vertexConsumer) -> {

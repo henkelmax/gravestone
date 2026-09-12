@@ -15,6 +15,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.permissions.Permissions;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.UUID;
@@ -34,7 +35,7 @@ public class RestoreCommand {
             }
             for (ItemStack stack : death.getAllItems()) {
                 if (!player.getInventory().add(stack)) {
-                    player.drop(stack, false);
+                    player.drop(stack, false, Prediction.SERVER_ONLY);
                 }
             }
             commandSource.getSource().sendSuccess(() -> Component.translatable("message.gravestone.restore.success", player.getDisplayName()), true);
@@ -52,7 +53,7 @@ public class RestoreCommand {
             player.getInventory().clearContent();
             NonNullList<ItemStack> itemStacks = GravestoneMod.GRAVESTONE.get().fillPlayerInventory(player, death);
             for (ItemStack stack : itemStacks) {
-                player.drop(stack, false);
+                player.drop(stack, false, Prediction.SERVER_ONLY);
             }
             commandSource.getSource().sendSuccess(() -> Component.translatable("message.gravestone.restore.success", player.getDisplayName()), true);
             return 1;

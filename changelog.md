@@ -1,1 +1,1 @@
-- Fixed obituary screen alignment
+- Updated to 26.3
