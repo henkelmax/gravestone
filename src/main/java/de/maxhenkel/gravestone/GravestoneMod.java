@@ -67,7 +67,7 @@ public class GravestoneMod {
     public GravestoneMod(IEventBus eventBus) {
         eventBus.addListener(CreativeTabEvents::onCreativeModeTabBuildContents);
 
-        SERVER_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.SERVER, ServerConfig.class, true);
+        SERVER_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.SYNCED, ServerConfig.class, true);
         CLIENT_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.CLIENT, ClientConfig.class, true);
 
         BLOCK_REGISTER.register(eventBus);
