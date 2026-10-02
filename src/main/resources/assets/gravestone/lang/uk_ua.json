@@ -4,7 +4,7 @@
   "entity.gravestone.player_ghost": "Гравець-привид",
   "message.gravestone.grave_of": "Могила %s",
   "message.gravestone.date_of_death": "Помер о %s",
-  "message.gravestone.item_count": "Зберігав %s стак(-ів)",
+  "message.gravestone.item_count": "Зберігав %s стос(-ів)",
   "message.gravestone.died": "%s помер о %s",
   "message.gravestone.deathlocation": "Місце смерті",
   "message.gravestone.no_deathlocation": "Немає доступних місць смертей",
@@ -12,7 +12,7 @@
   "message.gravestone.copied": "Скопійовано %s у буфер обміну",
   "message.gravestone.restore": "Відновити предмети",
   "message.gravestone.restore.replace": "Замінити",
-  "message.gravestone.restore.replace.description": "Видаляє всі предмети з вашого інвентаря та відновлює ті, що були у вас незадовго до смерті",
+  "message.gravestone.restore.replace.description": "Видаляє всі предмети з вашого інвентарю та відновлює ті, що були у вас незадовго до смерті",
   "message.gravestone.restore.add": "Додати",
   "message.gravestone.restore.add.description": "Додає до вашого інвентарю предмети, які були у вас незадовго до смерті",
   "message.gravestone.death_id": "ID смерті",
@@ -21,7 +21,7 @@
   "message.gravestone.death_not_found": "Смерть не знайдена",
   "gui.obituary.name": "Ім'я",
   "gui.obituary.title": "Інформація про смерть",
-  "gui.obituary.location": "Місцезнаходження",
+  "gui.obituary.location": "Локація",
   "gui.obituary.dimension": "Вимір",
   "gui.obituary.title.items": "Предмети при смерті",
   "gui.obituary.page": "Стор. %s із %s",
@@ -30,5 +30,6 @@
   "gui.obituary.copy_id": "Скопіювати ID",
   "gui.gravestone.date_format": "yyyy/MM/dd HH:mm:ss",
   "button.gravestone.next": "Наст.",
-  "button.gravestone.prev": "Попер."
+  "button.gravestone.prev": "Попер.",
+  "config.jade.plugin_gravestone.grave": "Могила"
 }
